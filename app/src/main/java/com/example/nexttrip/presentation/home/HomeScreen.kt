@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +32,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.nexttrip.R
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.components.ButtonCustom
 import com.example.nexttrip.presentation.components.PlanCard
 import com.example.nexttrip.presentation.components.ServiceItem
@@ -40,13 +43,13 @@ import com.example.nexttrip.presentation.itemsList
 import com.example.nexttrip.ui.theme.NextTripTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
-    HomeScreenSkeleton()
+fun HomeScreen(navController: NavController) {
+    HomeScreenSkeleton(navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenSkeleton() {
+fun HomeScreenSkeleton(navController: NavController) {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -129,14 +132,17 @@ fun HomeScreenSkeleton() {
                 )
                 Text(
                     text = "See all",
-                    color = Color(0xFF8A1C40)
+                    color = Color(0xFF8A1C40),
+                    modifier = Modifier.clickable {
+                        navController.navigate(Screen.PopularDestination.route)
+                    }
                 )
             }
             LazyRow(
                 modifier = Modifier.padding(top = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(destinationList) {data->
+                items(destinationList) { data ->
                     PlanCard(item = data)
                 }
             }
@@ -164,6 +170,6 @@ fun HomeScreenSkeleton() {
 @Composable
 private fun ShowHomeScreen() {
     NextTripTheme {
-        HomeScreenSkeleton()
+//        HomeScreenSkeleton()
     }
 }

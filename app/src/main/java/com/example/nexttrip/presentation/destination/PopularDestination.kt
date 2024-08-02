@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.destination
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,17 +23,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.nexttrip.presentation.components.PlanCard
 import com.example.nexttrip.presentation.destinationList
 import com.example.nexttrip.ui.theme.NextTripTheme
 
 @Composable
-fun PopularDestinationScreen() {
-    PopularDestinationSkeleton()
+fun PopularDestinationScreen(navController: NavController) {
+    PopularDestinationSkeleton(navController)
 }
 
 @Composable
-fun PopularDestinationSkeleton() {
+fun PopularDestinationSkeleton(navController: NavController) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -46,23 +48,27 @@ fun PopularDestinationSkeleton() {
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBackIos, contentDescription = "",
-                    modifier = Modifier.size(30.dp)
+                    modifier = Modifier
+                        .size(26.dp)
+                        .clickable {
+                            navController.popBackStack()
+                        }
                 )
                 Text(
                     text = "Popular Destination",
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     color = Color(0xFF8A1C40)
                 )
                 Icon(
                     imageVector = Icons.Default.Menu, contentDescription = "",
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier.size(30.dp)
                 )
             }
             LazyColumn(
                 modifier = Modifier.padding(top = 20.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(destinationList) {data ->
+                items(destinationList) { data ->
                     PlanCard(modifier = Modifier.fillMaxWidth(), item = data)
                 }
             }
@@ -74,6 +80,6 @@ fun PopularDestinationSkeleton() {
 @Composable
 private fun ShowPopularDestination() {
     NextTripTheme {
-        PopularDestinationSkeleton()
+//        PopularDestinationSkeleton()
     }
 }
