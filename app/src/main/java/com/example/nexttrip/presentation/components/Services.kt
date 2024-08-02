@@ -1,10 +1,14 @@
 package com.example.nexttrip.presentation.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,13 +30,23 @@ fun ServiceItem(title: String, image: Int) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Image(
-            painter = painterResource(id = image), contentDescription = "",
-            modifier = Modifier.size(56.dp),
-            contentScale = ContentScale.FillBounds
-        )
+        Row(
+            modifier = Modifier
+                .background(
+                    color = Color(0xFF8A1C40).copy(alpha = 0.15f),
+                    shape = RoundedCornerShape(16.dp)
+                )
+        ) {
+            Icon(
+                painter = painterResource(id = image), contentDescription = "",
+                modifier = Modifier
+                    .padding(4.dp)
+                    .size(42.dp),
+                tint = Color(0xFF8A1C40)
+            )
+        }
         Text(
-            modifier = Modifier.padding(top = 4.dp, bottom = 4.dp),
+            modifier = Modifier.padding(top = 8.dp, bottom = 4.dp),
             text = title,
             style = MaterialTheme.typography.bodySmall.copy(
                 fontSize = 14.sp,
@@ -45,5 +59,5 @@ fun ServiceItem(title: String, image: Int) {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ServiceItem(title = "Flight", image = R.drawable.plane)
+    ServiceItem(title = "Flight", image = R.drawable.bus)
 }

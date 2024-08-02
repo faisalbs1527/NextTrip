@@ -34,8 +34,8 @@ import com.example.nexttrip.R
 fun PlanCard(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
-            .width(380.dp)
-            .height(260.dp)
+            .width(340.dp)
+            .height(200.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.dubai),
@@ -65,7 +65,7 @@ fun PlanCard(modifier: Modifier = Modifier) {
             Text(
                 text = "Dubai City",
                 color = Color.White,
-                fontSize = 28.sp,
+                fontSize = 24.sp,
                 fontWeight = FontWeight(700)
             )
             Row(
@@ -83,7 +83,7 @@ fun PlanCard(modifier: Modifier = Modifier) {
                 )
             }
             Row(
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -94,7 +94,7 @@ fun PlanCard(modifier: Modifier = Modifier) {
                 Text(
                     text = "$3100.00",
                     color = Color.White,
-                    fontSize = 28.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight(700)
                 )
             }

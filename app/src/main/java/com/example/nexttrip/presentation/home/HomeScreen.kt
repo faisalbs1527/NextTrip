@@ -132,7 +132,7 @@ fun HomeScreenSkeleton() {
                 )
             }
             LazyRow(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(5) {
@@ -146,7 +146,8 @@ fun HomeScreenSkeleton() {
                 fontWeight = FontWeight(500)
             )
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(itemsList) { item ->
