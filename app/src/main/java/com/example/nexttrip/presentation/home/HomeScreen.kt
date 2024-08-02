@@ -35,6 +35,7 @@ import com.example.nexttrip.R
 import com.example.nexttrip.presentation.components.ButtonCustom
 import com.example.nexttrip.presentation.components.PlanCard
 import com.example.nexttrip.presentation.components.ServiceItem
+import com.example.nexttrip.presentation.destinationList
 import com.example.nexttrip.presentation.itemsList
 import com.example.nexttrip.ui.theme.NextTripTheme
 
@@ -135,8 +136,8 @@ fun HomeScreenSkeleton() {
                 modifier = Modifier.padding(top = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(5) {
-                    PlanCard()
+                items(destinationList) {data->
+                    PlanCard(item = data)
                 }
             }
             Text(

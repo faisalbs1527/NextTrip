@@ -29,16 +29,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.DestinationData
 
 @Composable
-fun PlanCard(modifier: Modifier = Modifier) {
+fun PlanCard(
+    modifier: Modifier = Modifier,
+    item: DestinationData
+) {
     Box(
         modifier = modifier
             .width(340.dp)
             .height(200.dp)
     ) {
         Image(
-            painter = painterResource(id = R.drawable.dubai),
+            painter = painterResource(id = item.image),
             contentDescription = "Background Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
@@ -63,7 +67,7 @@ fun PlanCard(modifier: Modifier = Modifier) {
                 .padding(start = 12.dp, bottom = 12.dp), verticalArrangement = Arrangement.Bottom
         ) {
             Text(
-                text = "Dubai City",
+                text = item.location,
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight(700)
@@ -75,11 +79,11 @@ fun PlanCard(modifier: Modifier = Modifier) {
             ) {
                 TextWithIcon(
                     icon = painterResource(id = R.drawable.departure),
-                    text = "16 Aug,2024"
+                    text = item.date
                 )
                 TextWithIcon(
                     icon = painterResource(id = R.drawable.seat),
-                    text = "Business Class"
+                    text = item.type
                 )
             }
             Row(
@@ -92,7 +96,7 @@ fun PlanCard(modifier: Modifier = Modifier) {
                     color = Color.White,
                 )
                 Text(
-                    text = "$3100.00",
+                    text = item.from,
                     color = Color.White,
                     fontSize = 24.sp,
                     fontWeight = FontWeight(700)
@@ -105,7 +109,15 @@ fun PlanCard(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    PlanCard()
+    PlanCard(
+        item = DestinationData(
+            "Gangtok",
+            R.drawable.gantok,
+            "16 Aug,2024",
+            "Business Class",
+            "$1540.00"
+        )
+    )
 }
 
 @Composable
