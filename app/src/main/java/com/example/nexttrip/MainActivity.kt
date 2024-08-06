@@ -7,7 +7,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.navigation.SetUpNavGraph
 import com.example.nexttrip.ui.theme.NextTripTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
