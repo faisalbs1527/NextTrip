@@ -1,16 +1,9 @@
 package com.example.nexttrip.presentation
 
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.model.DestinationData
+import com.example.nexttrip.presentation.model.ServiceItemData
 
-data class ServiceItemData(val title: String, val image: Int)
-
-data class DestinationData(
-    val location: String,
-    val image: Int,
-    val date: String,
-    val type: String,
-    val from: String
-)
 
 val destinationList = listOf(
     DestinationData("Dubai City",R.drawable.dubai,"16 Aug,2024","Business Class","$3100.00"),
