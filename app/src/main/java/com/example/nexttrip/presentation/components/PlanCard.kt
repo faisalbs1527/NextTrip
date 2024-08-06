@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.DestinationData
 
@@ -40,7 +41,7 @@ fun PlanCard(
             .height(200.dp)
     ) {
         Image(
-            painter = painterResource(id = item.image),
+            painter = rememberAsyncImagePainter(item.image),
             contentDescription = "Background Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
@@ -110,7 +111,7 @@ private fun Show() {
     PlanCard(
         item = DestinationData(
             "Gangtok",
-            R.drawable.gantok,
+            "https://github.com/faisalbs1527/dummyData/blob/d230d36e7457dce677e060d49756c05ffa6d54e1/NextTrip/Pictures/dubai.jpg",
             "16 Aug,2024",
             "Business Class",
             "$1540.00"

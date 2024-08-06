@@ -91,4 +91,6 @@ dependencies {
     //for hiltviewmodel
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+    implementation ("io.coil-kt:coil-compose:2.4.0")
+
 }

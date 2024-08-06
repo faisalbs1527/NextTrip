@@ -17,15 +17,19 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.nexttrip.presentation.components.PlanCard
-import com.example.nexttrip.presentation.destinationList
+import com.example.nexttrip.presentation.home.HomeViewModel
 import com.example.nexttrip.ui.theme.NextTripTheme
 
 @Composable
@@ -35,6 +39,15 @@ fun PopularDestinationScreen(navController: NavController) {
 
 @Composable
 fun PopularDestinationSkeleton(navController: NavController) {
+
+    val viewModel: HomeViewModel = hiltViewModel()
+
+    val destinationList by viewModel.destinationList.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getDestinations()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier

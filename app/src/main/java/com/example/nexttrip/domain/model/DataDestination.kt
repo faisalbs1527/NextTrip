@@ -10,6 +10,10 @@ data class DataDestination(
     val amountFrom: String
 )
 
-//fun DataDestination.toDestinationData() = DestinationData(
-//
-//)
+fun DataDestination.toDestinationData() = DestinationData(
+    location = destination,
+    image = image,
+    date = date,
+    type = type,
+    from = amountFrom
+)
