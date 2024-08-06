@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.DestinationData
@@ -40,8 +41,8 @@ fun PlanCard(
             .width(340.dp)
             .height(200.dp)
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(item.image),
+        AsyncImage(
+            model = item.image,
             contentDescription = "Background Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
