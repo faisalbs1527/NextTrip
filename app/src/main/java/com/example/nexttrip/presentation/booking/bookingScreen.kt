@@ -18,8 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,18 +30,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.components.TicketType
 import com.example.nexttrip.ui.theme.NextTripTheme
 
 @Composable
-fun BookingScreen() {
-    BookingScreenSkeleton()
+fun BookingScreen(navController: NavController) {
+    BookingScreenSkeleton(navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreenSkeleton() {
+fun BookingScreenSkeleton(navController: NavController) {
 
     val selectedItem = remember {
         mutableIntStateOf(0)
@@ -112,9 +113,15 @@ fun BookingScreenSkeleton() {
                     color = Color.Black.copy(alpha = .6f)
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
-
+                            navController.navigate(
+                                Screen.SearchScreen.createRoute(
+                                    text = "From Where?",
+                                    selected = 1
+                                )
+                            )
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -162,7 +169,12 @@ fun BookingScreenSkeleton() {
                         .fillMaxWidth()
                         .padding(bottom = 12.dp)
                         .clickable {
-                                   
+                            navController.navigate(
+                                Screen.SearchScreen.createRoute(
+                                    text = "Where to?",
+                                    selected = 2
+                                )
+                            )
                         },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -200,6 +212,6 @@ fun BookingScreenSkeleton() {
 @Composable
 private fun ShowBooking() {
     NextTripTheme {
-        BookingScreenSkeleton()
+        BookingScreenSkeleton(rememberNavController())
     }
 }

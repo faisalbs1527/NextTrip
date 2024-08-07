@@ -29,14 +29,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.nexttrip.R
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.components.ButtonCustom
 import com.example.nexttrip.presentation.components.PlanCard
@@ -168,7 +166,9 @@ fun HomeScreenSkeleton(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(itemsList) { item ->
-                    ServiceItem(title = item.title, image = item.image)
+                    ServiceItem(title = item.title, image = item.image) {
+                        navController.navigate(Screen.BookingScreen.route)
+                    }
                 }
             }
         }

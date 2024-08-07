@@ -1,7 +1,7 @@
 package com.example.nexttrip.presentation.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +23,11 @@ import com.example.nexttrip.R
 
 
 @Composable
-fun ServiceItem(title: String, image: Int) {
+fun ServiceItem(
+    title: String,
+    image: Int,
+    onClick: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -36,6 +39,9 @@ fun ServiceItem(title: String, image: Int) {
                     color = Color(0xFF8A1C40).copy(alpha = 0.15f),
                     shape = RoundedCornerShape(16.dp)
                 )
+                .clickable {
+                    onClick()
+                }
         ) {
             Icon(
                 painter = painterResource(id = image), contentDescription = "",
@@ -59,5 +65,5 @@ fun ServiceItem(title: String, image: Int) {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ServiceItem(title = "Flight", image = R.drawable.bus)
+    ServiceItem(title = "Flight", image = R.drawable.bus,{})
 }

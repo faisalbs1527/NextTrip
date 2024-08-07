@@ -1,6 +1,6 @@
 package com.example.nexttrip.presentation.booking
 
-import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,12 +19,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,29 +39,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.red40
 
-data class Location(
-    val name: String,
-    val city: String,
-    val country: String
-)
-
-val sampleLocations = listOf(
-    Location("John F. Kennedy International Airport", "New York", "USA"),
-    Location("Los Angeles International Airport", "Los Angeles", "USA"),
-    Location("Dubai International Airport", "Dubai", "UAE"),
-    Location("Heathrow Airport", "London", "UK"),
-    Location("Sydney Kingsford Smith Airport", "Sydney", "Australia")
-)
-
-
 @Composable
 fun SearchScreen(
+    navController: NavController,
     title: String,
     focusTarget: Int,
 ) {
+
+    val viewModel: SearchViewModel = hiltViewModel()
+
+    val airportList by viewModel.airportList.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getAirports()
+    }
 
     val focusRequesterFrom = remember {
         FocusRequester()
@@ -82,13 +80,14 @@ fun SearchScreen(
     var fromQuery by remember { mutableStateOf("") }
     var toQuery by remember { mutableStateOf("") }
 
-    val filteredLocations = sampleLocations.filter { location ->
+    val filteredLocations = airportList.filter { location ->
         location.name.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true) ||
                 location.city.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true) ||
                 location.country.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true)
     }
 
-    Log.d("FilterDebug", "Filtered locations: $filteredLocations")
+    val maxDisplayedItems = 8
+    val locationsToShow = filteredLocations.take(maxDisplayedItems)
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -103,6 +102,9 @@ fun SearchScreen(
                 Icon(
                     imageVector = Icons.Default.ArrowBack, contentDescription = "",
                     modifier = Modifier.size(36.dp)
+                        .clickable {
+                            navController.popBackStack()
+                        }
                 )
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -141,7 +143,7 @@ fun SearchScreen(
                     focusRequester = focusRequesterTo
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                LocationList(locations = filteredLocations)
+                LocationList(locations = locationsToShow)
             }
         }
     }
@@ -175,7 +177,7 @@ fun SearchBar(
 }
 
 @Composable
-fun LocationList(locations: List<Location>) {
+fun LocationList(locations: List<AirportsData>) {
     LazyColumn {
         items(locations) { location ->
             LocationItem(location)
@@ -184,24 +186,27 @@ fun LocationList(locations: List<Location>) {
 }
 
 @Composable
-fun LocationItem(location: Location) {
+fun LocationItem(location: AirportsData) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Text(
-                text = "${location.city}, ${location.country}",
-                fontSize = 18.sp,
-                color = Color.Black,
-                fontWeight = FontWeight(500)
-            )
-            Text(text = location.name,
-                fontSize = 14.sp,
-                color = Color.Black.copy(alpha = 0.6f)
-            )
+        Row {
+            Column(modifier = Modifier.padding(8.dp)) {
+                Text(
+                    text = "${location.city}, ${location.country}",
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    fontWeight = FontWeight(500)
+                )
+                Text(
+                    text = location.name,
+                    fontSize = 14.sp,
+                    color = Color.Black.copy(alpha = 0.6f)
+                )
+            }
         }
     }
 }
@@ -211,6 +216,7 @@ fun LocationItem(location: Location) {
 private fun Show() {
     NextTripTheme {
         SearchScreen(
+            navController = rememberNavController(),
             title = "From Where?",
             focusTarget = 1
         )
