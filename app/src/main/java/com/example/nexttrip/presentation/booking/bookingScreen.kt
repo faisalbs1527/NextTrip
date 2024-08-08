@@ -42,6 +42,8 @@ import com.example.nexttrip.presentation.components.TicketType
 import com.example.nexttrip.presentation.from
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.to
+import com.example.nexttrip.ui.theme.Font_Lato
+import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.google.gson.Gson
 
@@ -111,6 +113,7 @@ fun BookingScreenSkeleton(navController: NavController) {
             Text(
                 text = "Book Your Flights",
                 fontSize = 26.sp,
+                fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(500),
                 modifier = Modifier.padding(top = 30.dp)
             )
@@ -137,11 +140,12 @@ fun BookingScreenSkeleton(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 8.dp)
-                    .background(color = Color.White)
+                    .background(color = Color.White, shape = RoundedCornerShape(4.dp))
             ) {
                 Text(
                     text = "Departure City",
                     fontSize = 16.sp,
+                    fontFamily = Font_Lato,
                     fontWeight = FontWeight(400),
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                     color = Color.Black.copy(alpha = .6f)
@@ -175,12 +179,14 @@ fun BookingScreenSkeleton(navController: NavController) {
                     ) {
                         Text(
                             text = fromData.value.city,
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
+                            fontFamily = Font_LatoBold,
                             fontWeight = FontWeight(400)
                         )
                         Text(
                             text = fromData.value.name,
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
+                            fontFamily = Font_Lato,
                             fontWeight = FontWeight(400),
                             color = Color.Black.copy(alpha = .6f)
                         )
@@ -196,8 +202,9 @@ fun BookingScreenSkeleton(navController: NavController) {
                 Text(
                     text = "Arrival City",
                     fontSize = 16.sp,
+                    fontFamily = Font_Lato,
                     fontWeight = FontWeight(400),
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                    modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                     color = Color.Black.copy(alpha = .6f)
                 )
                 Row(
@@ -230,12 +237,14 @@ fun BookingScreenSkeleton(navController: NavController) {
                     ) {
                         Text(
                             text = toData.value.city,
-                            fontSize = 24.sp,
+                            fontSize = 20.sp,
+                            fontFamily = Font_LatoBold,
                             fontWeight = FontWeight(400)
                         )
                         Text(
                             text = toData.value.name,
-                            fontSize = 14.sp,
+                            fontSize = 12.sp,
+                            fontFamily = Font_Lato,
                             fontWeight = FontWeight(400),
                             color = Color.Black.copy(alpha = .6f)
                         )
