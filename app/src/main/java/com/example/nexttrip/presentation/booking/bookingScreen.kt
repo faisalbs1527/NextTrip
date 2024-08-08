@@ -16,11 +16,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,23 +34,54 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.components.TicketType
+import com.example.nexttrip.presentation.from
+import com.example.nexttrip.presentation.model.AirportsData
+import com.example.nexttrip.presentation.to
 import com.example.nexttrip.ui.theme.NextTripTheme
+import com.google.gson.Gson
 
 @Composable
 fun BookingScreen(navController: NavController) {
     BookingScreenSkeleton(navController)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun BookingScreenSkeleton(navController: NavController) {
 
     val selectedItem = remember {
         mutableIntStateOf(0)
+    }
+
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val savedStateHandle = backStackEntry?.savedStateHandle
+
+    val fromJsonSate = savedStateHandle?.getStateFlow("fromData", initialValue = "")
+        ?.collectAsState()
+    val toJsonState =
+        savedStateHandle?.getStateFlow("toData", initialValue = "")?.collectAsState()
+    var fromData =
+        remember { mutableStateOf(from) }
+    var toData =
+        remember { mutableStateOf(to) }
+
+    LaunchedEffect(fromJsonSate?.value, toJsonState?.value) {
+
+        val fromJson = fromJsonSate?.value.orEmpty()
+        val toJson = toJsonState?.value.orEmpty()
+
+        fromData.value = if (fromJson.isNotEmpty()) Gson().fromJson(
+            fromJson,
+            AirportsData::class.java
+        ) else from
+
+        toData.value =
+            if (toJson.isNotEmpty()) Gson().fromJson(toJson, AirportsData::class.java) else to
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -119,7 +153,9 @@ fun BookingScreenSkeleton(navController: NavController) {
                             navController.navigate(
                                 Screen.SearchScreen.createRoute(
                                     text = "From Where?",
-                                    selected = 1
+                                    selected = 1,
+                                    from = fromData.value,
+                                    to = toData.value
                                 )
                             )
                         },
@@ -138,12 +174,12 @@ fun BookingScreenSkeleton(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = "Dhaka",
+                            text = fromData.value.city,
                             fontSize = 24.sp,
                             fontWeight = FontWeight(400)
                         )
                         Text(
-                            text = "Hazzrat Shahjalal Int. Airport",
+                            text = fromData.value.name,
                             fontSize = 14.sp,
                             fontWeight = FontWeight(400),
                             color = Color.Black.copy(alpha = .6f)
@@ -172,7 +208,9 @@ fun BookingScreenSkeleton(navController: NavController) {
                             navController.navigate(
                                 Screen.SearchScreen.createRoute(
                                     text = "Where to?",
-                                    selected = 2
+                                    selected = 2,
+                                    from = fromData.value,
+                                    to = toData.value
                                 )
                             )
                         },
@@ -191,12 +229,12 @@ fun BookingScreenSkeleton(navController: NavController) {
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = "Cox's Bazar",
+                            text = toData.value.city,
                             fontSize = 24.sp,
                             fontWeight = FontWeight(400)
                         )
                         Text(
-                            text = "Cox's Bazar Airport",
+                            text = toData.value.name,
                             fontSize = 14.sp,
                             fontWeight = FontWeight(400),
                             color = Color.Black.copy(alpha = .6f)

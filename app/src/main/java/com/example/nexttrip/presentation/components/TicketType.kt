@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.red40
-import kotlin.math.truncate
 
 @Composable
 fun TicketType(

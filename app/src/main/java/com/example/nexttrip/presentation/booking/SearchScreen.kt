@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.booking
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,9 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -41,16 +39,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.presentation.model.AirportsData
+import com.example.nexttrip.ui.theme.Font_Lato
+import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.red40
+import com.google.gson.Gson
 
 @Composable
 fun SearchScreen(
     navController: NavController,
     title: String,
     focusTarget: Int,
+    from: AirportsData,
+    to: AirportsData
 ) {
 
     val viewModel: SearchViewModel = hiltViewModel()
@@ -74,6 +76,9 @@ fun SearchScreen(
             2 -> focusRequesterTo.requestFocus()
         }
     }
+
+    var fromData by remember { mutableStateOf(from) }
+    var toData by remember { mutableStateOf(to) }
     var titleText by remember { mutableStateOf(title) }
     var fromFocus by remember { mutableStateOf(false) }
     var toFocus by remember { mutableStateOf(false) }
@@ -81,9 +86,18 @@ fun SearchScreen(
     var toQuery by remember { mutableStateOf("") }
 
     val filteredLocations = airportList.filter { location ->
-        location.name.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true) ||
-                location.city.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true) ||
-                location.country.contains(if (fromFocus) fromQuery else toQuery, ignoreCase = true)
+        location.name.contains(
+            if (fromFocus) fromQuery else if (toFocus) toQuery else "bangla",
+            ignoreCase = true
+        ) ||
+                location.city.contains(
+                    if (fromFocus) fromQuery else if (toFocus) toQuery else "bangla",
+                    ignoreCase = true
+                ) ||
+                location.country.contains(
+                    if (fromFocus) fromQuery else if (toFocus) toQuery else "bangla",
+                    ignoreCase = true
+                )
     }
 
     val maxDisplayedItems = 8
@@ -93,15 +107,18 @@ fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 30.dp, horizontal = 20.dp)
+                .padding(vertical = 30.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack, contentDescription = "",
-                    modifier = Modifier.size(36.dp)
+                    modifier = Modifier
+                        .size(36.dp)
                         .clickable {
                             navController.popBackStack()
                         }
@@ -113,17 +130,24 @@ fun SearchScreen(
                     Text(
                         text = titleText,
                         fontSize = 24.sp,
+                        fontFamily = Font_LatoBold,
                         color = Color(0xFF8A1C40),
                         modifier = Modifier.padding(end = 12.dp)
                     )
                 }
             }
 
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 16.dp)
+                    .background(color = Color.White)
+                    .padding(vertical = 8.dp, horizontal = 20.dp)
+            ) {
                 SearchBar(
                     query = fromQuery,
                     onQueryChange = { fromQuery = it },
                     label = "From",
+                    location = fromData,
                     isFocused = fromFocus,
                     onFocusChange = {
                         fromFocus = it
@@ -131,10 +155,12 @@ fun SearchScreen(
                     },
                     focusRequester = focusRequesterFrom
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 SearchBar(
                     query = toQuery,
                     onQueryChange = { toQuery = it },
                     label = "To",
+                    location = toData,
                     isFocused = toFocus,
                     onFocusChange = {
                         toFocus = it
@@ -143,18 +169,35 @@ fun SearchScreen(
                     focusRequester = focusRequesterTo
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                LocationList(locations = locationsToShow)
+                LocationList(locations = locationsToShow) { airportData ->
+                    if (fromFocus) {
+                        fromData = airportData
+                        val fromJson = Gson().toJson(fromData)
+                        navController.previousBackStackEntry?.savedStateHandle?.set(
+                            "fromData",
+                            fromJson
+                        )
+                    } else {
+                        toData = airportData
+                        val toJson = Gson().toJson(toData)
+                        navController.previousBackStackEntry?.savedStateHandle?.set(
+                            "toData",
+                            toJson
+                        )
+                    }
+                    navController.popBackStack()
+                }
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     label: String,
+    location: AirportsData,
     isFocused: Boolean,
     onFocusChange: (Boolean) -> Unit,
     focusRequester: FocusRequester
@@ -162,11 +205,37 @@ fun SearchBar(
     OutlinedTextField(
         value = query,
         onValueChange = onQueryChange,
-        label = { Text(label) },
+        label = {
+            Column{
+                Text(
+                    text = label,
+                    fontFamily = Font_Lato
+                )
+                if (!isFocused) {
+                    Text(
+                        text = "${location.city}, ${location.code}",
+                        fontSize = 16.sp,
+                        fontFamily = Font_LatoBold,
+                        color = Color.Black,
+                        fontWeight = FontWeight(700),
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+            }
+        },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = if (isFocused) red40 else Color.Black.copy(0.6f),
             unfocusedBorderColor = Color.Black.copy(0.6f)
         ),
+//        placeholder = {
+//            Text(
+//                text = "${location.city}, ${location.code}",
+//                fontSize = 16.sp,
+//                fontFamily = Font_LatoBold,
+//                color = Color.Black,
+//                fontWeight = FontWeight(700)
+//            )
+//        },
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester)
@@ -177,48 +246,83 @@ fun SearchBar(
 }
 
 @Composable
-fun LocationList(locations: List<AirportsData>) {
-    LazyColumn {
+fun LocationList(
+    locations: List<AirportsData>,
+    onLocationClick: (AirportsData) -> Unit
+) {
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(locations) { location ->
-            LocationItem(location)
+            LocationItem(location, onLocationClick = onLocationClick)
         }
     }
 }
 
 @Composable
-fun LocationItem(location: AirportsData) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+fun LocationItem(
+    location: AirportsData,
+    onLocationClick: (AirportsData) -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Row {
-            Column(modifier = Modifier.padding(8.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    onLocationClick(location)
+                },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(modifier = Modifier.padding(vertical = 8.dp)) {
                 Text(
                     text = "${location.city}, ${location.country}",
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
+                    fontFamily = Font_LatoBold,
                     color = Color.Black,
                     fontWeight = FontWeight(500)
                 )
                 Text(
                     text = location.name,
-                    fontSize = 14.sp,
-                    color = Color.Black.copy(alpha = 0.6f)
+                    fontSize = 12.sp,
+                    fontFamily = Font_Lato,
+                    color = Color.Black.copy(alpha = 0.6f),
+                    fontWeight = FontWeight(300)
                 )
             }
+            Text(
+                text = location.code,
+                fontSize = 18.sp,
+                color = Color.Black,
+                fontFamily = Font_LatoBold,
+                fontWeight = FontWeight(500)
+            )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 4.dp)
+                .height(1.dp)
+                .background(color = Color.Gray.copy(alpha = 0.5f))
+        )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
     NextTripTheme {
-        SearchScreen(
-            navController = rememberNavController(),
-            title = "From Where?",
-            focusTarget = 1
+        LocationItem(
+            location = AirportsData(
+                name = "Hazzarat Shahjalal Int. Airport",
+                city = "Dhaka",
+                code = "DAC",
+                country = "BD"
+            ),
+            {}
         )
     }
 }

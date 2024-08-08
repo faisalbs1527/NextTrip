@@ -1,6 +1,7 @@
 package com.example.nexttrip.presentation
 
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.DestinationData
 import com.example.nexttrip.presentation.model.ServiceItemData
 
@@ -19,4 +20,17 @@ val itemsList = listOf(
     ServiceItemData("Travel", R.drawable.travel),
     ServiceItemData("Bus", R.drawable.bus),
     ServiceItemData("Car", R.drawable.car)
+)
+
+val from = AirportsData(
+    name = "Hazzarat Shahjalal Int. Airport",
+    city = "Dhaka",
+    country = "Bangladesh",
+    code = "DAC"
+)
+val to = AirportsData(
+    name = "Cox's Bazar Airport",
+    city = "Cox's Bazar",
+    country = "Bangladesh",
+    code = "CXB"
 )

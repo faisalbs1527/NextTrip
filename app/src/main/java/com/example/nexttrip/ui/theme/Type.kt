@@ -2,9 +2,11 @@ package com.example.nexttrip.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.nexttrip.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -31,4 +33,17 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+)
+
+val Font_Lato = FontFamily(
+    Font(R.font.lato_regular)
+)
+val Font_LatoBold = FontFamily(
+    Font(R.font.lato_bold)
+)
+val Font_Latothin = FontFamily(
+    Font(R.font.lato_thin)
+)
+val Font_Latolight = FontFamily(
+    Font(R.font.lato_light)
 )
