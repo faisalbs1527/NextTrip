@@ -227,15 +227,6 @@ fun SearchBar(
             focusedBorderColor = if (isFocused) red40 else Color.Black.copy(0.6f),
             unfocusedBorderColor = Color.Black.copy(0.6f)
         ),
-//        placeholder = {
-//            Text(
-//                text = "${location.city}, ${location.code}",
-//                fontSize = 16.sp,
-//                fontFamily = Font_LatoBold,
-//                color = Color.Black,
-//                fontWeight = FontWeight(700)
-//            )
-//        },
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester)

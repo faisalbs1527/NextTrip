@@ -6,16 +6,21 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AirlineSeatReclineNormal
+import androidx.compose.material.icons.filled.ContentPasteGo
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +45,9 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.navigation.Screen
+import com.example.nexttrip.presentation.components.ButtonCustom
+import com.example.nexttrip.presentation.components.ButtonRound
+import com.example.nexttrip.presentation.components.PickerBox
 import com.example.nexttrip.presentation.components.TicketType
 import com.example.nexttrip.presentation.from
 import com.example.nexttrip.presentation.model.AirportsData
@@ -144,8 +154,8 @@ fun BookingScreenSkeleton(navController: NavController) {
             ) {
                 Text(
                     text = "Departure City",
-                    fontSize = 16.sp,
-                    fontFamily = Font_Lato,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight(400),
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
                     color = Color.Black.copy(alpha = .6f)
@@ -197,12 +207,12 @@ fun BookingScreenSkeleton(navController: NavController) {
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp, vertical = 16.dp)
                         .height(1.dp)
-                        .background(color = Color.Black.copy(alpha = .5f))
+                        .background(color = Color.Black.copy(alpha = .2f))
                 )
                 Text(
                     text = "Arrival City",
-                    fontSize = 16.sp,
-                    fontFamily = Font_Lato,
+                    fontSize = 14.sp,
+                    fontFamily = FontFamily.SansSerif,
                     fontWeight = FontWeight(400),
                     modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 8.dp),
                     color = Color.Black.copy(alpha = .6f)
@@ -249,6 +259,84 @@ fun BookingScreenSkeleton(navController: NavController) {
                             color = Color.Black.copy(alpha = .6f)
                         )
                     }
+                }
+            }
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                        .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        PickerBox(
+                            modifier = Modifier.weight(1f),
+                            title = "Departure Date",
+                            contentText = "8 Aug,2024",
+                            icon = Icons.Default.ContentPasteGo
+                        ) {
+
+                        }
+                        PickerBox(
+                            modifier = Modifier.weight(1f),
+                            modifierIcon = Modifier.graphicsLayer(scaleX = -1f),
+                            title = "Return Date",
+                            contentText = "9 Aug,2024",
+                            icon = Icons.Default.ContentPasteGo
+                        ) {
+
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 16.dp)
+                            .height(1.dp)
+                            .background(color = Color.Black.copy(alpha = .2f))
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 84.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        PickerBox(
+                            modifier = Modifier.weight(1f),
+                            modifierIcon = Modifier.padding(end = 4.dp),
+                            title = "Travelers",
+                            contentText = "02",
+                            icon = Icons.Default.People
+                        ) {
+
+                        }
+                        PickerBox(
+                            modifier = Modifier.weight(1f),
+                            title = "Class",
+                            contentText = "Business",
+                            icon = Icons.Default.AirlineSeatReclineNormal
+                        ) {
+
+                        }
+                    }
+                }
+                ButtonRound(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .offset(y = 45.dp)
+                ) {
+
                 }
             }
         }
