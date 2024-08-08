@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,7 +45,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.components.ButtonCustom
+import com.example.nexttrip.presentation.components.AddReturn
 import com.example.nexttrip.presentation.components.ButtonRound
 import com.example.nexttrip.presentation.components.PickerBox
 import com.example.nexttrip.presentation.components.TicketType
@@ -66,7 +66,7 @@ fun BookingScreen(navController: NavController) {
 @Composable
 fun BookingScreenSkeleton(navController: NavController) {
 
-    val selectedItem = remember {
+    var selectedItem by remember {
         mutableIntStateOf(0)
     }
 
@@ -135,14 +135,14 @@ fun BookingScreenSkeleton(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketType(text = "One Way", selected = selectedItem.intValue == 0) {
-                    selectedItem.intValue = 0
+                TicketType(text = "One Way", selected = selectedItem == 0) {
+                    selectedItem = 0
                 }
-                TicketType(text = "Round Way", selected = selectedItem.intValue == 1) {
-                    selectedItem.intValue = 1
+                TicketType(text = "Round Way", selected = selectedItem == 1) {
+                    selectedItem = 1
                 }
-                TicketType(text = "Multi City", selected = selectedItem.intValue == 2) {
-                    selectedItem.intValue = 2
+                TicketType(text = "Multi City", selected = selectedItem == 2) {
+                    selectedItem = 2
                 }
             }
 
@@ -286,14 +286,22 @@ fun BookingScreenSkeleton(navController: NavController) {
                         ) {
 
                         }
-                        PickerBox(
-                            modifier = Modifier.weight(1f),
-                            modifierIcon = Modifier.graphicsLayer(scaleX = -1f),
-                            title = "Return Date",
-                            contentText = "9 Aug,2024",
-                            icon = Icons.Default.ContentPasteGo
-                        ) {
+                        if (selectedItem == 0) {
+                            AddReturn(
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                selectedItem = 1
+                            }
+                        } else {
+                            PickerBox(
+                                modifier = Modifier.weight(1f),
+                                modifierIcon = Modifier.graphicsLayer(scaleX = -1f),
+                                title = "Return Date",
+                                contentText = "9 Aug,2024",
+                                icon = Icons.Default.ContentPasteGo
+                            ) {
 
+                            }
                         }
                     }
 
