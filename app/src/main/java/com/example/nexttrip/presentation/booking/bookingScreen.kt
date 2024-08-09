@@ -47,8 +47,11 @@ import com.example.nexttrip.R
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.components.AddReturn
 import com.example.nexttrip.presentation.components.ButtonRound
+import com.example.nexttrip.presentation.components.DatePickerModel
 import com.example.nexttrip.presentation.components.PickerBox
 import com.example.nexttrip.presentation.components.TicketType
+import com.example.nexttrip.presentation.components.formatDate
+import com.example.nexttrip.presentation.components.getNextDate
 import com.example.nexttrip.presentation.from
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.to
@@ -69,6 +72,29 @@ fun BookingScreenSkeleton(navController: NavController) {
     var selectedItem by remember {
         mutableIntStateOf(0)
     }
+
+    //Date Picker
+
+    val currentDateMillis = System.currentTimeMillis()
+    val currentDate = formatDate(currentDateMillis)
+    val nextDate = getNextDate(currentDateMillis)
+
+    var departureDate by remember {
+        mutableStateOf(currentDate)
+    }
+    var returnDate by remember {
+        mutableStateOf(nextDate)
+    }
+
+    var showDatePicker by remember {
+        mutableStateOf(false)
+    }
+
+    var selectedDatePicker by remember {
+        mutableStateOf(0)
+    }
+
+    //get the "from/to" data from search result
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val savedStateHandle = backStackEntry?.savedStateHandle
@@ -262,7 +288,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                 }
             }
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxSize()
             ) {
                 Column(
                     modifier = Modifier
@@ -281,14 +307,17 @@ fun BookingScreenSkeleton(navController: NavController) {
                         PickerBox(
                             modifier = Modifier.weight(1f),
                             title = "Departure Date",
-                            contentText = "8 Aug,2024",
+                            contentText = departureDate,
                             icon = Icons.Default.ContentPasteGo
                         ) {
-
+                            showDatePicker = true
+                            selectedDatePicker = 1
                         }
                         if (selectedItem == 0) {
                             AddReturn(
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 8.dp)
                             ) {
                                 selectedItem = 1
                             }
@@ -297,10 +326,11 @@ fun BookingScreenSkeleton(navController: NavController) {
                                 modifier = Modifier.weight(1f),
                                 modifierIcon = Modifier.graphicsLayer(scaleX = -1f),
                                 title = "Return Date",
-                                contentText = "9 Aug,2024",
+                                contentText = returnDate,
                                 icon = Icons.Default.ContentPasteGo
                             ) {
-
+                                showDatePicker = true
+                                selectedDatePicker = 2
                             }
                         }
                     }
@@ -342,12 +372,31 @@ fun BookingScreenSkeleton(navController: NavController) {
                 ButtonRound(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .offset(y = 45.dp)
+//                        .offset(y = 45.dp)
+                        .padding(top = 235.dp, bottom = 16.dp)
                 ) {
 
                 }
             }
         }
+    }
+    if (showDatePicker) {
+        DatePickerModel(
+            onDateSelected = { selectedDate ->
+                if (selectedDate != null) {
+                    if (selectedDatePicker == 1) {
+                        departureDate = formatDate(selectedDate)
+                        returnDate = getNextDate(selectedDate)
+                    } else {
+                        returnDate = formatDate(selectedDate)
+                    }
+                }
+                showDatePicker = false
+            },
+            onDismiss = {
+                showDatePicker = false
+            }
+        )
     }
 }
 

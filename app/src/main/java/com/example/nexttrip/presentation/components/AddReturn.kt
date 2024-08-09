@@ -43,7 +43,8 @@ fun AddReturn(
             fontFamily = Font_Lato,
             fontWeight = FontWeight(400),
             modifier = Modifier.padding(top = 2.dp),
-            color = Color.Black.copy(alpha = 0.6f)
+            color = Color.Black.copy(alpha = 0.6f),
+            lineHeight = 14.sp
         )
     }
 }
