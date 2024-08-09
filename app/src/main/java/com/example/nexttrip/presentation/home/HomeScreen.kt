@@ -35,10 +35,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.PlanCard
 import com.example.nexttrip.components.ServiceItem
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.itemsList
 import com.example.nexttrip.ui.theme.NextTripTheme
 
@@ -124,8 +124,11 @@ fun HomeScreenSkeleton(navController: NavController) {
 
             }
             ButtonCustom(
-                modifier = Modifier.padding(top = 20.dp)
-            )
+                modifier = Modifier.padding(top = 20.dp),
+                text = "Search Flight Now"
+            ){
+
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

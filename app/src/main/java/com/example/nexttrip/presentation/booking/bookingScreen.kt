@@ -43,8 +43,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
-import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.components.AddReturn
+import com.example.nexttrip.components.BottomSheetModel
 import com.example.nexttrip.components.ButtonRound
 import com.example.nexttrip.components.DatePickerModel
 import com.example.nexttrip.components.PickerBox
@@ -52,6 +52,7 @@ import com.example.nexttrip.components.TicketType
 import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.components.formattedDateToMillis
 import com.example.nexttrip.components.getNextDate
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.from
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.to
@@ -93,6 +94,15 @@ fun BookingScreenSkeleton(navController: NavController) {
     var selectedDatePicker by remember {
         mutableStateOf(0)
     }
+
+    //travelers and class selection
+
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var totalTraveler by remember { mutableStateOf(1) }
+    var adult by remember { mutableStateOf(1) }
+    var children by remember { mutableStateOf(0) }
+    var infant by remember { mutableStateOf(0) }
+    var selectedClass by remember { mutableStateOf(1) }
 
     //get the "from/to" data from search result
 
@@ -357,7 +367,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                             contentText = "02",
                             icon = Icons.Default.People
                         ) {
-
+                            showBottomSheet = true
                         }
                         PickerBox(
                             modifier = Modifier.weight(1f),
@@ -365,7 +375,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                             contentText = "Business",
                             icon = Icons.Default.AirlineSeatReclineNormal
                         ) {
-
+                            showBottomSheet = true
                         }
                     }
                 }
@@ -400,6 +410,18 @@ fun BookingScreenSkeleton(navController: NavController) {
             onDismiss = {
                 showDatePicker = false
             }
+        )
+    }
+
+    if (showBottomSheet) {
+        BottomSheetModel(
+            onDismiss = {
+                showBottomSheet = false
+            },
+            onSelectClass = {},
+            onUpdateAdultCount = {},
+            onUpdateChildCount = {},
+            onUpdateAInfantCount = {}
         )
     }
 }
