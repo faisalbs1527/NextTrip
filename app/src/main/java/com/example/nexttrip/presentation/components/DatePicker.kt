@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
@@ -22,10 +23,20 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerModel(
+    initialDate: Long,
+    fromDate:Long,
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialDate,
+        selectableDates =
+        object : SelectableDates {
+            override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                return utcTimeMillis >= fromDate
+            }
+        }
+    )
 
     DatePickerDialog(
         modifier = Modifier.padding(12.dp),
@@ -62,6 +73,8 @@ private fun Show() {
     NextTripTheme {
 
         DatePickerModel(
+            initialDate = System.currentTimeMillis(),
+            fromDate = System.currentTimeMillis(),
             onDateSelected = {
 
             },
@@ -87,5 +100,11 @@ fun getNextDate(currentDate: Long): String {
     val nextDate = calendar.time
     val dateFormat = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
     return dateFormat.format(nextDate)
+}
+
+fun formattedDateToMillis(formattedDate: String):Long{
+    val dateFormat = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
+    val date = dateFormat.parse(formattedDate)
+    return date.time
 }
 

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -51,6 +50,7 @@ import com.example.nexttrip.presentation.components.DatePickerModel
 import com.example.nexttrip.presentation.components.PickerBox
 import com.example.nexttrip.presentation.components.TicketType
 import com.example.nexttrip.presentation.components.formatDate
+import com.example.nexttrip.presentation.components.formattedDateToMillis
 import com.example.nexttrip.presentation.components.getNextDate
 import com.example.nexttrip.presentation.from
 import com.example.nexttrip.presentation.model.AirportsData
@@ -382,6 +382,10 @@ fun BookingScreenSkeleton(navController: NavController) {
     }
     if (showDatePicker) {
         DatePickerModel(
+            initialDate = currentDateMillis,
+            fromDate = if (selectedDatePicker == 1) currentDateMillis else formattedDateToMillis(
+                departureDate
+            ),
             onDateSelected = { selectedDate ->
                 if (selectedDate != null) {
                     if (selectedDatePicker == 1) {
