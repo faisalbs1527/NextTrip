@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.nexttrip.presentation.components.PlanCard
+import com.example.nexttrip.components.PlanCard
 import com.example.nexttrip.presentation.home.HomeViewModel
 import com.example.nexttrip.ui.theme.NextTripTheme
 

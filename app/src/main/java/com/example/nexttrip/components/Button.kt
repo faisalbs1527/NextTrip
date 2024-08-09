@@ -1,4 +1,4 @@
-package com.example.nexttrip.presentation.components
+package com.example.nexttrip.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
