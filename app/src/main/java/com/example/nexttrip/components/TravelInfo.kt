@@ -22,17 +22,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
-import com.example.nexttrip.ui.theme.Font_Lato
 import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.red40
 
-
 @Composable
-fun ScheduleContent(
-    startTime: String,
-    endTime: String,
+private fun TravelInfo(
+    startCode: String,
+    endCode: String,
     startLoc: String,
-    endLoc: String
+    endLoc: String,
+    date: String,
+    totalTravelers: String,
+    adults: String,
+    childs: String,
+    infants: String,
+    type: String
 ) {
     Row(
         modifier = Modifier
@@ -47,7 +51,7 @@ fun ScheduleContent(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = startTime,
+                text = startCode,
                 fontSize = 20.sp,
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
@@ -60,6 +64,20 @@ fun ScheduleContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TicketText(text = date, size = 12)
+                Box(
+                    modifier = Modifier
+                        .height(8.dp)
+                        .width(1.dp)
+                        .background(color = Color.Black.copy(alpha = .4f))
+                )
+                TicketText(text = type, size = 12)
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,19 +102,27 @@ fun ScheduleContent(
                 )
                 ForwardArrow(modifier = Modifier.weight(.4f))
             }
+            TicketText(text = "$totalTravelers travellers", size = 12)
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "3h", size = 10)
+                TicketText(text = "$adults Adults", size = 10)
                 Box(
                     modifier = Modifier
                         .height(6.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = "Non-Stops", size = 10)
+                TicketText(text = "$childs Childrens", size = 10)
+                Box(
+                    modifier = Modifier
+                        .height(6.dp)
+                        .width(1.dp)
+                        .background(color = Color.Black.copy(alpha = .4f))
+                )
+                TicketText(text = "$infants Infants", size = 10)
             }
 
         }
@@ -107,7 +133,7 @@ fun ScheduleContent(
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = endTime,
+                text = endCode,
                 fontSize = 20.sp,
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
@@ -121,10 +147,16 @@ fun ScheduleContent(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ScheduleContent(
-        startTime = "12:25",
-        endTime = "13:10",
-        startLoc = "DHA",
-        endLoc = "CXB"
+    TravelInfo(
+        startCode = "DHA",
+        endCode = "CXB",
+        startLoc = "Dhaka",
+        endLoc = "Cox's Bazar",
+        date = "Sun,24 Aug",
+        totalTravelers = "4",
+        adults = "2",
+        childs = "1",
+        infants = "1",
+        type = "Business"
     )
 }
