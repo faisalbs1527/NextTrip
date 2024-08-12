@@ -52,7 +52,7 @@ fun ScheduleContent(
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = startLoc, size = 12)
+            TicketText(text = startLoc, size = 14)
         }
 
         Column(
@@ -89,14 +89,14 @@ fun ScheduleContent(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "3h", size = 10)
+                TicketText(text = "3h", size = 12)
                 Box(
                     modifier = Modifier
-                        .height(6.dp)
+                        .height(8.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = "Non-Stops", size = 10)
+                TicketText(text = "Non-Stops", size = 12)
             }
 
         }
@@ -112,7 +112,7 @@ fun ScheduleContent(
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = endLoc, size = 12)
+            TicketText(text = endLoc, size = 14)
         }
 
     }

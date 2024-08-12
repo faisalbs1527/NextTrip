@@ -26,17 +26,19 @@ import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.red40
 
 @Composable
-private fun TravelInfo(
+fun TravelInfo(
     startCode: String,
     endCode: String,
     startLoc: String,
     endLoc: String,
-    date: String,
+    startDate: String,
+    endDate: String,
     totalTravelers: String,
     adults: String,
     childs: String,
     infants: String,
-    type: String
+    type: String,
+    roundway: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -66,17 +68,14 @@ private fun TravelInfo(
         ) {
 
             Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = date, size = 12)
-                Box(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .width(1.dp)
-                        .background(color = Color.Black.copy(alpha = .4f))
-                )
-                TicketText(text = type, size = 12)
+                TicketText(text = startDate, size = 12)
+                if (roundway) {
+                    TicketText(text = "to", size = 12)
+                    TicketText(text = endDate, size = 12)
+                }
             }
             Row(
                 modifier = Modifier
@@ -102,27 +101,19 @@ private fun TravelInfo(
                 )
                 ForwardArrow(modifier = Modifier.weight(.4f))
             }
-            TicketText(text = "$totalTravelers travellers", size = 12)
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "$adults Adults", size = 10)
+                TicketText(text = "$totalTravelers travellers", size = 14)
                 Box(
                     modifier = Modifier
-                        .height(6.dp)
+                        .height(10.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = "$childs Childrens", size = 10)
-                Box(
-                    modifier = Modifier
-                        .height(6.dp)
-                        .width(1.dp)
-                        .background(color = Color.Black.copy(alpha = .4f))
-                )
-                TicketText(text = "$infants Infants", size = 10)
+                TicketText(text = type, size = 14)
             }
 
         }
@@ -152,11 +143,13 @@ private fun Show() {
         endCode = "CXB",
         startLoc = "Dhaka",
         endLoc = "Cox's Bazar",
-        date = "Sun,24 Aug",
+        startDate = "Sun,24 Aug",
+        endDate = "Mon,25 Aug",
         totalTravelers = "4",
         adults = "2",
         childs = "1",
         infants = "1",
-        type = "Business"
+        type = "Business",
+        roundway = true
     )
 }

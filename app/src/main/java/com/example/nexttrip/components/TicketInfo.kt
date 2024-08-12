@@ -39,7 +39,7 @@ fun TicketInfo() {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TicketText(text = "Airbus A350-1000", size = 12)
+            TicketText(text = "Airbus A350-1000", size = 14)
             Text(
                 text = "$2260.00",
                 fontSize = 20.sp,
