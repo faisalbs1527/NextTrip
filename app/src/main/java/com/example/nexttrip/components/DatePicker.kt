@@ -24,7 +24,7 @@ import java.util.Locale
 @Composable
 fun DatePickerModel(
     initialDate: Long,
-    fromDate:Long,
+    fromDate: Long,
     onDateSelected: (Long?) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -39,7 +39,7 @@ fun DatePickerModel(
     )
 
     DatePickerDialog(
-        modifier = Modifier.padding(12.dp),
+        modifier = Modifier.padding(20.dp),
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = {
@@ -102,7 +102,7 @@ fun getNextDate(currentDate: Long): String {
     return dateFormat.format(nextDate)
 }
 
-fun formattedDateToMillis(formattedDate: String):Long{
+fun formattedDateToMillis(formattedDate: String): Long {
     val dateFormat = SimpleDateFormat("dd MMM, yyyy", Locale.getDefault())
     val date = dateFormat.parse(formattedDate)
     return date.time

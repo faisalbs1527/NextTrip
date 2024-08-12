@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.booking
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -67,6 +68,7 @@ fun BookingScreen(navController: NavController) {
 }
 
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun BookingScreenSkeleton(navController: NavController) {
 
@@ -102,7 +104,7 @@ fun BookingScreenSkeleton(navController: NavController) {
     var adult by remember { mutableStateOf(1) }
     var children by remember { mutableStateOf(0) }
     var infant by remember { mutableStateOf(0) }
-    var selectedClass by remember { mutableStateOf(1) }
+    var selectedClass by remember { mutableStateOf(2) }
 
     //get the "from/to" data from search result
 
@@ -364,7 +366,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                             modifier = Modifier.weight(1f),
                             modifierIcon = Modifier.padding(end = 4.dp),
                             title = "Travelers",
-                            contentText = "02",
+                            contentText = String.format("%02d", totalTraveler),
                             icon = Icons.Default.People
                         ) {
                             showBottomSheet = true
@@ -372,7 +374,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                         PickerBox(
                             modifier = Modifier.weight(1f),
                             title = "Class",
-                            contentText = "Business",
+                            contentText = if (selectedClass == 2) "Business" else "Economy",
                             icon = Icons.Default.AirlineSeatReclineNormal
                         ) {
                             showBottomSheet = true
@@ -418,10 +420,17 @@ fun BookingScreenSkeleton(navController: NavController) {
             onDismiss = {
                 showBottomSheet = false
             },
-            onSelectClass = {},
-            onUpdateAdultCount = {},
-            onUpdateChildCount = {},
-            onUpdateAInfantCount = {}
+            curAdult = adult,
+            curChild = children,
+            curInfant = infant,
+            curClass = selectedClass,
+            onDone = { adultT, child, infantT, classType ->
+                adult = adultT
+                children = child
+                infant = infantT
+                selectedClass = classType
+                totalTraveler = adult + children + infant
+            }
         )
     }
 }

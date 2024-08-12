@@ -218,7 +218,7 @@ fun SearchBar(
                         fontFamily = Font_LatoBold,
                         color = Color.Black,
                         fontWeight = FontWeight(700),
-                        modifier = Modifier.padding(bottom = 16.dp)
+                        modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
             }

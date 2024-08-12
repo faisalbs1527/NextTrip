@@ -34,14 +34,18 @@ import kotlinx.coroutines.launch
 @Composable
 fun BottomSheetModel(
     onDismiss: () -> Unit,
-    onSelectClass: (Int) -> Unit,
-    onUpdateAdultCount: (Int) -> Unit,
-    onUpdateChildCount: (Int) -> Unit,
-    onUpdateAInfantCount: (Int) -> Unit,
+    curAdult: Int,
+    curChild: Int,
+    curInfant: Int,
+    curClass: Int,
+    onDone: (Int, Int, Int, Int) -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
-    var selectedClass by remember { mutableStateOf(1) }
+    var selectedClass by remember { mutableStateOf(curClass) }
+    var adult by remember { mutableStateOf(curAdult) }
+    var children by remember { mutableStateOf(curChild) }
+    var infant by remember { mutableStateOf(curInfant) }
 
     ModalBottomSheet(
         onDismissRequest = {
@@ -62,16 +66,21 @@ fun BottomSheetModel(
             )
         }
         HorizontalLine()
-        SelectionRow(title = "Adult", limitText = "12 years and above", count = 1) {
-            onUpdateAdultCount(it)
+        SelectionRow(
+            title = "Adult",
+            limitText = "12 years and above",
+            count = adult,
+            category = 1
+        ) {
+            adult = it
         }
         HorizontalLine()
-        SelectionRow(title = "Children", limitText = "2-11 years", count = 0) {
-            onUpdateChildCount(it)
+        SelectionRow(title = "Children", limitText = "2-11 years", count = children, category = 2) {
+            children = it
         }
         HorizontalLine()
-        SelectionRow(title = "Infant", limitText = "Below 2 years", count = 0) {
-            onUpdateAInfantCount(it)
+        SelectionRow(title = "Infant", limitText = "Below 2 years", count = infant, category = 2) {
+            infant = it
         }
         HorizontalLine()
 
@@ -94,7 +103,6 @@ fun BottomSheetModel(
                 containerColor = if (selectedClass == 1) black40 else black40.copy(0.2f)
             ) {
                 selectedClass = 1
-                onSelectClass(selectedClass)
             }
             ClassButton(
                 text = "Business",
@@ -102,7 +110,6 @@ fun BottomSheetModel(
                 containerColor = if (selectedClass == 2) black40 else black40.copy(0.2f)
             ) {
                 selectedClass = 2
-                onSelectClass(selectedClass)
             }
         }
         ButtonCustom(
@@ -114,6 +121,7 @@ fun BottomSheetModel(
                 .launch { sheetState.hide() }
                 .invokeOnCompletion {
                     if (!sheetState.isVisible) {
+                        onDone(adult, children, infant, selectedClass)
                         onDismiss()
                     }
                 }
@@ -128,6 +136,7 @@ fun SelectionRow(
     title: String,
     limitText: String,
     count: Int,
+    category: Int,
     onUpdate: (Int) -> Unit
 ) {
     var currCount by remember {
@@ -159,7 +168,10 @@ fun SelectionRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             ButtonRoundIcon(onClick = {
-                if (currCount > 1) {
+                if (category == 1 && currCount > 1) {
+                    currCount--
+                    onUpdate(currCount)
+                } else if (category == 2 && currCount > 0) {
                     currCount--
                     onUpdate(currCount)
                 }
@@ -188,10 +200,13 @@ private fun Show() {
             onDismiss = {
                 showBottomSheet = false
             },
-            onSelectClass = {},
-            onUpdateAdultCount = {},
-            onUpdateChildCount = {},
-            onUpdateAInfantCount = {}
+            curAdult = 1,
+            curChild = 0,
+            curInfant = 0,
+            curClass = 1,
+            onDone = { adultT, child, infantT, classType ->
+
+            }
         )
     }
 }
