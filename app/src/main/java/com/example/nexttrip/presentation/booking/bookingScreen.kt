@@ -387,7 +387,7 @@ fun BookingScreenSkeleton(navController: NavController) {
 //                        .offset(y = 45.dp)
                         .padding(top = 235.dp, bottom = 16.dp)
                 ) {
-
+                    navController.navigate(Screen.ResultsScreen.route)
                 }
             }
         }

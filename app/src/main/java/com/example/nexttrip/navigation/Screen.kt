@@ -15,4 +15,5 @@ sealed class Screen(val route: String) {
             return "SearchScreen/$text/$selected/$fromJson/$toJson"
         }
     }
+    data object ResultsScreen : Screen(route = "ResultsScreen")
 }

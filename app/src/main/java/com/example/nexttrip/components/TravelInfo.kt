@@ -48,7 +48,7 @@ fun TravelInfo(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.weight(.2f),
+            modifier = Modifier.weight(.25f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
@@ -62,7 +62,7 @@ fun TravelInfo(
         }
 
         Column(
-            modifier = Modifier.weight(.6f),
+            modifier = Modifier.weight(.5f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -106,20 +106,20 @@ fun TravelInfo(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "$totalTravelers travellers", size = 14)
+                TicketText(text = "$totalTravelers travellers", size = 12)
                 Box(
                     modifier = Modifier
                         .height(10.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = type, size = 14)
+                TicketText(text = type, size = 12)
             }
 
         }
 
         Column(
-            modifier = Modifier.weight(.2f),
+            modifier = Modifier.weight(.25f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.End
         ) {

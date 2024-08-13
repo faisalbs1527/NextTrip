@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.nexttrip.presentation.booking.BookingScreen
+import com.example.nexttrip.presentation.booking.ResultsScreen
 import com.example.nexttrip.presentation.booking.SearchScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.home.HomeScreen
@@ -51,6 +52,9 @@ fun SetUpNavGraph(
                 from = from,
                 to = to
             )
+        }
+        composable(route = Screen.ResultsScreen.route) {
+            ResultsScreen(navController = navController)
         }
     }
 }
