@@ -95,7 +95,7 @@ fun ButtonRoundIcon(
         onClick = {
             onClick()
         },
-        colors = IconButtonColors(containerColor = Color.Gray.copy(.1f), contentColor = Color.Black, disabledContentColor = Color.Gray.copy(.1f), disabledContainerColor = Color.Black)
+        //colors = IconButtonColors(containerColor = Color.Gray.copy(.1f), contentColor = Color.Black, disabledContentColor = Color.Gray.copy(.1f), disabledContainerColor = Color.Black)
     ) {
         Icon(
             imageVector = icon,

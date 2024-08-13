@@ -47,3 +47,6 @@ val Font_Latothin = FontFamily(
 val Font_Latolight = FontFamily(
     Font(R.font.lato_light)
 )
+val Font_SFPro = FontFamily(
+    Font(R.font.sf_pro)
+)

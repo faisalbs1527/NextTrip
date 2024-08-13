@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -22,23 +24,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.getDateWithDay
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TravelInfo(
-    startCode: String,
-    endCode: String,
-    startLoc: String,
-    endLoc: String,
-    startDate: String,
-    endDate: String,
-    totalTravelers: String,
-    adults: String,
-    childs: String,
-    infants: String,
-    type: String,
-    roundway: Boolean
+    bookingData: FlightBookingData
 ) {
     Row(
         modifier = Modifier
@@ -53,12 +47,12 @@ fun TravelInfo(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = startCode,
+                text = bookingData.departureCode,
                 fontSize = 20.sp,
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = startLoc, size = 12)
+            TicketText(text = bookingData.departureCity, size = 12)
         }
 
         Column(
@@ -71,10 +65,10 @@ fun TravelInfo(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = startDate, size = 12)
-                if (roundway) {
+                TicketText(text = getDateWithDay(bookingData.departureDate), size = 12)
+                if (bookingData.roundway) {
                     TicketText(text = "to", size = 12)
-                    TicketText(text = endDate, size = 12)
+                    TicketText(text = getDateWithDay(bookingData.arrivalDate), size = 12)
                 }
             }
             Row(
@@ -106,14 +100,14 @@ fun TravelInfo(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "$totalTravelers travellers", size = 12)
+                TicketText(text = "${bookingData.totalTravelers} travellers", size = 12)
                 Box(
                     modifier = Modifier
                         .height(10.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = type, size = 12)
+                TicketText(text = bookingData.type, size = 12)
             }
 
         }
@@ -124,32 +118,22 @@ fun TravelInfo(
             horizontalAlignment = Alignment.End
         ) {
             Text(
-                text = endCode,
+                text = bookingData.arrivalCode,
                 fontSize = 20.sp,
                 fontFamily = Font_LatoBold,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = endLoc, size = 12)
+            TicketText(text = bookingData.arrivalCity, size = 12)
         }
 
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
     TravelInfo(
-        startCode = "DHA",
-        endCode = "CXB",
-        startLoc = "Dhaka",
-        endLoc = "Cox's Bazar",
-        startDate = "Sun,24 Aug",
-        endDate = "Mon,25 Aug",
-        totalTravelers = "4",
-        adults = "2",
-        childs = "1",
-        infants = "1",
-        type = "Business",
-        roundway = true
+        bookingData = FlightBookingData()
     )
 }

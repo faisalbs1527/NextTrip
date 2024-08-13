@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,43 +18,64 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.nexttrip.ui.theme.Font_LatoBold
+import com.example.nexttrip.presentation.model.FlightsData
+import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.getTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TicketInfo() {
+fun TicketInfo(
+    flightdata: FlightsData
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
     ) {
         ScheduleContent(
-            startTime = "12:25",
-            endTime = "13:10",
-            startLoc = "DHA",
-            endLoc = "CXB"
+            startTime = getTime(flightdata.departureTime),
+            endTime = getTime(flightdata.arrivalTime),
+            startLoc = flightdata.departureAirport,
+            endLoc = flightdata.arrivalAirport,
+            duration = flightdata.duration,
+            stops = flightdata.stop
         )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp, vertical =  8.dp),
+                .padding(horizontal = 8.dp, vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TicketText(text = "Airbus A350-1000", size = 14)
+            TicketText(text = flightdata.airline, size = 15)
             Text(
-                text = "$2260.00",
-                fontSize = 20.sp,
+                text = "$${flightdata.price}",
+                fontSize = 18.sp,
                 color = red40,
-                fontFamily = Font_LatoBold,
-                fontWeight = FontWeight(400)
+                fontFamily = Font_SFPro,
+                fontWeight = FontWeight(600)
             )
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    TicketInfo()
+    TicketInfo(
+        flightdata = FlightsData(
+            airline = "Biman Bangladesh Airlines",
+            arrivalAirport = "CXB",
+            departureAirport = "DAC",
+            classType = "Business",
+            price = 150,
+            flightNumber = "",
+            currency = "",
+            arrivalTime = "2024-08-15T10:00:00Z",
+            departureTime = "2024-08-15T09:00:00Z",
+            duration = "1h"
+        )
+    )
 }

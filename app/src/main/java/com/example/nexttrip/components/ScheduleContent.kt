@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,8 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
-import com.example.nexttrip.ui.theme.Font_Lato
-import com.example.nexttrip.ui.theme.Font_LatoBold
+import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 
 
@@ -32,7 +32,9 @@ fun ScheduleContent(
     startTime: String,
     endTime: String,
     startLoc: String,
-    endLoc: String
+    endLoc: String,
+    duration: String,
+    stops:String
 ) {
     Row(
         modifier = Modifier
@@ -42,21 +44,21 @@ fun ScheduleContent(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            modifier = Modifier.weight(.2f),
+            modifier = Modifier.weight(.25f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = startTime,
-                fontSize = 20.sp,
-                fontFamily = Font_LatoBold,
+                fontSize = 24.sp,
+                fontFamily = Font_SFPro,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = startLoc, size = 14)
+            TicketText(text = startLoc, size = 15)
         }
 
         Column(
-            modifier = Modifier.weight(.6f),
+            modifier = Modifier.weight(.5f),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -89,30 +91,30 @@ fun ScheduleContent(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TicketText(text = "3h", size = 12)
+                TicketText(text = duration, size = 12)
                 Box(
                     modifier = Modifier
                         .height(8.dp)
                         .width(1.dp)
                         .background(color = Color.Black.copy(alpha = .4f))
                 )
-                TicketText(text = "Non-Stops", size = 12)
+                TicketText(text = stops, size = 12)
             }
 
         }
 
         Column(
-            modifier = Modifier.weight(.2f),
+            modifier = Modifier.weight(.25f),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalAlignment = Alignment.End
         ) {
             Text(
                 text = endTime,
-                fontSize = 20.sp,
-                fontFamily = Font_LatoBold,
+                fontSize = 24.sp,
+                fontFamily = Font_SFPro,
                 fontWeight = FontWeight(400)
             )
-            TicketText(text = endLoc, size = 14)
+            TicketText(text = endLoc, size = 15)
         }
 
     }
@@ -125,6 +127,8 @@ private fun Show() {
         startTime = "12:25",
         endTime = "13:10",
         startLoc = "DHA",
-        endLoc = "CXB"
+        endLoc = "CXB",
+        duration = "1h",
+        stops = "Non-Stops"
     )
 }
