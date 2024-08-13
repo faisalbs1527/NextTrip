@@ -29,7 +29,7 @@ fun getTime(dateTime: String): String {
 fun getDateWithDay(date: String):String{
     val inputFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
     val localDate = LocalDate.parse(date, inputFormatter)
-    val outputFormatter = DateTimeFormatter.ofPattern("E, dd MMM")
+    val outputFormatter = DateTimeFormatter.ofPattern("E,dd MMM")
     val formattedDate = localDate.format(outputFormatter)
     return formattedDate.toString()
 }

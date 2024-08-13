@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,7 +37,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
+import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.TicketInfo
+import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.components.TravelInfo
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.ui.theme.Font_LatoBold
@@ -43,6 +47,7 @@ import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.getDateWithDay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -79,32 +84,51 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
                             navController.popBackStack()
                         }
                 )
-                Text(
-                    text = "Search Results",
-                    fontFamily = Font_LatoBold,
-                    fontSize = 22.sp,
-                    color = red40
-                )
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "${bookingData.departureCity} to ${bookingData.arrivalCity}",
+                        fontFamily = Font_SFPro,
+                        fontSize = 20.sp,
+                        color = red40,
+                        fontWeight = FontWeight(600)
+                    )
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TicketText(text = getDateWithDay(bookingData.departureDate), size = 12)
+                            if (bookingData.roundway) {
+                                TicketText(text = "to", size = 12)
+                                TicketText(text = getDateWithDay(bookingData.arrivalDate), size = 12)
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .height(8.dp)
+                                .width(1.dp)
+                                .background(color = Color.Black.copy(alpha = .4f))
+                        )
+                        TicketText(text = bookingData.type, size = 12)
+                    }
+                }
                 Icon(
                     painter = painterResource(id = R.drawable.filter), contentDescription = "",
                     modifier = Modifier.size(30.dp),
                     tint = Color.Black
                 )
             }
+            HorizontalLine()
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp)
-                    .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-            ) {
-                TravelInfo(
-                   bookingData = bookingData
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp, bottom = 16.dp),
+                    .padding(top = 8.dp, bottom = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
             ) {

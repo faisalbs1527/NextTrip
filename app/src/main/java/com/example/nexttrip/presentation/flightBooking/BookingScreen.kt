@@ -404,7 +404,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                                 childs = children.toString(),
                                 infants = infant.toString(),
                                 type = if (selectedClass == 2) "Business" else "Economy",
-                                roundway = selectedItem == 2
+                                roundway = selectedItem == 1
                             )
                         )
                     )
