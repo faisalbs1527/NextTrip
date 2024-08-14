@@ -2,6 +2,8 @@ package com.example.nexttrip.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.nexttrip.components.formatDate
+import com.example.nexttrip.components.getNextDate
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -39,3 +41,7 @@ fun getDateWithDay(date: String): String {
     val formattedDate = localDate.format(outputFormatter)
     return formattedDate.toString()
 }
+
+val currentDateMillis = System.currentTimeMillis()
+val currentDate = formatDate(currentDateMillis)
+val nextDate = getNextDate(currentDateMillis)

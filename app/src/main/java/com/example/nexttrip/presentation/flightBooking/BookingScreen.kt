@@ -26,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -40,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -61,6 +61,7 @@ import com.example.nexttrip.presentation.to
 import com.example.nexttrip.ui.theme.Font_Lato
 import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.NextTripTheme
+import com.example.nexttrip.utils.currentDateMillis
 import com.google.gson.Gson
 
 @Composable
@@ -73,22 +74,19 @@ fun BookingScreen(navController: NavController) {
 @Composable
 fun BookingScreenSkeleton(navController: NavController) {
 
-    var selectedItem by remember {
-        mutableIntStateOf(0)
-    }
+    val viewModel: BookingViewModel = hiltViewModel()
 
-    //Date Picker
+    val selectedItem by viewModel.selectedItem.collectAsState()
 
-    val currentDateMillis = System.currentTimeMillis()
-    val currentDate = formatDate(currentDateMillis)
-    val nextDate = getNextDate(currentDateMillis)
+    val departureDate by viewModel.departureDate.collectAsState()
+    val returnDate by viewModel.returnDate.collectAsState()
 
-    var departureDate by remember {
-        mutableStateOf(currentDate)
-    }
-    var returnDate by remember {
-        mutableStateOf(nextDate)
-    }
+    val totalTraveler by viewModel.totalTraveler.collectAsState()
+    val adult by viewModel.adult.collectAsState()
+    val children by viewModel.children.collectAsState()
+    val infant by viewModel.infant.collectAsState()
+    val selectedClass by viewModel.selectedClass.collectAsState()
+
 
     var showDatePicker by remember {
         mutableStateOf(false)
@@ -98,14 +96,9 @@ fun BookingScreenSkeleton(navController: NavController) {
         mutableStateOf(0)
     }
 
-    //travelers and class selection
-
-    var showBottomSheet by remember { mutableStateOf(false) }
-    var totalTraveler by remember { mutableStateOf(1) }
-    var adult by remember { mutableStateOf(1) }
-    var children by remember { mutableStateOf(0) }
-    var infant by remember { mutableStateOf(0) }
-    var selectedClass by remember { mutableStateOf(2) }
+    var showBottomSheet by remember {
+        mutableStateOf(false)
+    }
 
     //get the "from/to" data from search result
 
@@ -116,10 +109,15 @@ fun BookingScreenSkeleton(navController: NavController) {
         ?.collectAsState()
     val toJsonState =
         savedStateHandle?.getStateFlow("toData", initialValue = "")?.collectAsState()
-    var fromData =
+
+    println(fromJsonSate)
+    println(toJsonState)
+    val fromData =
         remember { mutableStateOf(from) }
-    var toData =
+    val toData =
         remember { mutableStateOf(to) }
+    println(fromData)
+    println(toData)
 
     LaunchedEffect(fromJsonSate?.value, toJsonState?.value) {
 
@@ -175,13 +173,13 @@ fun BookingScreenSkeleton(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TicketType(text = "One Way", selected = selectedItem == 0) {
-                    selectedItem = 0
+                    viewModel.onUpdateSelectedItem(0)
                 }
                 TicketType(text = "Round Way", selected = selectedItem == 1) {
-                    selectedItem = 1
+                    viewModel.onUpdateSelectedItem(1)
                 }
                 TicketType(text = "Multi City", selected = selectedItem == 2) {
-                    selectedItem = 2
+                    viewModel.onUpdateSelectedItem(2)
                 }
             }
 
@@ -332,7 +330,7 @@ fun BookingScreenSkeleton(navController: NavController) {
                                     .weight(1f)
                                     .padding(start = 8.dp)
                             ) {
-                                selectedItem = 1
+                                viewModel.onUpdateSelectedItem(1)
                             }
                         } else {
                             PickerBox(
@@ -421,10 +419,10 @@ fun BookingScreenSkeleton(navController: NavController) {
             onDateSelected = { selectedDate ->
                 if (selectedDate != null) {
                     if (selectedDatePicker == 1) {
-                        departureDate = formatDate(selectedDate)
-                        returnDate = getNextDate(selectedDate)
+                        viewModel.onUpdateDepartureDate(formatDate(selectedDate))
+                        viewModel.onUpdateReturnDate(getNextDate(selectedDate))
                     } else {
-                        returnDate = formatDate(selectedDate)
+                        viewModel.onUpdateReturnDate(getNextDate(selectedDate))
                     }
                 }
                 showDatePicker = false
@@ -445,11 +443,11 @@ fun BookingScreenSkeleton(navController: NavController) {
             curInfant = infant,
             curClass = selectedClass,
             onDone = { adultT, child, infantT, classType ->
-                adult = adultT
-                children = child
-                infant = infantT
-                selectedClass = classType
-                totalTraveler = adult + children + infant
+                viewModel.onUpdateAdultCount(adultT)
+                viewModel.onUpdateChildrenCount(child)
+                viewModel.onUpdateInfantCount(infantT)
+                viewModel.onUpdateClass(classType)
+                viewModel.onUpdateTotalTravelerCount(count = (adultT + child + infantT))
             }
         )
     }

@@ -51,7 +51,7 @@ import com.example.nexttrip.utils.getDateWithDay
 @Composable
 fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) {
 
-    val viewModel: BookingViewModel = hiltViewModel()
+    val viewModel: ResultsViewModel = hiltViewModel()
     val flightList by viewModel.flightList.collectAsState()
     val returnFlightList by viewModel.returnList.collectAsState()
     val bothWayFlights = generateRoundWayFlights(flightList, returnFlightList, bookingData.roundway)
