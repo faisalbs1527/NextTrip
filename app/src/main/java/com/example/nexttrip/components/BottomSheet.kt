@@ -93,28 +93,28 @@ fun BottomSheetModel(
         )
         Row(
             modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             ClassButton(
                 text = "Economy",
                 textColor = if (selectedClass == 1) Color.White else Color.Black,
-                containerColor = if (selectedClass == 1) black40 else black40.copy(0.2f)
+                containerColor = if (selectedClass == 1) black40 else black40.copy(0.1f)
             ) {
                 selectedClass = 1
             }
             ClassButton(
                 text = "Business",
                 textColor = if (selectedClass == 2) Color.White else Color.Black,
-                containerColor = if (selectedClass == 2) black40 else black40.copy(0.2f)
+                containerColor = if (selectedClass == 2) black40 else black40.copy(0.1f)
             ) {
                 selectedClass = 2
             }
         }
         ButtonCustom(
             modifier = Modifier
-                .padding(top = 16.dp, bottom = 32.dp, start = 12.dp, end = 12.dp),
+                .padding(top = 12.dp, bottom = 32.dp, start = 12.dp, end = 12.dp),
             text = "Done"
         ) {
             scope
@@ -146,7 +146,8 @@ fun SelectionRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(

@@ -1,7 +1,6 @@
 package com.example.nexttrip.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,12 +8,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_Lato
-import com.example.nexttrip.ui.theme.black40
 
 @Composable
 fun ButtonCustom(
@@ -91,25 +90,17 @@ fun ButtonRoundIcon(
     onClick: () -> Unit,
     icon: ImageVector
 ) {
-    Box(
-        modifier = Modifier
-            .size(32.dp)
-            .shadow(elevation = 12.dp, shape = CircleShape)
-            .background(color = Color.Transparent, shape = CircleShape)
-            .border(
-                width = 1.dp,
-                color = Color.Gray.copy(alpha = 0.5f),
-                shape = CircleShape
-            )
-            .clickable {
-                onClick()
-            },
-        contentAlignment = Alignment.Center,
+    OutlinedIconButton(
+        modifier = Modifier.size(28.dp),
+        onClick = {
+            onClick()
+        },
+        //colors = IconButtonColors(containerColor = Color.Gray.copy(.1f), contentColor = Color.Black, disabledContentColor = Color.Gray.copy(.1f), disabledContainerColor = Color.Black)
     ) {
         Icon(
             imageVector = icon,
             contentDescription = "",
-            tint = Color.Black.copy(alpha = 0.6f)
+            tint = Color.Black.copy(alpha = 0.8f)
         )
     }
 }
@@ -148,7 +139,9 @@ fun ClassButton(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ClassButton(text = "Economy", textColor = Color.White, containerColor = black40) {
-
-    }
+//    ClassButton(text = "Economy", textColor = Color.White, containerColor = black40) {
+//
+//    }
+    ButtonRoundIcon(onClick = {
+    }, icon = Icons.Outlined.Add)
 }

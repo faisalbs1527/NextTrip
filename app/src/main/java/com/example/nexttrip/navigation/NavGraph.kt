@@ -5,11 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.nexttrip.presentation.booking.BookingScreen
-import com.example.nexttrip.presentation.booking.SearchScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
+import com.example.nexttrip.presentation.flightBooking.BookingScreen
+import com.example.nexttrip.presentation.flightBooking.ResultsScreen
+import com.example.nexttrip.presentation.flightBooking.SearchScreen
 import com.example.nexttrip.presentation.home.HomeScreen
 import com.example.nexttrip.presentation.model.AirportsData
+import com.example.nexttrip.presentation.model.FlightBookingData
 import com.google.gson.Gson
 
 @Composable
@@ -51,6 +53,17 @@ fun SetUpNavGraph(
                 from = from,
                 to = to
             )
+        }
+        composable(
+            route = Screen.ResultsScreen.route,
+            arguments = listOf(
+                navArgument("bookingData") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            val data = backStackEntry.arguments?.getString("bookingData") ?: ""
+            val bookingInfo = Gson().fromJson(data, FlightBookingData::class.java)
+
+            ResultsScreen(navController = navController, bookingData = bookingInfo)
         }
     }
 }

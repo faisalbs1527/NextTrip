@@ -1,6 +1,7 @@
 package com.example.nexttrip.navigation
 
 import com.example.nexttrip.presentation.model.AirportsData
+import com.example.nexttrip.presentation.model.FlightBookingData
 import com.google.gson.Gson
 
 sealed class Screen(val route: String) {
@@ -13,6 +14,13 @@ sealed class Screen(val route: String) {
             val fromJson = Gson().toJson(from)
             val toJson = Gson().toJson(to)
             return "SearchScreen/$text/$selected/$fromJson/$toJson"
+        }
+    }
+
+    data object ResultsScreen : Screen(route = "ResultsScreen/{bookingData}") {
+        fun createRoute(data: FlightBookingData): String {
+            val infoBooking = Gson().toJson(data)
+            return "ResultsScreen/$infoBooking"
         }
     }
 }
