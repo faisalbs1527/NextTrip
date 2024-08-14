@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -119,19 +118,17 @@ fun BookingScreenSkeleton(navController: NavController) {
     println(fromData)
     println(toData)
 
-    LaunchedEffect(fromJsonSate?.value, toJsonState?.value) {
 
-        val fromJson = fromJsonSate?.value.orEmpty()
-        val toJson = toJsonState?.value.orEmpty()
+    val fromJson = fromJsonSate?.value.orEmpty()
+    val toJson = toJsonState?.value.orEmpty()
 
-        fromData.value = if (fromJson.isNotEmpty()) Gson().fromJson(
-            fromJson,
-            AirportsData::class.java
-        ) else from
+    if (fromJson.isNotEmpty()) fromData.value = Gson().fromJson(
+        fromJson,
+        AirportsData::class.java
+    )
 
-        toData.value =
-            if (toJson.isNotEmpty()) Gson().fromJson(toJson, AirportsData::class.java) else to
-    }
+    if (toJson.isNotEmpty()) toData.value = Gson().fromJson(toJson, AirportsData::class.java)
+
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
