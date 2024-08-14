@@ -1,15 +1,15 @@
 package com.example.nexttrip.presentation.model
 
 data class FlightsData(
-    val airline: String,
-    val arrivalAirport: String,
-    val arrivalTime: String,
-    val classType: String,
-    val currency: String,
-    val departureAirport: String,
-    val departureTime: String,
-    val flightNumber: String,
-    val price: Int,
+    var airline: String = "",
+    var arrivalAirport: String = "",
+    var arrivalTime: String = "",
+    var classType: String = "",
+    var currency: String = "",
+    var departureAirport: String = "",
+    var departureTime: String = "",
+    var flightNumber: String = "",
+    var price: Int = 0,
     var duration: String = "",
-    val stop: String = "Non-Stops"
+    var stop: String = "Non-Stops"
 )

@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.Icon
@@ -40,9 +39,8 @@ import com.example.nexttrip.R
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.TicketInfo
 import com.example.nexttrip.components.TicketText
-import com.example.nexttrip.components.TravelInfo
 import com.example.nexttrip.presentation.model.FlightBookingData
-import com.example.nexttrip.ui.theme.Font_LatoBold
+import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.gray
@@ -55,6 +53,9 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
 
     val viewModel: BookingViewModel = hiltViewModel()
     val flightList by viewModel.flightList.collectAsState()
+    val returnFlightList by viewModel.returnList.collectAsState()
+    val bothWayFlights = generateRoundWayFlights(flightList, returnFlightList, bookingData.roundway)
+
     LaunchedEffect(key1 = Unit) {
         viewModel.getFlights(
             arrivalAirport = bookingData.arrivalCode,
@@ -106,7 +107,10 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
                             TicketText(text = getDateWithDay(bookingData.departureDate), size = 12)
                             if (bookingData.roundway) {
                                 TicketText(text = "to", size = 12)
-                                TicketText(text = getDateWithDay(bookingData.arrivalDate), size = 12)
+                                TicketText(
+                                    text = getDateWithDay(bookingData.arrivalDate),
+                                    size = 12
+                                )
                             }
                         }
                         Box(
@@ -139,7 +143,7 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
                     fontWeight = FontWeight(600)
                 )
                 Text(
-                    text = "(" + flightList.size.toString() + " Results)",
+                    text = "(" + bothWayFlights.size.toString() + " Results)",
                     fontFamily = Font_SFPro,
                     fontSize = 18.sp,
                     color = gray,
@@ -149,8 +153,8 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(flightList) { flight ->
-                    TicketInfo(flight)
+                items(bothWayFlights) { (outgoing, incoming) ->
+                    TicketInfo(outgoing, incoming, bookingData.roundway)
                 }
             }
         }
@@ -164,4 +168,22 @@ private fun Show() {
     NextTripTheme {
         ResultsScreen(navController = rememberNavController(), bookingData = FlightBookingData())
     }
+}
+
+private fun generateRoundWayFlights(
+    outgoingFlights: List<FlightsData>,
+    incomingFlights: List<FlightsData>,
+    roundWay: Boolean
+): List<Pair<FlightsData, FlightsData>> {
+    val combinations = mutableListOf<Pair<FlightsData, FlightsData>>()
+    for (outgoing in outgoingFlights) {
+        if (roundWay) {
+            for (incoming in incomingFlights) {
+                combinations.add(Pair(outgoing, incoming))
+            }
+        } else {
+            combinations.add(Pair(outgoing, FlightsData()))
+        }
+    }
+    return combinations
 }

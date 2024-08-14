@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,21 +30,37 @@ import com.example.nexttrip.utils.getTime
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TicketInfo(
-    flightdata: FlightsData
+    flightData: FlightsData,
+    flightDataReturn: FlightsData,
+    roundWay: Boolean
 ) {
+
+    var price = flightData.price
+    if (roundWay) price += flightDataReturn.price
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
     ) {
         ScheduleContent(
-            startTime = getTime(flightdata.departureTime),
-            endTime = getTime(flightdata.arrivalTime),
-            startLoc = flightdata.departureAirport,
-            endLoc = flightdata.arrivalAirport,
-            duration = flightdata.duration,
-            stops = flightdata.stop
+            startTime = getTime(flightData.departureTime),
+            endTime = getTime(flightData.arrivalTime),
+            startLoc = flightData.departureAirport,
+            endLoc = flightData.arrivalAirport,
+            duration = flightData.duration,
+            stops = flightData.stop
         )
+        if (roundWay) {
+            HorizontalLine()
+            ScheduleContent(
+                startTime = getTime(flightDataReturn.departureTime),
+                endTime = getTime(flightDataReturn.arrivalTime),
+                startLoc = flightDataReturn.departureAirport,
+                endLoc = flightDataReturn.arrivalAirport,
+                duration = flightDataReturn.duration,
+                stops = flightDataReturn.stop
+            )
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -48,9 +68,9 @@ fun TicketInfo(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TicketText(text = flightdata.airline, size = 15)
+            TicketText(text = flightData.airline, size = 15)
             Text(
-                text = "$${flightdata.price}",
+                text = "$$price",
                 fontSize = 18.sp,
                 color = red40,
                 fontFamily = Font_SFPro,
@@ -65,7 +85,7 @@ fun TicketInfo(
 @Composable
 private fun Show() {
     TicketInfo(
-        flightdata = FlightsData(
+        flightData = FlightsData(
             airline = "Biman Bangladesh Airlines",
             arrivalAirport = "CXB",
             departureAirport = "DAC",
@@ -76,6 +96,19 @@ private fun Show() {
             arrivalTime = "2024-08-15T10:00:00Z",
             departureTime = "2024-08-15T09:00:00Z",
             duration = "1h"
-        )
+        ),
+        flightDataReturn = FlightsData(
+            airline = "Biman Bangladesh Airlines",
+            arrivalAirport = "DAC",
+            departureAirport = "CXB",
+            classType = "Business",
+            price = 150,
+            flightNumber = "",
+            currency = "",
+            arrivalTime = "2024-08-15T10:00:00Z",
+            departureTime = "2024-08-15T09:00:00Z",
+            duration = "1h"
+        ),
+        roundWay = true
     )
 }

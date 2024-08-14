@@ -20,6 +20,9 @@ class BookingViewModel @Inject constructor(
     private val _flightList = MutableStateFlow<List<FlightsData>>(emptyList())
     val flightList: StateFlow<List<FlightsData>> = _flightList
 
+    private val _returnList = MutableStateFlow<List<FlightsData>>(emptyList())
+    val returnList: StateFlow<List<FlightsData>> = _returnList
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun getFlights(arrivalAirport: String, departureAirport: String, classType: String) =
         viewModelScope.launch {
@@ -28,6 +31,11 @@ class BookingViewModel @Inject constructor(
             _flightList.value = flights.filter { flight ->
                 flight.departureAirport == departureAirport &&
                         flight.arrivalAirport == arrivalAirport &&
+                        flight.classType == classType
+            }
+            _returnList.value = flights.filter { flight ->
+                flight.arrivalAirport == departureAirport &&
+                        flight.departureAirport == arrivalAirport &&
                         flight.classType == classType
             }
         }

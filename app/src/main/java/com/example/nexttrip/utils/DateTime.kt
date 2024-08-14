@@ -13,8 +13,14 @@ fun getDuration(startDateTime: String, endDateTime: String): String {
 
     val departureTime = LocalDateTime.parse(startDateTime, formatter)
     val arrivalTime = LocalDateTime.parse(endDateTime, formatter)
+    val duration = Duration.between(departureTime, arrivalTime)
+    val hours = duration.toHours()
+    val minutes = duration.toMinutes() % 60
 
-    return Duration.between(departureTime, arrivalTime).toHours().toString()
+    return buildString {
+        if (hours > 0) append("${hours}h ")
+        if (minutes > 0) append("${minutes}m")
+    }.trim()
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -26,7 +32,7 @@ fun getTime(dateTime: String): String {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun getDateWithDay(date: String):String{
+fun getDateWithDay(date: String): String {
     val inputFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
     val localDate = LocalDate.parse(date, inputFormatter)
     val outputFormatter = DateTimeFormatter.ofPattern("E,dd MMM")
