@@ -38,7 +38,10 @@ import com.example.nexttrip.ui.theme.red40
 
 
 @Composable
-fun PassengerInput() {
+fun PassengerInput(
+    status: String,
+    count: Int
+) {
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var day by remember { mutableStateOf("") }
@@ -53,7 +56,7 @@ fun PassengerInput() {
     ) {
 
         Text(
-            text = "Adult-1",
+            text = "$status - $count",
             fontFamily = Font_SFPro,
             fontSize = 20.sp,
             color = red40,
@@ -191,7 +194,10 @@ fun PassengerInput() {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    PassengerInput()
+    PassengerInput(
+        status = "Children",
+        count = 1
+    )
 }
 
 @Composable

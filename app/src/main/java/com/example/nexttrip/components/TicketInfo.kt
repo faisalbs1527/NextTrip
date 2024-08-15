@@ -3,6 +3,7 @@ package com.example.nexttrip.components
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,10 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +29,8 @@ import com.example.nexttrip.utils.getTime
 fun TicketInfo(
     flightData: FlightsData,
     flightDataReturn: FlightsData,
-    roundWay: Boolean
+    roundWay: Boolean,
+    onClick: (FlightsData, FlightsData) -> Unit
 ) {
 
     var price = flightData.price
@@ -41,6 +39,9 @@ fun TicketInfo(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+            .clickable {
+                onClick(flightData, flightDataReturn)
+            }
     ) {
         ScheduleContent(
             startTime = getTime(flightData.departureTime),
@@ -109,6 +110,9 @@ private fun Show() {
             departureTime = "2024-08-15T09:00:00Z",
             duration = "1h"
         ),
-        roundWay = true
+        roundWay = true,
+        onClick = { one,two ->
+
+        }
     )
 }

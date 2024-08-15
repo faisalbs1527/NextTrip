@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.bookingInfoData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
@@ -147,21 +148,6 @@ fun TravelInfo(
 @Composable
 private fun Show() {
     TravelInfo(
-        bookingData = FlightBookingData(
-            departureCity = "Dhaka",
-            departureCode = "DAC",
-            departureDate = "24 Aug, 2024",
-            departureAirport = "",
-            arrivalCity = "Cox's Bazar",
-            arrivalCode = "CXB",
-            arrivalDate = "25 Aug, 2024",
-            arrivalAirport = "",
-            totalTravelers = "5",
-            adults = "2",
-            childs = "2",
-            infants = "1",
-            type = "Business",
-            roundway = true
-        )
+        bookingData = bookingInfoData
     )
 }

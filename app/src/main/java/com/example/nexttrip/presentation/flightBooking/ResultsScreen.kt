@@ -39,6 +39,7 @@ import com.example.nexttrip.R
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.TicketInfo
 import com.example.nexttrip.components.TicketText
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.ui.theme.Font_SFPro
@@ -154,7 +155,19 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 items(bothWayFlights) { (outgoing, incoming) ->
-                    TicketInfo(outgoing, incoming, bookingData.roundway)
+                    TicketInfo(
+                        outgoing,
+                        incoming,
+                        bookingData.roundway
+                    ) { departureFlight, returnFlight ->
+                        navController.navigate(
+                            Screen.AddInfoScreen.createRoute(
+                                data = bookingData,
+                                departureFlight = departureFlight,
+                                returnFlight = returnFlight
+                            )
+                        )
+                    }
                 }
             }
         }
