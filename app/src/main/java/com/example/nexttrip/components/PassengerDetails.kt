@@ -1,11 +1,19 @@
 package com.example.nexttrip.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -25,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.gray
+import com.example.nexttrip.ui.theme.red10
 import com.example.nexttrip.ui.theme.red40
 
 
@@ -38,21 +47,20 @@ fun PassengerInput() {
     var selectedTitle by remember { mutableStateOf(1) }
     Column(
         modifier = Modifier
+            .background(color = Color.White)
             .fillMaxWidth()
-            .padding(horizontal = 12.dp)
+            .padding(horizontal = 12.dp, vertical = 8.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Passenger 1(Adult)",
-                fontFamily = Font_SFPro,
-                fontSize = 20.sp,
-                color = red40,
-                fontWeight = FontWeight(600)
-            )
-        }
+
+        Text(
+            text = "Adult-1",
+            fontFamily = Font_SFPro,
+            fontSize = 20.sp,
+            color = red40,
+            fontWeight = FontWeight(600),
+            modifier = Modifier.padding(top = 8.dp)
+        )
+
         HorizontalLine()
         Text(
             text = "Select Title",
@@ -145,6 +153,38 @@ fun PassengerInput() {
                 keyboardType = KeyboardType.Number
             )
         }
+        Box(
+            modifier = Modifier
+                .padding(top = 8.dp, bottom = 12.dp)
+                .background(color = red10, shape = RoundedCornerShape(4.dp))
+                .clickable {
+
+                },
+            contentAlignment = Alignment.Center
+        ) {
+
+            Row(
+                modifier = Modifier.padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "",
+                    tint = red40,
+                    modifier = Modifier.size(18.dp)
+                )
+                Text(
+                    text = "Add Passport details",
+                    fontSize = 14.sp,
+                    fontFamily = Font_SFPro,
+                    color = red40,
+                    fontWeight = FontWeight(500)
+                )
+            }
+
+        }
+
     }
 }
 
@@ -181,6 +221,6 @@ fun InputField(
         ),
         modifier = modifier
             .padding(vertical = 8.dp),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }

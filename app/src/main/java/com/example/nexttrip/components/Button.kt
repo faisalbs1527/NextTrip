@@ -143,6 +143,9 @@ private fun Show() {
 //    ClassButton(text = "Economy", textColor = Color.White, containerColor = black40) {
 //
 //    }
-    ButtonRoundIcon(onClick = {
-    }, icon = Icons.Outlined.Add)
+//    ButtonRoundIcon(onClick = {
+//    }, icon = Icons.Outlined.Add)
+    ButtonCustom(text = "Continue") {
+        
+    }
 }

@@ -52,9 +52,9 @@ fun TravelInfo(
             ) {
                 Text(
                     text = bookingData.departureCode,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(400)
+                    fontWeight = FontWeight(500)
                 )
                 TicketText(text = bookingData.departureCity, size = 12)
             }
@@ -110,9 +110,9 @@ fun TravelInfo(
             ) {
                 Text(
                     text = bookingData.arrivalCode,
-                    fontSize = 20.sp,
+                    fontSize = 24.sp,
                     fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(400)
+                    fontWeight = FontWeight(500)
                 )
                 TicketText(text = bookingData.arrivalCity, size = 12)
             }
