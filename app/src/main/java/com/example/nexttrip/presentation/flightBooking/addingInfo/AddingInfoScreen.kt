@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.FabPosition
@@ -39,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.PassengerInput
+import com.example.nexttrip.components.SeatPlan
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.presentation.bookingInfoData
 import com.example.nexttrip.presentation.departureData
@@ -59,6 +62,10 @@ fun AddingInfoScreen(
     returnFlight: FlightsData
 ) {
 
+
+    var pageStatus by remember {
+        mutableStateOf(1)
+    }
     var titleText by remember {
         mutableStateOf("Passenger Details")
     }
@@ -74,7 +81,10 @@ fun AddingInfoScreen(
                     end = 20.dp
                 )
             ) {
-
+                if(pageStatus == 1) {
+                    pageStatus = 2
+                    titleText = "Select Seats"
+                }
             }
         }
     ) { innerPadding ->
@@ -160,37 +170,56 @@ fun AddingInfoScreen(
                         modifier = Modifier.padding(top = 8.dp),
                         fontWeight = FontWeight(600)
                     )
-                    Row(
-                        modifier = Modifier.padding(bottom = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TicketText(text = "${bookingData.adults} Adults", size = 14)
-                        Box(
-                            modifier = Modifier
-                                .height(10.dp)
-                                .width(1.dp)
-                                .background(color = Color.Black.copy(alpha = .4f))
-                        )
-                        TicketText(text = "${bookingData.childs} Childrens", size = 14)
-                        Box(
-                            modifier = Modifier
-                                .height(10.dp)
-                                .width(1.dp)
-                                .background(color = Color.Black.copy(alpha = .4f))
-                        )
-                        TicketText(text = "${bookingData.infants} Infants", size = 14)
+                    if (pageStatus == 1) {
+                        Row(
+                            modifier = Modifier.padding(bottom = 4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TicketText(text = "${bookingData.adults} Adults", size = 14)
+                            Box(
+                                modifier = Modifier
+                                    .height(10.dp)
+                                    .width(1.dp)
+                                    .background(color = Color.Black.copy(alpha = .4f))
+                            )
+                            TicketText(text = "${bookingData.childs} Childrens", size = 14)
+                            Box(
+                                modifier = Modifier
+                                    .height(10.dp)
+                                    .width(1.dp)
+                                    .background(color = Color.Black.copy(alpha = .4f))
+                            )
+                            TicketText(text = "${bookingData.infants} Infants", size = 14)
+                        }
                     }
                 }
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    items(passengerStatusList) { (status, count) ->
-                        PassengerInput(status, count)
+                if (pageStatus == 1) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(passengerStatusList) { (status, count) ->
+                            PassengerInput(status, count)
+                        }
+                    }
+                }
+                else if(pageStatus == 2){
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp)
+                                .verticalScroll(
+                                    state = rememberScrollState()
+                                )
+                        ) {
+                            SeatPlan()
+                        }
                     }
                 }
             }
