@@ -20,11 +20,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
@@ -62,6 +66,18 @@ fun AddingInfoScreen(
     returnFlight: FlightsData
 ) {
 
+    val viewModel: AddingInfoViewModel = hiltViewModel()
+    viewModel.addPassenger(bookingData.adults, bookingData.childs, bookingData.infants)
+
+    val passengers = bookingData.adults.toInt() + bookingData.childs.toInt()
+
+    val passengerList by viewModel.passengerList.collectAsState()
+
+    val selectedSeats by viewModel.selectedSeat.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getSeatPlans(departureFlight.flightNumber)
+    }
 
     var pageStatus by remember {
         mutableStateOf(1)
@@ -69,7 +85,6 @@ fun AddingInfoScreen(
     var titleText by remember {
         mutableStateOf("Passenger Details")
     }
-    val passengerStatusList = getInfoInputTitle(bookingData)
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
@@ -81,7 +96,7 @@ fun AddingInfoScreen(
                     end = 20.dp
                 )
             ) {
-                if(pageStatus == 1) {
+                if (pageStatus == 1) {
                     pageStatus = 2
                     titleText = "Select Seats"
                 }
@@ -106,11 +121,17 @@ fun AddingInfoScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "",
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                        contentDescription = "",
                         modifier = Modifier
                             .size(36.dp)
                             .clickable {
-                                navController.popBackStack()
+                                if (pageStatus == 1) {
+                                    navController.popBackStack()
+                                } else if (pageStatus == 2) {
+                                    pageStatus = 1
+                                    titleText = "Passenger Details"
+                                }
                             }
                     )
                     Column(
@@ -192,6 +213,11 @@ fun AddingInfoScreen(
                             )
                             TicketText(text = "${bookingData.infants} Infants", size = 14)
                         }
+                    } else if (pageStatus == 2) {
+                        TicketText(
+                            text = "(${selectedSeats.size} of $passengers selected)",
+                            size = 14
+                        )
                     }
                 }
                 if (pageStatus == 1) {
@@ -201,12 +227,43 @@ fun AddingInfoScreen(
                             .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        items(passengerStatusList) { (status, count) ->
-                            PassengerInput(status, count)
+                        items(passengerList) { passenger ->
+                            PassengerInput(
+                                passenger,
+                                onUpdateTitle = {
+                                    viewModel.updateTitle(
+                                        passenger.status,
+                                        passenger.passengerNo,
+                                        it
+                                    )
+                                },
+                                onUpdateFirstName = {
+                                    viewModel.updateFirstName(
+                                        passenger.status,
+                                        passenger.passengerNo,
+                                        it
+                                    )
+                                },
+                                onUpdateLastName = {
+                                    viewModel.updateLastName(
+                                        passenger.status,
+                                        passenger.passengerNo,
+                                        it
+                                    )
+                                },
+                                onUpdateDate = { day, month, year ->
+                                    viewModel.updateBirthDate(
+                                        passenger.status,
+                                        passenger.passengerNo,
+                                        day,
+                                        month,
+                                        year
+                                    )
+                                }
+                            )
                         }
                     }
-                }
-                else if(pageStatus == 2){
+                } else if (pageStatus == 2) {
                     Box(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -218,7 +275,7 @@ fun AddingInfoScreen(
                                     state = rememberScrollState()
                                 )
                         ) {
-                            SeatPlan()
+                            SeatPlan(viewModel, passengers, bookingData.type)
                         }
                     }
                 }
@@ -239,18 +296,4 @@ private fun Show() {
             returnFlight = returnData
         )
     }
-}
-
-fun getInfoInputTitle(bookingData: FlightBookingData): List<Pair<String, Int>> {
-    val passengerStatus = mutableListOf<Pair<String, Int>>()
-    for (i in 1..bookingData.adults.toInt()) {
-        passengerStatus.add(Pair("Adult", i))
-    }
-    for (i in 1..bookingData.childs.toInt()) {
-        passengerStatus.add(Pair("Children", i))
-    }
-    for (i in 1..bookingData.infants.toInt()) {
-        passengerStatus.add(Pair("Infant", i))
-    }
-    return passengerStatus
 }

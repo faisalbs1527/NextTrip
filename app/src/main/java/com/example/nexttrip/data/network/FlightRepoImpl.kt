@@ -2,6 +2,7 @@ package com.example.nexttrip.data.network
 
 import com.example.nexttrip.data.network.api.FlightAPI
 import com.example.nexttrip.domain.model.FlightsItem
+import com.example.nexttrip.domain.model.SeatPlan
 import com.example.nexttrip.domain.repository.FlightRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -13,4 +14,14 @@ class FlightRepoImpl @Inject constructor(
     override suspend fun getFlights(): List<FlightsItem> = withContext(Dispatchers.IO) {
         return@withContext apiService.getFlights()
     }
+
+    override suspend fun getSeatPlans(flightNo: String): SeatPlan =
+        withContext(Dispatchers.IO) {
+            val response = apiService.getSeatPlans()
+            println("Repository")
+            println(response)
+            val seatList = response.find { it.flightNumber == flightNo }
+            println(seatList)
+            return@withContext seatList!!
+        }
 }

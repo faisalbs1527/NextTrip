@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,36 +20,51 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red10
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.getDay
+import com.example.nexttrip.utils.getMonth
+import com.example.nexttrip.utils.getYear
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PassengerInput(
-    status: String,
-    count: Int
+    passenger: PassengerData,
+    onUpdateTitle: (String) -> Unit,
+    onUpdateFirstName: (String) -> Unit,
+    onUpdateLastName: (String) -> Unit,
+    onUpdateDate: (String, String, String) -> Unit
 ) {
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var day by remember { mutableStateOf("") }
-    var month by remember { mutableStateOf("") }
-    var year by remember { mutableStateOf("") }
-    var selectedTitle by remember { mutableStateOf(1) }
+    var firstName by remember { mutableStateOf(passenger.firstName) }
+    var lastName by remember { mutableStateOf(passenger.lastName) }
+    var day by remember { mutableStateOf(getDay(passenger.birthDate)) }
+    var month by remember { mutableStateOf(getMonth(passenger.birthDate)) }
+    var year by remember { mutableStateOf(getYear(passenger.birthDate)) }
+    var selectedTitle by remember { mutableStateOf(if (passenger.title == "MR.") 1 else if (passenger.title == "MS.") 2 else 3) }
+
+    LaunchedEffect(day, month, year) {
+        onUpdateDate(day, month, year)
+    }
+
     Column(
         modifier = Modifier
             .background(color = Color.White)
@@ -56,7 +73,7 @@ fun PassengerInput(
     ) {
 
         Text(
-            text = "$status - $count",
+            text = "${passenger.status} - ${passenger.passengerNo}",
             fontFamily = Font_SFPro,
             fontSize = 20.sp,
             color = red40,
@@ -83,6 +100,7 @@ fun PassengerInput(
                 containerColor = if (selectedTitle == 1) black40 else black40.copy(0.1f)
             ) {
                 selectedTitle = 1
+                onUpdateTitle("MR.")
             }
             ClassButton(
                 text = "MS.",
@@ -90,6 +108,7 @@ fun PassengerInput(
                 containerColor = if (selectedTitle == 2) black40 else black40.copy(0.1f)
             ) {
                 selectedTitle = 2
+                onUpdateTitle("MS.")
             }
             ClassButton(
                 text = "MRS.",
@@ -97,6 +116,7 @@ fun PassengerInput(
                 containerColor = if (selectedTitle == 3) black40 else black40.copy(0.1f)
             ) {
                 selectedTitle = 3
+                onUpdateTitle("MRS.")
             }
         }
         Text(
@@ -109,7 +129,12 @@ fun PassengerInput(
             modifier = Modifier.fillMaxWidth(),
             text = firstName,
             onTextChange = { firstName = it },
-            placeHolderText = "Given Name"
+            placeHolderText = "Given Name",
+            onFocusChange = {
+                if (it == false) {
+                    onUpdateFirstName(firstName)
+                }
+            }
         )
         Text(
             text = "Surname/Last Name",
@@ -121,7 +146,12 @@ fun PassengerInput(
             modifier = Modifier.fillMaxWidth(),
             text = lastName,
             onTextChange = { lastName = it },
-            placeHolderText = "SurName"
+            placeHolderText = "SurName",
+            onFocusChange = {
+                if (it == false) {
+                    onUpdateLastName(lastName)
+                }
+            }
         )
         Text(
             text = "Date of birth",
@@ -139,21 +169,30 @@ fun PassengerInput(
                 text = day,
                 onTextChange = { day = it },
                 placeHolderText = "DD",
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
+                onFocusChange = {
+
+                }
             )
             InputField(
                 modifier = Modifier.weight(.3f),
                 text = month,
                 onTextChange = { month = it },
                 placeHolderText = "MM",
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
+                onFocusChange = {
+
+                }
             )
             InputField(
                 modifier = Modifier.weight(.4f),
                 text = year,
                 onTextChange = { year = it },
                 placeHolderText = "YYYY",
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
+                onFocusChange = {
+
+                }
             )
         }
         Box(
@@ -191,12 +230,25 @@ fun PassengerInput(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
     PassengerInput(
-        status = "Children",
-        count = 1
+        PassengerData(
+            title = "MS.",
+            firstName = "",
+            lastName = "",
+            birthDate = null,
+            status = "Adult",
+            passengerNo = "2"
+        ),
+        onUpdateTitle = {},
+        onUpdateFirstName = {},
+        onUpdateLastName = {},
+        onUpdateDate = { d, m, y ->
+
+        }
     )
 }
 
@@ -206,7 +258,8 @@ fun InputField(
     text: String,
     onTextChange: (String) -> Unit,
     placeHolderText: String,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    onFocusChange: (Boolean) -> Unit
 ) {
 
     OutlinedTextField(
@@ -226,7 +279,10 @@ fun InputField(
             unfocusedBorderColor = gray
         ),
         modifier = modifier
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .onFocusChanged {
+                onFocusChange(it.isFocused)
+            },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }

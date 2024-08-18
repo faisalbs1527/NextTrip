@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,14 +26,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.nexttrip.domain.model.Seat
+import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.green40
 import com.example.nexttrip.ui.theme.red10
 import com.example.nexttrip.ui.theme.red80
-import org.w3c.dom.Text
 
 @Composable
-fun SeatPlan() {
+fun SeatPlan(
+    viewModel: AddingInfoViewModel,
+    totalPassenger: Int,
+    classType: String
+) {
+    val seatList by viewModel.seatList.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -63,10 +75,34 @@ fun SeatPlan() {
             }
             HorizontalLine()
 
-            BusinessRow()
-            BusinessRow()
-            BusinessRow()
-            BusinessRow()
+            BusinessRow(
+                row = "1",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            BusinessRow(
+                row = "2",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            BusinessRow(
+                row = "3",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            BusinessRow(
+                row = "4",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
 
             Spacer(modifier = Modifier.height(8.dp))
             HorizontalLine()
@@ -83,13 +119,55 @@ fun SeatPlan() {
             }
             HorizontalLine()
 
-            EconomyRow()
-            EconomyRow()
-            EconomyRow()
-            EconomyRow()
-            EconomyRow()
-            EconomyRow()
-            EconomyRow()
+            EconomyRow(
+                row = "5",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "6",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "7",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "8",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "9",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "10",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
+            EconomyRow(
+                row = "11",
+                viewModel = viewModel,
+                passenger = totalPassenger,
+                seatList = seatList,
+                classType = classType
+            )
             Spacer(modifier = Modifier.height(8.dp))
         }
 
@@ -98,7 +176,13 @@ fun SeatPlan() {
 
 
 @Composable
-fun BusinessRow() {
+fun BusinessRow(
+    row: String,
+    viewModel: AddingInfoViewModel,
+    passenger: Int,
+    seatList: List<Seat>,
+    classType: String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,34 +192,68 @@ fun BusinessRow() {
             modifier = Modifier.weight(.42f)
         ) {
             SeatBox(
-                seatNo = "1A",
-                modifier = Modifier.weight(.45f)
-            )
+                seatNo = row + "A",
+                modifier = Modifier.weight(.45f),
+                status = seatList.find { it.seatNumber == row + "A" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "A",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.1f))
             SeatBox(
-                seatNo = "1B",
-                modifier = Modifier.weight(.45f)
-            )
+                seatNo = row + "B",
+                modifier = Modifier.weight(.45f),
+                status = seatList.find { it.seatNumber == row + "B" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "B",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(.16f))
         Row(
             modifier = Modifier.weight(.42f)
         ) {
             SeatBox(
-                seatNo = "1C",
-                modifier = Modifier.weight(.45f)
-            )
+                seatNo = row + "C",
+                modifier = Modifier.weight(.45f),
+                status = seatList.find { it.seatNumber == row + "C" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "C",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.1f))
             SeatBox(
-                seatNo = "1D",
-                modifier = Modifier.weight(.45f)
-            )
+                seatNo = row + "D",
+                modifier = Modifier.weight(.45f),
+                status = seatList.find { it.seatNumber == row + "D" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "D",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
         }
     }
 }
 
 @Composable
-fun EconomyRow() {
+fun EconomyRow(
+    row: String,
+    viewModel: AddingInfoViewModel,
+    passenger: Int,
+    seatList: List<Seat>,
+    classType: String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,38 +263,80 @@ fun EconomyRow() {
             modifier = Modifier.weight(.42f)
         ) {
             SeatBox(
-                seatNo = "5A",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "A",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "A" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "A",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.05f))
             SeatBox(
-                seatNo = "5B",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "B",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "B" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "B",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.05f))
             SeatBox(
-                seatNo = "5C",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "C",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "C" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "C",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
         }
         Spacer(modifier = Modifier.weight(.16f))
         Row(
             modifier = Modifier.weight(.42f)
         ) {
             SeatBox(
-                seatNo = "5D",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "D",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "D" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "D",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.05f))
             SeatBox(
-                seatNo = "5E",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "E",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "E" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "E",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
             Spacer(modifier = Modifier.weight(.05f))
             SeatBox(
-                seatNo = "5F",
-                modifier = Modifier.weight(.3f)
-            )
+                seatNo = row + "F",
+                modifier = Modifier.weight(.3f),
+                status = seatList.find { it.seatNumber == row + "F" }?.status
+            ) {
+                viewModel.selectSeat(
+                    seatNo = row + "F",
+                    totalPassenger = passenger,
+                    classType = classType
+                )
+            }
         }
     }
 }
@@ -184,22 +344,25 @@ fun EconomyRow() {
 @Composable
 fun SeatBox(
     modifier: Modifier = Modifier,
-    color: Color = red10,
+    status: String? = "Available",
     seatNo: String = "5B",
-    textColor: Color = red80
+    onSelect: () -> Unit
 ) {
     Box(
         modifier = modifier
             .size(32.dp)
-            .background(color = color, shape = RoundedCornerShape(4.dp))
+            .background(
+                color = if (status == "Booked") red80 else if (status == "Available") red10 else green40,
+                shape = RoundedCornerShape(4.dp)
+            )
             .clickable {
-
+                onSelect()
             },
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = seatNo,
-            color = textColor,
+            color = if (status == "Booked") Color.White else red80,
             fontSize = 16.sp,
             fontFamily = Font_SFPro,
             fontWeight = FontWeight(500)
@@ -234,5 +397,5 @@ fun IdentificationBox(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    SeatPlan()
+    SeatPlan(hiltViewModel(), 2,"")
 }
