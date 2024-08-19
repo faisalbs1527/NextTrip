@@ -36,8 +36,9 @@ fun TravelInfo(
     bookingData: FlightBookingData
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -65,17 +66,6 @@ fun TravelInfo(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TicketText(text = getDateWithDay(bookingData.departureDate), size = 12)
-                    if (bookingData.roundway) {
-                        TicketText(text = "to", size = 12)
-                        TicketText(text = getDateWithDay(bookingData.arrivalDate), size = 12)
-                    }
-                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,8 +90,6 @@ fun TravelInfo(
                     )
                     ForwardArrow(modifier = Modifier.weight(.4f))
                 }
-
-                TicketText(text = "${bookingData.totalTravelers} travellers", size = 12)
             }
 
             Column(
@@ -118,27 +106,6 @@ fun TravelInfo(
                 TicketText(text = bookingData.arrivalCity, size = 12)
             }
 
-        }
-        Row(
-            modifier = Modifier.padding(top = 4.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            TicketText(text = "${bookingData.adults} Adults", size = 12)
-            Box(
-                modifier = Modifier
-                    .height(10.dp)
-                    .width(1.dp)
-                    .background(color = Color.Black.copy(alpha = .4f))
-            )
-            TicketText(text = "${bookingData.childs} Childrens", size = 12)
-            Box(
-                modifier = Modifier
-                    .height(10.dp)
-                    .width(1.dp)
-                    .background(color = Color.Black.copy(alpha = .4f))
-            )
-            TicketText(text = "${bookingData.infants} Infants", size = 12)
         }
     }
 }
