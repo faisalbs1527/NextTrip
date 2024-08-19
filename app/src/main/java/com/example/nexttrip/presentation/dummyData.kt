@@ -2,7 +2,9 @@ package com.example.nexttrip.presentation
 
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
-import com.example.nexttrip.presentation.model.DestinationData
+import com.example.nexttrip.presentation.model.FlightBookingData
+import com.example.nexttrip.presentation.model.FlightsData
+import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
 
 
@@ -33,4 +35,64 @@ val to = AirportsData(
     city = "Cox's Bazar",
     country = "Bangladesh",
     code = "CXB"
+)
+
+val departureData = FlightsData(
+    airline = "Biman Bangladesh Airlines",
+    arrivalAirport = "CXB",
+    departureAirport = "DAC",
+    classType = "Business",
+    price = 150,
+    flightNumber = "BG-201",
+    currency = "",
+    arrivalTime = "2024-08-15T10:00:00Z",
+    departureTime = "2024-08-15T09:00:00Z",
+    duration = "1h"
+)
+val returnData = FlightsData(
+    airline = "Biman Bangladesh Airlines",
+    arrivalAirport = "DAC",
+    departureAirport = "CXB",
+    classType = "Business",
+    price = 150,
+    flightNumber = "BG-201",
+    currency = "",
+    arrivalTime = "2024-08-15T10:00:00Z",
+    departureTime = "2024-08-15T09:00:00Z",
+    duration = "1h"
+)
+val bookingInfoData = FlightBookingData(
+    departureCity = "Dhaka",
+    departureCode = "DAC",
+    departureDate = "24 Aug, 2024",
+    departureAirport = "",
+    arrivalCity = "Cox's Bazar",
+    arrivalCode = "CXB",
+    arrivalDate = "25 Aug, 2024",
+    arrivalAirport = "",
+    totalTravelers = "5",
+    adults = "2",
+    childs = "2",
+    infants = "1",
+    type = "Business",
+    roundway = true
+)
+
+val dummyPassengerList = listOf(
+    PassengerData(
+        title = "MR.",
+        firstName = "Faisal",
+        lastName = "Ahammed",
+        birthDate = null,
+        status = "Adult",
+        passengerNo = "1"
+    ),
+    PassengerData(
+        title = "MR.",
+        firstName = "G M",
+        lastName = "Taskin",
+        birthDate = null,
+        status = "Adult",
+        passengerNo = "2"
+    )
 )

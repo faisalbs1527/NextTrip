@@ -27,12 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_Lato
+import com.example.nexttrip.ui.theme.Font_SFPro
 
 @Composable
 fun ButtonCustom(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick:() -> Unit
 ) {
     Box(
         modifier = modifier
@@ -126,10 +127,10 @@ fun ClassButton(
 
         Text(
             text = text,
-            fontSize = 18.sp,
-            fontFamily = Font_Lato,
+            fontSize = 16.sp,
+            fontFamily = Font_SFPro,
             color = textColor,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             fontWeight = FontWeight(500)
         )
 
@@ -142,6 +143,9 @@ private fun Show() {
 //    ClassButton(text = "Economy", textColor = Color.White, containerColor = black40) {
 //
 //    }
-    ButtonRoundIcon(onClick = {
-    }, icon = Icons.Outlined.Add)
+//    ButtonRoundIcon(onClick = {
+//    }, icon = Icons.Outlined.Add)
+    ButtonCustom(text = "Continue") {
+        
+    }
 }

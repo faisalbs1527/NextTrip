@@ -1,5 +1,7 @@
 package com.example.nexttrip.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,11 +11,14 @@ import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
+import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.home.HomeScreen
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
+import com.example.nexttrip.presentation.model.FlightsData
 import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetUpNavGraph(
     navController: NavHostController,
@@ -64,6 +69,30 @@ fun SetUpNavGraph(
             val bookingInfo = Gson().fromJson(data, FlightBookingData::class.java)
 
             ResultsScreen(navController = navController, bookingData = bookingInfo)
+        }
+
+        composable(
+            route = Screen.AddInfoScreen.route,
+            arguments = listOf(
+                navArgument("bookingData") { defaultValue = "" },
+                navArgument("departureFlight") { defaultValue = "" },
+                navArgument("returnFlight") { defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            val data = backStackEntry.arguments?.getString("bookingData") ?: ""
+            val outgoingJson = backStackEntry.arguments?.getString("departureFlight") ?: ""
+            val incomingJson = backStackEntry.arguments?.getString("returnFlight") ?: ""
+
+            val bookingInfo = Gson().fromJson(data, FlightBookingData::class.java)
+            val outgoingInfo = Gson().fromJson(outgoingJson, FlightsData::class.java)
+            val incomingInfo = Gson().fromJson(incomingJson, FlightsData::class.java)
+
+            AddingInfoScreen(
+                navController = navController,
+                bookingData = bookingInfo,
+                departureFlight = outgoingInfo,
+                returnFlight = incomingInfo
+            )
         }
     }
 }

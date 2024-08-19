@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.components.getNextDate
+import java.time.DateTimeException
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,6 +41,35 @@ fun getDateWithDay(date: String): String {
     val outputFormatter = DateTimeFormatter.ofPattern("E,dd MMM")
     val formattedDate = localDate.format(outputFormatter)
     return formattedDate.toString()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun createDate(day: String, month: String, year: String): LocalDate? {
+    return try {
+        val dd = day.toInt()
+        val mm = month.toInt()
+        val yy = year.toInt()
+        LocalDate.of(yy, mm, dd)
+    } catch (e: NumberFormatException) {
+        null
+    } catch (e: DateTimeException) {
+        null
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getDay(date: LocalDate?): String {
+    return date?.dayOfMonth?.toString() ?: ""
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getMonth(date: LocalDate?): String {
+    return date?.monthValue?.toString() ?: ""
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getYear(date: LocalDate?): String {
+    return date?.year?.toString() ?: ""
 }
 
 val currentDateMillis = System.currentTimeMillis()
