@@ -33,7 +33,7 @@ import com.example.nexttrip.ui.theme.Font_SFPro
 fun ButtonCustom(
     modifier: Modifier = Modifier,
     text: String,
-    onClick: () -> Unit
+    onClick:() -> Unit
 ) {
     Box(
         modifier = modifier

@@ -98,6 +98,16 @@ class AddingInfoViewModel @Inject constructor(
         }
     }
 
+    fun checkCompletion(): Boolean {
+        var isComplete = true
+        for (passenger in passengerList.value) {
+            if (passenger.firstName.isEmpty() && passenger.lastName.isEmpty() && passenger.birthDate == null) {
+                isComplete = false
+            }
+        }
+        return isComplete
+    }
+
     fun getSeatPlans(flightNo: String) = viewModelScope.launch {
         val response = repository.getSeatPlans(flightNo)
         seatList.value = response.seatPlan.seats

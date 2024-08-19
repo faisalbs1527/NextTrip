@@ -1,6 +1,7 @@
 package com.example.nexttrip.presentation.flightBooking.addingInfo
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +67,7 @@ fun AddingInfoScreen(
     departureFlight: FlightsData,
     returnFlight: FlightsData
 ) {
+    val context = LocalContext.current
 
     val viewModel: AddingInfoViewModel = hiltViewModel()
     viewModel.addPassenger(bookingData.adults, bookingData.childs, bookingData.infants)
@@ -97,8 +100,16 @@ fun AddingInfoScreen(
                 )
             ) {
                 if (pageStatus == 1) {
-                    pageStatus = 2
-                    titleText = "Select Seats"
+                    if (viewModel.checkCompletion()) {
+                        pageStatus = 2
+                        titleText = "Select Seats"
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Please complete all the fields!!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }

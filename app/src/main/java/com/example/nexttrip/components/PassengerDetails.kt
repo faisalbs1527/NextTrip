@@ -131,7 +131,7 @@ fun PassengerInput(
             onTextChange = { firstName = it },
             placeHolderText = "Given Name",
             onFocusChange = {
-                if (it == false) {
+                if (!it) {
                     onUpdateFirstName(firstName)
                 }
             }
@@ -148,7 +148,7 @@ fun PassengerInput(
             onTextChange = { lastName = it },
             placeHolderText = "SurName",
             onFocusChange = {
-                if (it == false) {
+                if (!it) {
                     onUpdateLastName(lastName)
                 }
             }
