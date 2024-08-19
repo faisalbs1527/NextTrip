@@ -144,4 +144,12 @@ class AddingInfoViewModel @Inject constructor(
         }
     }
 
+    fun getSeats(): String {
+        var seats = selectedSeat.value[0]
+        for (i in 1..<selectedSeat.value.size) {
+            seats += "-${selectedSeat.value[i]}"
+        }
+        return seats
+    }
+
 }

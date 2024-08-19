@@ -4,6 +4,7 @@ import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
+import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
 
 
@@ -42,7 +43,7 @@ val departureData = FlightsData(
     departureAirport = "DAC",
     classType = "Business",
     price = 150,
-    flightNumber = "",
+    flightNumber = "BG-201",
     currency = "",
     arrivalTime = "2024-08-15T10:00:00Z",
     departureTime = "2024-08-15T09:00:00Z",
@@ -54,7 +55,7 @@ val returnData = FlightsData(
     departureAirport = "CXB",
     classType = "Business",
     price = 150,
-    flightNumber = "",
+    flightNumber = "BG-201",
     currency = "",
     arrivalTime = "2024-08-15T10:00:00Z",
     departureTime = "2024-08-15T09:00:00Z",
@@ -75,4 +76,23 @@ val bookingInfoData = FlightBookingData(
     infants = "1",
     type = "Business",
     roundway = true
+)
+
+val dummyPassengerList = listOf(
+    PassengerData(
+        title = "MR.",
+        firstName = "Faisal",
+        lastName = "Ahammed",
+        birthDate = null,
+        status = "Adult",
+        passengerNo = "1"
+    ),
+    PassengerData(
+        title = "MR.",
+        firstName = "G M",
+        lastName = "Taskin",
+        birthDate = null,
+        status = "Adult",
+        passengerNo = "2"
+    )
 )

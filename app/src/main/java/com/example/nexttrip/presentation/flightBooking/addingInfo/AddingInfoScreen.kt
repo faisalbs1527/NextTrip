@@ -45,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
+import com.example.nexttrip.components.DetailsSection
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.PassengerInput
 import com.example.nexttrip.components.SeatPlan
@@ -110,6 +111,17 @@ fun AddingInfoScreen(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+                } else if (pageStatus == 2) {
+                    if (selectedSeats.size < passengers) {
+                        Toast.makeText(
+                            context,
+                            "Please select all the seats!!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        pageStatus = 3
+                        titleText = "Ticket Confirmation"
+                    }
                 }
             }
         }
@@ -142,6 +154,9 @@ fun AddingInfoScreen(
                                 } else if (pageStatus == 2) {
                                     pageStatus = 1
                                     titleText = "Passenger Details"
+                                } else if (pageStatus == 3) {
+                                    pageStatus = 2
+                                    titleText = "Select Seats"
                                 }
                             }
                     )
@@ -193,7 +208,6 @@ fun AddingInfoScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 20.dp, end = 20.dp, top = 12.dp)
-//                    .background(color = Color.White)
                 ) {
                     Text(
                         text = titleText,
@@ -287,6 +301,22 @@ fun AddingInfoScreen(
                                 )
                         ) {
                             SeatPlan(viewModel, passengers, bookingData.type)
+                        }
+                    }
+                } else if (pageStatus == 3) {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            DetailsSection(
+                                passengerList = passengerList,
+                                selectedSeats = viewModel.getSeats(),
+                                flightData = departureFlight
+                            )
                         }
                     }
                 }
