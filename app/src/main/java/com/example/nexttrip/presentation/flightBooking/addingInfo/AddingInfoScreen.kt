@@ -48,6 +48,7 @@ import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.DetailsSection
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.PassengerInput
+import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.SeatPlan
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.presentation.bookingInfoData
@@ -122,6 +123,9 @@ fun AddingInfoScreen(
                         pageStatus = 3
                         titleText = "Ticket Confirmation"
                     }
+                } else if (pageStatus == 3) {
+                    pageStatus = 4
+                    titleText = "Payment"
                 }
             }
         }
@@ -157,6 +161,9 @@ fun AddingInfoScreen(
                                 } else if (pageStatus == 3) {
                                     pageStatus = 2
                                     titleText = "Select Seats"
+                                } else if (pageStatus == 4) {
+                                    pageStatus = 3
+                                    titleText = "Ticket Confirmation"
                                 }
                             }
                     )
@@ -317,6 +324,18 @@ fun AddingInfoScreen(
                                 selectedSeats = viewModel.getSeats(),
                                 flightData = departureFlight
                             )
+                        }
+                    }
+                } else if (pageStatus == 4) {
+                    Box(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp)
+                        ) {
+                            PaymentSection()
                         }
                     }
                 }
