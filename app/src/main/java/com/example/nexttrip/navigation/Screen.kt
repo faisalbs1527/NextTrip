@@ -38,4 +38,5 @@ sealed class Screen(val route: String) {
             return "AddInfoScreen/$infoBooking/$outgoing/$incoming"
         }
     }
+    data object ConfirmationScreen: Screen(route = "ConfirmationScreen")
 }

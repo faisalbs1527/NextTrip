@@ -51,6 +51,7 @@ import com.example.nexttrip.components.PassengerInput
 import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.SeatPlan
 import com.example.nexttrip.components.TicketText
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.bookingInfoData
 import com.example.nexttrip.presentation.departureData
 import com.example.nexttrip.presentation.model.FlightBookingData
@@ -126,6 +127,8 @@ fun AddingInfoScreen(
                 } else if (pageStatus == 3) {
                     pageStatus = 4
                     titleText = "Payment"
+                } else if (pageStatus == 4) {
+                    navController.navigate(Screen.ConfirmationScreen.route)
                 }
             }
         }

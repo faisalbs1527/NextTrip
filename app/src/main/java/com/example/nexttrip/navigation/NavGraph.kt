@@ -12,6 +12,7 @@ import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
+import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.home.HomeScreen
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
@@ -93,6 +94,11 @@ fun SetUpNavGraph(
                 departureFlight = outgoingInfo,
                 returnFlight = incomingInfo
             )
+        }
+        composable(
+            route = Screen.ConfirmationScreen.route
+        ) {
+            ConfirmationScreen(navController = navController)
         }
     }
 }
