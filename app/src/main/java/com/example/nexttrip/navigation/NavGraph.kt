@@ -3,6 +3,7 @@ package com.example.nexttrip.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,6 +12,7 @@ import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
+import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.home.HomeScreen
@@ -23,7 +25,8 @@ import com.google.gson.Gson
 @Composable
 fun SetUpNavGraph(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
+    sharedViewModel: SharedViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Screen.HomeScreen.route) {
@@ -69,36 +72,22 @@ fun SetUpNavGraph(
             val data = backStackEntry.arguments?.getString("bookingData") ?: ""
             val bookingInfo = Gson().fromJson(data, FlightBookingData::class.java)
 
-            ResultsScreen(navController = navController, bookingData = bookingInfo)
+            ResultsScreen(
+                navController = navController,
+                bookingData = bookingInfo,
+                sharedViewModel = sharedViewModel
+            )
         }
 
         composable(
-            route = Screen.AddInfoScreen.route,
-            arguments = listOf(
-                navArgument("bookingData") { defaultValue = "" },
-                navArgument("departureFlight") { defaultValue = "" },
-                navArgument("returnFlight") { defaultValue = "" }
-            )
-        ) { backStackEntry ->
-            val data = backStackEntry.arguments?.getString("bookingData") ?: ""
-            val outgoingJson = backStackEntry.arguments?.getString("departureFlight") ?: ""
-            val incomingJson = backStackEntry.arguments?.getString("returnFlight") ?: ""
-
-            val bookingInfo = Gson().fromJson(data, FlightBookingData::class.java)
-            val outgoingInfo = Gson().fromJson(outgoingJson, FlightsData::class.java)
-            val incomingInfo = Gson().fromJson(incomingJson, FlightsData::class.java)
-
-            AddingInfoScreen(
-                navController = navController,
-                bookingData = bookingInfo,
-                departureFlight = outgoingInfo,
-                returnFlight = incomingInfo
-            )
+            route = Screen.AddInfoScreen.route
+        ) {
+            AddingInfoScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(
             route = Screen.ConfirmationScreen.route
         ) {
-            ConfirmationScreen(navController = navController)
+            ConfirmationScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
     }
 

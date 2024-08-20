@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +24,9 @@ import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.getDateWithMonth
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Passenger(passengerData: PassengerData) {
     Box(
@@ -58,7 +62,7 @@ fun Passenger(passengerData: PassengerData) {
                         fontWeight = FontWeight(400),
                     )
                     Text(
-                        text = "3 Dec,2024",
+                        text = getDateWithMonth(passengerData.birthDate!!),
                         fontSize = 14.sp,
                         fontFamily = Font_SFPro,
                         fontWeight = FontWeight(400),
@@ -78,6 +82,7 @@ fun Passenger(passengerData: PassengerData) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {

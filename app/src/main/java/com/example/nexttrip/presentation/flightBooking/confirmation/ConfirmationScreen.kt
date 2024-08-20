@@ -20,7 +20,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,28 +33,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationStatus
 import com.example.nexttrip.components.TicketSection
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.bookingInfoData
-import com.example.nexttrip.presentation.departureData
-import com.example.nexttrip.presentation.dummyPassengerList
-import com.example.nexttrip.presentation.returnData
+import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ConfirmationScreen(navController: NavController) {
+fun ConfirmationScreen(
+    navController: NavController,
+    sharedViewModel: SharedViewModel = hiltViewModel()
+) {
+
+    val passengerList by sharedViewModel.passengerList.collectAsState()
+    val selectedSeats by sharedViewModel.selectedSeats.collectAsState()
+    val departureFlight by sharedViewModel.departureFlight.collectAsState()
+    val returnFlight by sharedViewModel.returnFlight.collectAsState()
+    val bookingData by sharedViewModel.bookingdata.collectAsState()
 
     var titleText by remember {
         mutableStateOf("Payment Confirmation")
     }
     var pageStatus by remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
@@ -123,7 +132,7 @@ fun ConfirmationScreen(navController: NavController) {
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        ConfirmationStatus()
+                        ConfirmationStatus("$" + departureFlight.price.toString())
                     }
                 } else {
                     Row(
@@ -134,10 +143,11 @@ fun ConfirmationScreen(navController: NavController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         TicketSection(
-                            departureFlight = departureData,
-                            returnFlight = returnData,
-                            bookingData = bookingInfoData,
-                            passengerList = dummyPassengerList
+                            departureFlight = departureFlight,
+                            returnFlight = returnFlight,
+                            bookingData = bookingData,
+                            passengerList = passengerList,
+                            seats = selectedSeats
                         )
                     }
                 }

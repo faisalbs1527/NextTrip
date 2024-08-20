@@ -25,18 +25,7 @@ sealed class Screen(val route: String) {
         }
     }
 
-    data object AddInfoScreen :
-        Screen(route = "AddInfoScreen/{bookingData}/{departureFlight}/{returnFlight}") {
-        fun createRoute(
-            data: FlightBookingData,
-            departureFlight: FlightsData,
-            returnFlight: FlightsData
-        ): String {
-            val infoBooking = Gson().toJson(data)
-            val outgoing = Gson().toJson(departureFlight)
-            val incoming = Gson().toJson(returnFlight)
-            return "AddInfoScreen/$infoBooking/$outgoing/$incoming"
-        }
-    }
-    data object ConfirmationScreen: Screen(route = "ConfirmationScreen")
+    data object AddInfoScreen : Screen(route = "AddInfoScreen")
+
+    data object ConfirmationScreen : Screen(route = "ConfirmationScreen")
 }

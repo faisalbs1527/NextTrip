@@ -104,7 +104,6 @@ class AddingInfoViewModel @Inject constructor(
             if (passenger.firstName.isEmpty() || passenger.lastName.isEmpty() || passenger.birthDate == null) {
                 isComplete = false
             }
-            println(passenger)
         }
         return isComplete
     }

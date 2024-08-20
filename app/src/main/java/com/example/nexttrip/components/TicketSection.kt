@@ -21,8 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AirlineSeatReclineNormal
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.Luggage
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +45,7 @@ import com.example.nexttrip.presentation.returnData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.getTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -54,7 +53,8 @@ fun TicketSection(
     departureFlight: FlightsData,
     returnFlight: FlightsData,
     bookingData: FlightBookingData,
-    passengerList: List<PassengerData>
+    passengerList: List<PassengerData>,
+    seats: String
 ) {
     LazyColumn(
         modifier = Modifier
@@ -93,14 +93,14 @@ fun TicketSection(
                     modifier = Modifier.weight(.42f),
                     icon = Icons.Default.CalendarMonth,
                     title = "Date",
-                    content = "16 Aug,2024"
+                    content = bookingData.departureDate
                 )
                 Spacer(modifier = Modifier.weight(.06f))
                 DateTimeBox(
                     modifier = Modifier.weight(.42f),
                     icon = Icons.Default.AccessTime,
                     title = "Time",
-                    content = "09:00-10:10"
+                    content = getTime(departureFlight.departureTime) + "-" + getTime(departureFlight.arrivalTime)
                 )
                 Spacer(modifier = Modifier.weight(.05f))
             }
@@ -134,12 +134,13 @@ fun TicketSection(
             IconInfoRow(
                 modifier = Modifier.padding(vertical = 8.dp),
                 title = "Seats",
-                text = "3A-3B",
+                text = seats,
                 icon = Icons.Default.AirlineSeatReclineNormal
             )
             HorizontalLine()
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = 16.dp, bottom = 20.dp)
             ) {
                 BarcodeView(text = "1234567890", modifier = Modifier.weight(1f))
@@ -156,7 +157,8 @@ private fun Show() {
         departureFlight = departureData,
         returnFlight = returnData,
         bookingData = bookingInfoData,
-        passengerList = dummyPassengerList
+        passengerList = dummyPassengerList,
+        seats = "3A-4B"
     )
 }
 

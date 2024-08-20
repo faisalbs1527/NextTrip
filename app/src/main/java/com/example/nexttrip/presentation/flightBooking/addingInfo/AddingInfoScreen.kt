@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -52,11 +51,7 @@ import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.SeatPlan
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.bookingInfoData
-import com.example.nexttrip.presentation.departureData
-import com.example.nexttrip.presentation.model.FlightBookingData
-import com.example.nexttrip.presentation.model.FlightsData
-import com.example.nexttrip.presentation.returnData
+import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.red40
@@ -66,13 +61,16 @@ import com.example.nexttrip.utils.getDateWithDay
 @Composable
 fun AddingInfoScreen(
     navController: NavController,
-    bookingData: FlightBookingData,
-    departureFlight: FlightsData,
-    returnFlight: FlightsData
+    sharedViewModel: SharedViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
 
+    val departureFlight by sharedViewModel.departureFlight.collectAsState()
+    val bookingData by sharedViewModel.bookingdata.collectAsState()
+    println(bookingData)
+
     val viewModel: AddingInfoViewModel = hiltViewModel()
+
     viewModel.addPassenger(bookingData.adults, bookingData.childs, bookingData.infants)
 
     val passengers = bookingData.adults.toInt() + bookingData.childs.toInt()
@@ -80,6 +78,7 @@ fun AddingInfoScreen(
     val passengerList by viewModel.passengerList.collectAsState()
 
     val selectedSeats by viewModel.selectedSeat.collectAsState()
+
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getSeatPlans(departureFlight.flightNumber)
@@ -104,6 +103,7 @@ fun AddingInfoScreen(
             ) {
                 if (pageStatus == 1) {
                     if (viewModel.checkCompletion()) {
+                        sharedViewModel.updatePassengerList(passengerList)
                         pageStatus = 2
                         titleText = "Select Seats"
                     } else {
@@ -121,6 +121,7 @@ fun AddingInfoScreen(
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
+                        sharedViewModel.updateSelectedSeats(viewModel.getSeats())
                         pageStatus = 3
                         titleText = "Ticket Confirmation"
                     }
@@ -156,17 +157,22 @@ fun AddingInfoScreen(
                         modifier = Modifier
                             .size(36.dp)
                             .clickable {
-                                if (pageStatus == 1) {
-                                    navController.popBackStack()
-                                } else if (pageStatus == 2) {
-                                    pageStatus = 1
-                                    titleText = "Passenger Details"
-                                } else if (pageStatus == 3) {
-                                    pageStatus = 2
-                                    titleText = "Select Seats"
-                                } else if (pageStatus == 4) {
-                                    pageStatus = 3
-                                    titleText = "Ticket Confirmation"
+                                when (pageStatus) {
+                                    1 -> {
+                                        navController.popBackStack()
+                                    }
+                                    2 -> {
+                                        pageStatus = 1
+                                        titleText = "Passenger Details"
+                                    }
+                                    3 -> {
+                                        pageStatus = 2
+                                        titleText = "Select Seats"
+                                    }
+                                    4 -> {
+                                        pageStatus = 3
+                                        titleText = "Ticket Confirmation"
+                                    }
                                 }
                             }
                     )
@@ -255,90 +261,95 @@ fun AddingInfoScreen(
                         )
                     }
                 }
-                if (pageStatus == 1) {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        items(passengerList) { passenger ->
-                            PassengerInput(
-                                passenger,
-                                onUpdateTitle = {
-                                    viewModel.updateTitle(
-                                        passenger.status,
-                                        passenger.passengerNo,
-                                        it
-                                    )
-                                },
-                                onUpdateFirstName = {
-                                    viewModel.updateFirstName(
-                                        passenger.status,
-                                        passenger.passengerNo,
-                                        it
-                                    )
-                                },
-                                onUpdateLastName = {
-                                    viewModel.updateLastName(
-                                        passenger.status,
-                                        passenger.passengerNo,
-                                        it
-                                    )
-                                },
-                                onUpdateDate = { day, month, year ->
-                                    viewModel.updateBirthDate(
-                                        passenger.status,
-                                        passenger.passengerNo,
-                                        day,
-                                        month,
-                                        year
-                                    )
-                                }
-                            )
-                        }
-                    }
-                } else if (pageStatus == 2) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row(
+                when (pageStatus) {
+                    1 -> {
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp)
-                                .verticalScroll(
-                                    state = rememberScrollState()
+                                .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp),
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(passengerList) { passenger ->
+                                PassengerInput(
+                                    passenger,
+                                    onUpdateTitle = {
+                                        viewModel.updateTitle(
+                                            passenger.status,
+                                            passenger.passengerNo,
+                                            it
+                                        )
+                                    },
+                                    onUpdateFirstName = {
+                                        viewModel.updateFirstName(
+                                            passenger.status,
+                                            passenger.passengerNo,
+                                            it
+                                        )
+                                    },
+                                    onUpdateLastName = {
+                                        viewModel.updateLastName(
+                                            passenger.status,
+                                            passenger.passengerNo,
+                                            it
+                                        )
+                                    },
+                                    onUpdateDate = { day, month, year ->
+                                        viewModel.updateBirthDate(
+                                            passenger.status,
+                                            passenger.passengerNo,
+                                            day,
+                                            month,
+                                            year
+                                        )
+                                    }
                                 )
-                        ) {
-                            SeatPlan(viewModel, passengers, bookingData.type)
+                            }
                         }
                     }
-                } else if (pageStatus == 3) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
+                    2 -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            DetailsSection(
-                                passengerList = passengerList,
-                                selectedSeats = viewModel.getSeats(),
-                                flightData = departureFlight
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp, end = 20.dp, bottom = 36.dp, top = 4.dp)
+                                    .verticalScroll(
+                                        state = rememberScrollState()
+                                    )
+                            ) {
+                                SeatPlan(viewModel, passengers, bookingData.type)
+                            }
                         }
                     }
-                } else if (pageStatus == 4) {
-                    Box(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 20.dp)
+                    3 -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
                         ) {
-                            PaymentSection("$" + departureFlight.price.toString())
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp)
+                            ) {
+                                DetailsSection(
+                                    passengerList = passengerList,
+                                    selectedSeats = viewModel.getSeats(),
+                                    flightData = departureFlight
+                                )
+                            }
+                        }
+                    }
+                    4 -> {
+                        Box(
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 20.dp)
+                            ) {
+                                PaymentSection("$" + departureFlight.price.toString())
+                            }
                         }
                     }
                 }
@@ -353,10 +364,7 @@ fun AddingInfoScreen(
 private fun Show() {
     NextTripTheme {
         AddingInfoScreen(
-            navController = rememberNavController(),
-            bookingData = bookingInfoData,
-            departureFlight = departureData,
-            returnFlight = returnData
+            navController = rememberNavController()
         )
     }
 }

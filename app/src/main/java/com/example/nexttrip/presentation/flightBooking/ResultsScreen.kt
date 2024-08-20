@@ -50,7 +50,11 @@ import com.example.nexttrip.utils.getDateWithDay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) {
+fun ResultsScreen(
+    navController: NavController,
+    bookingData: FlightBookingData,
+    sharedViewModel: SharedViewModel = hiltViewModel()
+) {
 
     val viewModel: ResultsViewModel = hiltViewModel()
     val flightList by viewModel.flightList.collectAsState()
@@ -162,12 +166,11 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
                         incoming,
                         bookingData.roundway
                     ) { departureFlight, returnFlight ->
+                        sharedViewModel.updateDepartureFlight(departureFlight)
+                        sharedViewModel.updateReturnFlight(returnFlight)
+                        sharedViewModel.updateBookingData(bookingData)
                         navController.navigate(
-                            Screen.AddInfoScreen.createRoute(
-                                data = bookingData,
-                                departureFlight = departureFlight,
-                                returnFlight = returnFlight
-                            )
+                            Screen.AddInfoScreen.route
                         )
                     }
                 }

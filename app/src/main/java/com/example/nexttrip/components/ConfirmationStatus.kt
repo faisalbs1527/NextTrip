@@ -28,7 +28,9 @@ import com.example.nexttrip.ui.theme.green40
 import com.example.nexttrip.ui.theme.green80
 
 @Composable
-fun ConfirmationStatus() {
+fun ConfirmationStatus(
+    payment: String = ""
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -71,7 +73,7 @@ fun ConfirmationStatus() {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Payment of $2260 has been received.",
+                text = "Payment of $payment has been received.",
                 fontSize = 16.sp,
                 fontFamily = Font_SFPro,
                 fontWeight = FontWeight(400),
