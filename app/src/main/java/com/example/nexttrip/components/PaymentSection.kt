@@ -33,7 +33,9 @@ import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red80
 
 @Composable
-fun PaymentSection() {
+fun PaymentSection(
+    payment: String
+) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -69,7 +71,7 @@ fun PaymentSection() {
                     color = gray
                 )
                 Text(
-                    text = "$2260.00",
+                    text = payment,
                     fontSize = 24.sp,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(600),
@@ -128,5 +130,5 @@ fun PaymentSection() {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    PaymentSection()
+    PaymentSection("$2200.00")
 }

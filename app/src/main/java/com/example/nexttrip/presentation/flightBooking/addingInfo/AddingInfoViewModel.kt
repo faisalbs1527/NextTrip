@@ -101,9 +101,10 @@ class AddingInfoViewModel @Inject constructor(
     fun checkCompletion(): Boolean {
         var isComplete = true
         for (passenger in passengerList.value) {
-            if (passenger.firstName.isEmpty() && passenger.lastName.isEmpty() && passenger.birthDate == null) {
+            if (passenger.firstName.isEmpty() || passenger.lastName.isEmpty() || passenger.birthDate == null) {
                 isComplete = false
             }
+            println(passenger)
         }
         return isComplete
     }

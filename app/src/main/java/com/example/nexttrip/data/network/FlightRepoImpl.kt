@@ -18,10 +18,7 @@ class FlightRepoImpl @Inject constructor(
     override suspend fun getSeatPlans(flightNo: String): SeatPlan =
         withContext(Dispatchers.IO) {
             val response = apiService.getSeatPlans()
-            println("Repository")
-            println(response)
             val seatList = response.find { it.flightNumber == flightNo }
-            println(seatList)
             return@withContext seatList!!
         }
 }

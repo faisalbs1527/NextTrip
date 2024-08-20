@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -23,17 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.nexttrip.presentation.departureData
 import com.example.nexttrip.presentation.dummyPassengerList
-import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoViewModel
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.getDateWithMonth
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DetailsSection(
     passengerList: List<PassengerData>,
@@ -77,6 +79,7 @@ fun DetailsSection(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PersonalDetails(
     passenger: PassengerData
@@ -98,7 +101,7 @@ fun PersonalDetails(
         )
         InfoRow(title = "Full Name", text = "${passenger.firstName} ${passenger.lastName}")
         InfoRow(title = "Passport ID", text = "26531786371")
-        InfoRow(title = "Date of Birth", text = "3 Dec,2024")
+        InfoRow(title = "Date of Birth", text = getDateWithMonth(passenger.birthDate!!))
     }
 }
 
@@ -229,6 +232,7 @@ fun InfoRow(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {

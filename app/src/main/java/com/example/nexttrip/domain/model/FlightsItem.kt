@@ -18,7 +18,7 @@ data class FlightsItem(
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun FlightsItem.toFlightsData() = FlightsData(
+fun FlightsItem.toFlightsData(count: Int) = FlightsData(
     airline = airline,
     arrivalAirport = arrivalAirport,
     arrivalTime = arrivalTime,
@@ -27,6 +27,6 @@ fun FlightsItem.toFlightsData() = FlightsData(
     departureAirport = departureAirport,
     departureTime = departureTime,
     flightNumber = flightNumber,
-    price = price,
+    price = price * count,
     duration = getDuration(departureTime, arrivalTime)
 )

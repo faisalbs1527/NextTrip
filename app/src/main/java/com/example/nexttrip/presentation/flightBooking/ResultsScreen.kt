@@ -56,12 +56,14 @@ fun ResultsScreen(navController: NavController, bookingData: FlightBookingData) 
     val flightList by viewModel.flightList.collectAsState()
     val returnFlightList by viewModel.returnList.collectAsState()
     val bothWayFlights = generateRoundWayFlights(flightList, returnFlightList, bookingData.roundway)
+    val travellersCount = bookingData.adults.toInt() + bookingData.childs.toInt()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getFlights(
             arrivalAirport = bookingData.arrivalCode,
             departureAirport = bookingData.departureCode,
-            classType = bookingData.type
+            classType = bookingData.type,
+            travellersCount = travellersCount
         )
     }
 

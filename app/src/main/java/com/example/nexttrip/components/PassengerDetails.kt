@@ -27,7 +27,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -128,13 +127,11 @@ fun PassengerInput(
         InputField(
             modifier = Modifier.fillMaxWidth(),
             text = firstName,
-            onTextChange = { firstName = it },
-            placeHolderText = "Given Name",
-            onFocusChange = {
-                if (!it) {
-                    onUpdateFirstName(firstName)
-                }
-            }
+            onTextChange = {
+                firstName = it
+                onUpdateFirstName(it)
+            },
+            placeHolderText = "Given Name"
         )
         Text(
             text = "Surname/Last Name",
@@ -145,13 +142,11 @@ fun PassengerInput(
         InputField(
             modifier = Modifier.fillMaxWidth(),
             text = lastName,
-            onTextChange = { lastName = it },
-            placeHolderText = "SurName",
-            onFocusChange = {
-                if (!it) {
-                    onUpdateLastName(lastName)
-                }
-            }
+            onTextChange = {
+                lastName = it
+                onUpdateLastName(it)
+            },
+            placeHolderText = "SurName"
         )
         Text(
             text = "Date of birth",
@@ -169,30 +164,21 @@ fun PassengerInput(
                 text = day,
                 onTextChange = { day = it },
                 placeHolderText = "DD",
-                keyboardType = KeyboardType.Number,
-                onFocusChange = {
-
-                }
+                keyboardType = KeyboardType.Number
             )
             InputField(
                 modifier = Modifier.weight(.3f),
                 text = month,
                 onTextChange = { month = it },
                 placeHolderText = "MM",
-                keyboardType = KeyboardType.Number,
-                onFocusChange = {
-
-                }
+                keyboardType = KeyboardType.Number
             )
             InputField(
                 modifier = Modifier.weight(.4f),
                 text = year,
                 onTextChange = { year = it },
                 placeHolderText = "YYYY",
-                keyboardType = KeyboardType.Number,
-                onFocusChange = {
-
-                }
+                keyboardType = KeyboardType.Number
             )
         }
         Box(
@@ -246,7 +232,7 @@ private fun Show() {
         onUpdateTitle = {},
         onUpdateFirstName = {},
         onUpdateLastName = {},
-        onUpdateDate = { d, m, y ->
+        onUpdateDate = { _, _, _ ->
 
         }
     )
@@ -258,8 +244,7 @@ fun InputField(
     text: String,
     onTextChange: (String) -> Unit,
     placeHolderText: String,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    onFocusChange: (Boolean) -> Unit
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
 
     OutlinedTextField(
@@ -279,10 +264,7 @@ fun InputField(
             unfocusedBorderColor = gray
         ),
         modifier = modifier
-            .padding(vertical = 8.dp)
-            .onFocusChanged {
-                onFocusChange(it.isFocused)
-            },
+            .padding(vertical = 8.dp),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }

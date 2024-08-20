@@ -44,6 +44,13 @@ fun getDateWithDay(date: String): String {
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
+fun getDateWithMonth(date: LocalDate): String {
+    val outputFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
+    val formattedDate = date.format(outputFormatter)
+    return formattedDate.toString()
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
 fun createDate(day: String, month: String, year: String): LocalDate? {
     return try {
         val dd = day.toInt()

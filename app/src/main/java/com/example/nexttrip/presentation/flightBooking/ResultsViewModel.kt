@@ -24,10 +24,10 @@ class ResultsViewModel @Inject constructor(
     val returnList: StateFlow<List<FlightsData>> = _returnList
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getFlights(arrivalAirport: String, departureAirport: String, classType: String) =
+    fun getFlights(arrivalAirport: String, departureAirport: String, classType: String, travellersCount: Int) =
         viewModelScope.launch {
             val response = repository.getFlights()
-            val flights = response.map { it.toFlightsData() }
+            val flights = response.map { it.toFlightsData(travellersCount) }
             _flightList.value = flights.filter { flight ->
                 flight.departureAirport == departureAirport &&
                         flight.arrivalAirport == arrivalAirport &&

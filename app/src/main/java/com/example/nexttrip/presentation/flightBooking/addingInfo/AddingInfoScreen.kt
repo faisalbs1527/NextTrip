@@ -338,7 +338,7 @@ fun AddingInfoScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 20.dp)
                         ) {
-                            PaymentSection()
+                            PaymentSection("$" + departureFlight.price.toString())
                         }
                     }
                 }

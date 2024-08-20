@@ -109,15 +109,10 @@ fun BookingScreenSkeleton(navController: NavController) {
     val toJsonState =
         savedStateHandle?.getStateFlow("toData", initialValue = "")?.collectAsState()
 
-    println(fromJsonSate)
-    println(toJsonState)
     val fromData =
         remember { mutableStateOf(from) }
     val toData =
         remember { mutableStateOf(to) }
-    println(fromData)
-    println(toData)
-
 
     val fromJson = fromJsonSate?.value.orEmpty()
     val toJson = toJsonState?.value.orEmpty()

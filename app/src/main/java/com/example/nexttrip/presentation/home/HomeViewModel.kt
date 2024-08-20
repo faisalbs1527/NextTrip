@@ -20,7 +20,6 @@ class HomeViewModel @Inject constructor(
 
     fun getDestinations() = viewModelScope.launch {
         val response = repository.getDestinations()
-        println(response)
         _destinationList.value = response.map { it.toDestinationData() }
     }
 }
