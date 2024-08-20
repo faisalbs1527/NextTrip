@@ -98,4 +98,7 @@ dependencies {
     // Parcelable library (if needed)
     implementation(libs.androidx.core.ktx.v1100)
 
+    //barcode
+    implementation (libs.core)
+
 }

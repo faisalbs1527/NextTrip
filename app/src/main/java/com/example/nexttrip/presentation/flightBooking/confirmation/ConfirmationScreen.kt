@@ -1,11 +1,14 @@
 package com.example.nexttrip.presentation.flightBooking.confirmation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,27 +35,39 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationStatus
+import com.example.nexttrip.components.TicketSection
 import com.example.nexttrip.navigation.Screen
+import com.example.nexttrip.presentation.bookingInfoData
+import com.example.nexttrip.presentation.departureData
+import com.example.nexttrip.presentation.dummyPassengerList
+import com.example.nexttrip.presentation.returnData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ConfirmationScreen(navController: NavController) {
 
     var titleText by remember {
         mutableStateOf("Payment Confirmation")
     }
+    var pageStatus by remember {
+        mutableStateOf(1)
+    }
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ButtonCustom(
-                text = "View Ticket",
+                text = if (pageStatus == 1) "View Ticket" else "Download Ticket",
                 modifier = Modifier.padding(
                     start = 20.dp,
                     end = 20.dp
                 )
             ) {
-
+                if (pageStatus == 1) {
+                    pageStatus = 2
+                    titleText = "Ticket"
+                }
             }
         }
     ) { innerPadding ->
@@ -77,6 +92,7 @@ fun ConfirmationScreen(navController: NavController) {
                         imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
                         contentDescription = "",
                         modifier = Modifier
+                            .weight(.1f)
                             .size(36.dp)
                             .clickable {
                                 navController.navigate(Screen.HomeScreen.route) {
@@ -86,8 +102,7 @@ fun ConfirmationScreen(navController: NavController) {
                     )
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 12.dp),
+                            .weight(.8f),
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
@@ -98,21 +113,40 @@ fun ConfirmationScreen(navController: NavController) {
                             fontWeight = FontWeight(600)
                         )
                     }
+                    Spacer(modifier = Modifier.weight(.1f))
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 20.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ConfirmationStatus()
+                if (pageStatus == 1) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        ConfirmationStatus()
+                    }
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp, horizontal = 20.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        TicketSection(
+                            departureFlight = departureData,
+                            returnFlight = returnData,
+                            bookingData = bookingInfoData,
+                            passengerList = dummyPassengerList
+                        )
+                    }
                 }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
