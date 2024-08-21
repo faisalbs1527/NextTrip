@@ -1,6 +1,7 @@
 package com.example.nexttrip.presentation.flightBooking.confirmation
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +46,8 @@ import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.createPdfFromComposable
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -51,11 +56,17 @@ fun ConfirmationScreen(
     sharedViewModel: SharedViewModel = hiltViewModel()
 ) {
 
+    val context = LocalContext.current
+
     val passengerList by sharedViewModel.passengerList.collectAsState()
     val selectedSeats by sharedViewModel.selectedSeats.collectAsState()
     val departureFlight by sharedViewModel.departureFlight.collectAsState()
     val returnFlight by sharedViewModel.returnFlight.collectAsState()
     val bookingData by sharedViewModel.bookingdata.collectAsState()
+
+    var barcodeWidth by remember {
+        mutableIntStateOf(200)
+    }
 
     var titleText by remember {
         mutableStateOf("Payment Confirmation")
@@ -76,6 +87,22 @@ fun ConfirmationScreen(
                 if (pageStatus == 1) {
                     pageStatus = 2
                     titleText = "Ticket"
+                } else if (pageStatus == 2) {
+                    createPdfFromComposable(context) {
+                        TicketSection(
+                            departureFlight = departureFlight,
+                            returnFlight = returnFlight,
+                            bookingData = bookingData,
+                            passengerList = passengerList,
+                            seats = selectedSeats,
+                            width = barcodeWidth
+                        )
+                    }
+
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    }
+                    Toast.makeText(context, "Ticket saved!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -138,6 +165,9 @@ fun ConfirmationScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .onGloballyPositioned {
+                                barcodeWidth = it.size.width
+                            }
                             .padding(vertical = 20.dp, horizontal = 20.dp),
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
@@ -147,7 +177,8 @@ fun ConfirmationScreen(
                             returnFlight = returnFlight,
                             bookingData = bookingData,
                             passengerList = passengerList,
-                            seats = selectedSeats
+                            seats = selectedSeats,
+                            width = barcodeWidth
                         )
                     }
                 }

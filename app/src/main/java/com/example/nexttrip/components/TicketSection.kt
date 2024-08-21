@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,11 +26,18 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,96 +63,112 @@ fun TicketSection(
     returnFlight: FlightsData,
     bookingData: FlightBookingData,
     passengerList: List<PassengerData>,
-    seats: String
+    seats: String,
+    width: Int
 ) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 20.dp)
-            .background(color = Color.White)
-            .padding(start = 20.dp, end = 20.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        item {
-            Text(
-                text = departureFlight.airline,
-                fontSize = 24.sp,
-                fontFamily = Font_SFPro,
-                fontWeight = FontWeight(400),
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-            )
-            Image(
-                painter = painterResource(id = R.drawable.airplane),
-                contentDescription = "",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 4.dp)
-                    .height(120.dp)
-                    .background(color = gray.copy(.1f)),
-                contentScale = ContentScale.FillBounds
-            )
-            TravelInfo(bookingData = bookingData)
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp)
-            ) {
-                Spacer(modifier = Modifier.weight(.05f))
-                DateTimeBox(
-                    modifier = Modifier.weight(.42f),
-                    icon = Icons.Default.CalendarMonth,
-                    title = "Date",
-                    content = bookingData.departureDate
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 20.dp)
+                .background(color = Color.White)
+                .padding(start = 20.dp, end = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            item {
+                Text(
+                    text = departureFlight.airline,
+                    fontSize = 24.sp,
+                    fontFamily = Font_SFPro,
+                    fontWeight = FontWeight(400),
+                    modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
                 )
-                Spacer(modifier = Modifier.weight(.06f))
-                DateTimeBox(
-                    modifier = Modifier.weight(.42f),
-                    icon = Icons.Default.AccessTime,
-                    title = "Time",
-                    content = getTime(departureFlight.departureTime) + "-" + getTime(departureFlight.arrivalTime)
-                )
-                Spacer(modifier = Modifier.weight(.05f))
             }
-            Text(
-                text = "Passenger Details",
-                fontSize = 18.sp,
-                fontFamily = Font_SFPro,
-                fontWeight = FontWeight(600),
-                modifier = Modifier.padding(top = 8.dp)
-            )
-        }
+            item {
+                Image(
+                    painter = painterResource(id = R.drawable.airplane),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 4.dp)
+                        .height(120.dp)
+                        .background(color = gray.copy(.1f)),
+                    contentScale = ContentScale.FillBounds
+                )
+                TravelInfo(bookingData = bookingData)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Spacer(modifier = Modifier.weight(.05f))
+                    DateTimeBox(
+                        modifier = Modifier.weight(.42f),
+                        icon = Icons.Default.CalendarMonth,
+                        title = "Date",
+                        content = bookingData.departureDate
+                    )
+                    Spacer(modifier = Modifier.weight(.06f))
+                    DateTimeBox(
+                        modifier = Modifier.weight(.42f),
+                        icon = Icons.Default.AccessTime,
+                        title = "Time",
+                        content = getTime(departureFlight.departureTime) + "-" + getTime(
+                            departureFlight.arrivalTime
+                        )
+                    )
+                    Spacer(modifier = Modifier.weight(.05f))
+                }
+                Text(
+                    text = "Passenger Details",
+                    fontSize = 18.sp,
+                    fontFamily = Font_SFPro,
+                    fontWeight = FontWeight(600),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
 
-        items(passengerList) {
-            Passenger(passengerData = it)
-        }
-        item {
-            Spacer(modifier = Modifier.size(14.dp))
-            HorizontalLine()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                InfoColumn(title = "Terminal", text = "3")
-                InfoColumn(title = "Gate", text = "B7")
-                InfoColumn(title = "Flight No", text = departureFlight.flightNumber)
-                InfoColumn(title = "Class", text = bookingData.type)
+            items(passengerList) {
+                Passenger(passengerData = it)
             }
-            HorizontalLine()
-            IconInfoRow(
-                modifier = Modifier.padding(vertical = 8.dp),
-                title = "Seats",
-                text = seats,
-                icon = Icons.Default.AirlineSeatReclineNormal
-            )
-            HorizontalLine()
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 20.dp)
-            ) {
-                BarcodeView(text = "1234567890", modifier = Modifier.weight(1f))
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+                HorizontalLine()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    InfoColumn(title = "Terminal", text = "3")
+                    InfoColumn(title = "Gate", text = "B7")
+                    InfoColumn(title = "Flight No", text = departureFlight.flightNumber)
+                    InfoColumn(title = "Class", text = bookingData.type)
+                }
+                HorizontalLine()
+                IconInfoRow(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    title = "Seats",
+                    text = seats,
+                    icon = Icons.Default.AirlineSeatReclineNormal
+                )
+                HorizontalLine()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, bottom = 20.dp)
+                ) {
+                    val bitmap = generateBarcode("1234567890", width, (width * 0.22).toInt())
+                    bitmap?.let {
+                        Image(
+                            bitmap = it.asImageBitmap(),
+                            contentDescription = "Barcode",
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
         }
     }
@@ -159,7 +183,8 @@ private fun Show() {
         returnFlight = returnData,
         bookingData = bookingInfoData,
         passengerList = dummyPassengerList,
-        seats = "3A-4B"
+        seats = "3A-4B",
+        width = 600
     )
 }
 
