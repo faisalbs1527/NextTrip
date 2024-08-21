@@ -99,6 +99,9 @@ fun ConfirmationScreen(
                         )
                     }
 
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    }
                     Toast.makeText(context, "Ticket saved!", Toast.LENGTH_SHORT).show()
                 }
             }

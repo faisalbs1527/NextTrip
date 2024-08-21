@@ -14,7 +14,8 @@ class ShareUtils {
 
     companion object{
         private fun savePdfAndGetUri(context: Context, pdfDocument: PdfDocument): Uri? {
-            val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+            val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            println(fileDir)
             val file = File(fileDir, "document.pdf")
 
             try {
