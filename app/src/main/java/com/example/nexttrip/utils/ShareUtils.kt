@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.core.content.FileProvider
 import java.io.File
 import java.io.FileOutputStream
@@ -14,9 +15,11 @@ class ShareUtils {
 
     companion object{
         private fun savePdfAndGetUri(context: Context, pdfDocument: PdfDocument): Uri? {
-            val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            val fileDir = context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
             println(fileDir)
             val file = File(fileDir, "document.pdf")
+            Log.d("ShareUtils", "File path: ${file.absolutePath}")
+
 
             try {
                 FileOutputStream(file).use { outputStream ->

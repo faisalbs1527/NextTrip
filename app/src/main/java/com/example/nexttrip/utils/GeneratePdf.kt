@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.drawToBitmap
+import savePdfToDownloads
 import kotlin.math.ceil
 
 fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit) {
@@ -49,6 +50,6 @@ fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit
     }
 
     // Save the PDF to a file
-    ShareUtils.sharePdfToOthers(context, "ticket", pdfDocument)
+    savePdfToDownloads(context,  pdfDocument)
     pdfDocument.close()
 }
