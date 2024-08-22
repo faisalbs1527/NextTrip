@@ -12,18 +12,26 @@ import androidx.core.content.ContextCompat
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 fun savePdfToDownloads(context: Context, pdfDocument: PdfDocument) {
+    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+    val currentDateTime = dateFormat.format(Date())
+    val fileName = "ticket_$currentDateTime.pdf"
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // Use MediaStore for Android 10 and above
         val contentValues = ContentValues().apply {
-            put(MediaStore.Downloads.DISPLAY_NAME, "document.pdf") // File name
+            put(MediaStore.Downloads.DISPLAY_NAME, fileName) // File name
             put(MediaStore.Downloads.MIME_TYPE, "application/pdf") // MIME type
             put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS) // Directory
         }
 
-        val uri: Uri? = context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+        val uri: Uri? =
+            context.contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
         uri?.let {
             context.contentResolver.openOutputStream(it)?.use { outputStream ->
@@ -33,17 +41,22 @@ fun savePdfToDownloads(context: Context, pdfDocument: PdfDocument) {
     } else {
         // Handle for older versions if needed
         // Note: For Android 9 (API level 28) and below, you might use direct file paths
-        savePdfToDownloadsLegacy(context,pdfDocument)
+        savePdfToDownloadsLegacy(context, pdfDocument, fileName)
     }
 
     pdfDocument.close()
 }
 
 
-fun savePdfToDownloadsLegacy(context: Context, pdfDocument: PdfDocument) {
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val file = File(downloadsDir, "document.pdf")
+fun savePdfToDownloadsLegacy(context: Context, pdfDocument: PdfDocument, fileName: String) {
+    if (ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        val downloadsDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(downloadsDir, fileName)
 
         try {
             FileOutputStream(file).use { outputStream ->
@@ -56,6 +69,10 @@ fun savePdfToDownloadsLegacy(context: Context, pdfDocument: PdfDocument) {
         pdfDocument.close()
     } else {
         // Request permissions if not granted
-        ActivityCompat.requestPermissions(context as androidx.activity.ComponentActivity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(
+            context as androidx.activity.ComponentActivity,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            1
+        )
     }
 }

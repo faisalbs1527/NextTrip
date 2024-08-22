@@ -33,7 +33,10 @@ import com.example.nexttrip.utils.getDateWithDay
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TravelInfo(
-    bookingData: FlightBookingData
+    departureCode: String,
+    departureCity: String,
+    arrivalCode: String,
+    arrivalCity: String
 ) {
     Column(
         modifier = Modifier
@@ -53,12 +56,12 @@ fun TravelInfo(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = bookingData.departureCode,
+                    text = departureCode,
                     fontSize = 24.sp,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(500)
                 )
-                TicketText(text = bookingData.departureCity, size = 12)
+                TicketText(text = departureCity, size = 12)
             }
 
             Column(
@@ -98,12 +101,12 @@ fun TravelInfo(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = bookingData.arrivalCode,
+                    text = arrivalCode,
                     fontSize = 24.sp,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(500)
                 )
-                TicketText(text = bookingData.arrivalCity, size = 12)
+                TicketText(text = arrivalCity, size = 12)
             }
 
         }
@@ -115,6 +118,9 @@ fun TravelInfo(
 @Composable
 private fun Show() {
     TravelInfo(
-        bookingData = bookingInfoData
+        departureCode = "DAC",
+        departureCity = "Dhaka",
+        arrivalCode = "CXB",
+        arrivalCity = "Cox's Bazar"
     )
 }

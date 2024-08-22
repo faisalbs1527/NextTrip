@@ -55,7 +55,8 @@ fun TicketSection(
     returnFlight: FlightsData,
     bookingData: FlightBookingData,
     passengerList: List<PassengerData>,
-    seats: String,
+    seatsDeparture: String,
+    seatsReturn: String,
     width: Int
 ) {
     Column(
@@ -77,8 +78,6 @@ fun TicketSection(
                     fontWeight = FontWeight(400),
                     modifier = Modifier.padding(top = 16.dp, bottom = 2.dp)
                 )
-            }
-            item {
                 Image(
                     painter = painterResource(id = R.drawable.airplane),
                     contentDescription = "",
@@ -89,63 +88,75 @@ fun TicketSection(
                         .background(color = gray.copy(.1f)),
                     contentScale = ContentScale.FillBounds
                 )
-                TravelInfo(bookingData = bookingData)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
-                    Spacer(modifier = Modifier.weight(.05f))
-                    DateTimeBox(
-                        modifier = Modifier.weight(.42f),
-                        icon = Icons.Default.CalendarMonth,
-                        title = "Date",
-                        content = bookingData.departureDate
+            }
+            item {
+                TopSection(
+                    departureCode = bookingData.departureCode,
+                    departureCity = bookingData.departureCity,
+                    arrivalCode = bookingData.arrivalCode,
+                    arrivalCity = bookingData.arrivalCity,
+                    travelDate = bookingData.departureDate,
+                    flight = departureFlight
+                )
+            }
+            if (bookingData.roundway) {
+                item {
+                    HorizontalLine()
+                    TopSection(
+                        departureCode = bookingData.arrivalCode,
+                        departureCity = bookingData.arrivalCity,
+                        arrivalCode = bookingData.departureCode,
+                        arrivalCity = bookingData.departureCity,
+                        travelDate = bookingData.arrivalDate,
+                        flight = returnFlight
                     )
-                    Spacer(modifier = Modifier.weight(.06f))
-                    DateTimeBox(
-                        modifier = Modifier.weight(.42f),
-                        icon = Icons.Default.AccessTime,
-                        title = "Time",
-                        content = getTime(departureFlight.departureTime) + "-" + getTime(
-                            departureFlight.arrivalTime
-                        )
-                    )
-                    Spacer(modifier = Modifier.weight(.05f))
                 }
+            }
+            item {
                 Text(
                     text = "Passenger Details",
                     fontSize = 18.sp,
                     fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(600),
-                    modifier = Modifier.padding(top = 8.dp)
+                    fontWeight = FontWeight(600)
                 )
             }
-
             items(passengerList) {
                 Passenger(passengerData = it)
             }
             item {
-                Spacer(modifier = Modifier.size(14.dp))
-                HorizontalLine()
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    InfoColumn(title = "Terminal", text = "3")
-                    InfoColumn(title = "Gate", text = "B7")
-                    InfoColumn(title = "Flight No", text = departureFlight.flightNumber)
-                    InfoColumn(title = "Class", text = bookingData.type)
+                Spacer(modifier = Modifier.size(6.dp))
+                if(bookingData.roundway){
+                    Text(
+                        text = "Departure",
+                        fontSize = 18.sp,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
-                HorizontalLine()
-                IconInfoRow(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    title = "Seats",
-                    text = seats,
-                    icon = Icons.Default.AirlineSeatReclineNormal
+                BottomSection(
+                    flight = departureFlight,
+                    seats = seatsDeparture,
+                    seatType = bookingData.type
                 )
+            }
+            if(bookingData.roundway){
+                item {
+                    Text(
+                        text = "Return",
+                        fontSize = 18.sp,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(600),
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                    BottomSection(
+                        flight = returnFlight,
+                        seats = seatsReturn,
+                        seatType = bookingData.type
+                    )
+                }
+            }
+            item {
                 HorizontalLine()
                 Row(
                     modifier = Modifier
@@ -175,7 +186,8 @@ private fun Show() {
         returnFlight = returnData,
         bookingData = bookingInfoData,
         passengerList = dummyPassengerList,
-        seats = "3A-4B",
+        seatsDeparture = "3A-4B",
+        seatsReturn = "2A-3B",
         width = 600
     )
 }
@@ -219,4 +231,72 @@ fun DateTimeBox(
             )
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun TopSection(
+    departureCode: String,
+    departureCity: String,
+    arrivalCode: String,
+    arrivalCity: String,
+    travelDate: String,
+    flight: FlightsData
+) {
+    TravelInfo(
+        departureCode = departureCode,
+        departureCity = departureCity,
+        arrivalCode = arrivalCode,
+        arrivalCity = arrivalCity
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Spacer(modifier = Modifier.weight(.05f))
+        DateTimeBox(
+            modifier = Modifier.weight(.42f),
+            icon = Icons.Default.CalendarMonth,
+            title = "Date",
+            content = travelDate
+        )
+        Spacer(modifier = Modifier.weight(.06f))
+        DateTimeBox(
+            modifier = Modifier.weight(.42f),
+            icon = Icons.Default.AccessTime,
+            title = "Time",
+            content = getTime(flight.departureTime) + "-" + getTime(
+                flight.arrivalTime
+            )
+        )
+        Spacer(modifier = Modifier.weight(.05f))
+    }
+}
+
+@Composable
+fun BottomSection(
+    flight: FlightsData,
+    seats: String,
+    seatType: String
+) {
+    HorizontalLine()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        InfoColumn(title = "Terminal", text = "3")
+        InfoColumn(title = "Gate", text = "B7")
+        InfoColumn(title = "Flight No", text = flight.flightNumber)
+        InfoColumn(title = "Class", text = seatType)
+    }
+    HorizontalLine()
+    IconInfoRow(
+        modifier = Modifier.padding(vertical = 8.dp),
+        title = "Seats",
+        text = seats,
+        icon = Icons.Default.AirlineSeatReclineNormal
+    )
 }

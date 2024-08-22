@@ -1,11 +1,14 @@
 package com.example.nexttrip.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
+import com.example.nexttrip.utils.createDate
 
 
 //val destinationList = listOf(
@@ -78,12 +81,13 @@ val bookingInfoData = FlightBookingData(
     roundway = true
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 val dummyPassengerList = listOf(
     PassengerData(
         title = "MR.",
         firstName = "Faisal",
         lastName = "Ahammed",
-        birthDate = null,
+        birthDate = createDate("8","5","2000"),
         status = "Adult",
         passengerNo = "1"
     ),
@@ -91,7 +95,7 @@ val dummyPassengerList = listOf(
         title = "MR.",
         firstName = "G M",
         lastName = "Taskin",
-        birthDate = null,
+        birthDate = createDate("8","5","2000"),
         status = "Adult",
         passengerNo = "2"
     )

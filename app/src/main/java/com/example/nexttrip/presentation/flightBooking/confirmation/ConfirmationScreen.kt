@@ -59,7 +59,8 @@ fun ConfirmationScreen(
     val context = LocalContext.current
 
     val passengerList by sharedViewModel.passengerList.collectAsState()
-    val selectedSeats by sharedViewModel.selectedSeatsDeparture.collectAsState()
+    val selectedSeatsDeparture by sharedViewModel.selectedSeatsDeparture.collectAsState()
+    val selectedSeatsReturn by sharedViewModel.selectedSeatsReturn.collectAsState()
     val departureFlight by sharedViewModel.departureFlight.collectAsState()
     val returnFlight by sharedViewModel.returnFlight.collectAsState()
     val bookingData by sharedViewModel.bookingdata.collectAsState()
@@ -94,7 +95,8 @@ fun ConfirmationScreen(
                             returnFlight = returnFlight,
                             bookingData = bookingData,
                             passengerList = passengerList,
-                            seats = selectedSeats,
+                            seatsDeparture = selectedSeatsDeparture,
+                            seatsReturn = selectedSeatsReturn,
                             width = barcodeWidth
                         )
                     }
@@ -159,7 +161,7 @@ fun ConfirmationScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        ConfirmationStatus("$" + departureFlight.price.toString())
+                        ConfirmationStatus("$" + (departureFlight.price + returnFlight.price).toString())
                     }
                 } else {
                     Row(
@@ -177,7 +179,8 @@ fun ConfirmationScreen(
                             returnFlight = returnFlight,
                             bookingData = bookingData,
                             passengerList = passengerList,
-                            seats = selectedSeats,
+                            seatsDeparture = selectedSeatsDeparture,
+                            seatsReturn = selectedSeatsReturn,
                             width = barcodeWidth
                         )
                     }
