@@ -59,7 +59,7 @@ fun ConfirmationScreen(
     val context = LocalContext.current
 
     val passengerList by sharedViewModel.passengerList.collectAsState()
-    val selectedSeats by sharedViewModel.selectedSeats.collectAsState()
+    val selectedSeats by sharedViewModel.selectedSeatsDeparture.collectAsState()
     val departureFlight by sharedViewModel.departureFlight.collectAsState()
     val returnFlight by sharedViewModel.returnFlight.collectAsState()
     val bookingData by sharedViewModel.bookingdata.collectAsState()

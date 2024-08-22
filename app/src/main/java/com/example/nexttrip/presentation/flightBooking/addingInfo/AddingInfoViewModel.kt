@@ -4,13 +4,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nexttrip.domain.model.Seat
 import com.example.nexttrip.domain.repository.FlightRepository
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.utils.createDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,8 +23,15 @@ class AddingInfoViewModel @Inject constructor(
 
     var seatList = MutableStateFlow<List<Seat>>(emptyList())
         private set
-    var selectedSeat = MutableStateFlow<List<String>>(emptyList())
+    var seatListDeparture = MutableStateFlow<List<Seat>>(emptyList())
         private set
+    var seatListReturn = MutableStateFlow<List<Seat>>(emptyList())
+        private set
+    var selectedSeatDeparture = MutableStateFlow<List<String>>(emptyList())
+        private set
+    var selectedSeatReturn = MutableStateFlow<List<String>>(emptyList())
+        private set
+    var travelStatus = MutableStateFlow<Int>(1)
 
     fun addPassenger(adults: String, childs: String, infants: String) = viewModelScope.launch {
         for (i in 1..adults.toInt()) {
@@ -108,46 +115,103 @@ class AddingInfoViewModel @Inject constructor(
         return isComplete
     }
 
-    fun getSeatPlans(flightNo: String) = viewModelScope.launch {
-        val response = repository.getSeatPlans(flightNo)
-        seatList.value = response.seatPlan.seats
+    fun getSeatPlans(flightNoDeparture: String, flightNoReturn: String) = viewModelScope.launch {
+        val response1 = repository.getSeatPlans(flightNoDeparture)
+        val response2 = repository.getSeatPlans(flightNoReturn)
+        seatListDeparture.value = response1.seatPlan.seats
+        seatListReturn.value = response2.seatPlan.seats
+        updateSeatList()
     }
 
     private fun isSelectable(seatNo: String, classType: String): Boolean {
-        val seat = seatList.value.find { it.seatNumber == seatNo }
-        return seat?.status == "Available" && seat.classType == classType
+        if (travelStatus.value == 1) {
+            val seat = seatListDeparture.value.find { it.seatNumber == seatNo }
+            return seat?.status == "Available" && seat.classType == classType
+        } else {
+            val seat = seatListReturn.value.find { it.seatNumber == seatNo }
+            return seat?.status == "Available" && seat.classType == classType
+        }
     }
 
     fun selectSeat(seatNo: String, totalPassenger: Int, classType: String) = viewModelScope.launch {
         if (isSelectable(seatNo, classType)) {
-            if (selectedSeat.value.size == totalPassenger) {
-                val removedSeat = selectedSeat.value[0]
-                selectedSeat.value = selectedSeat.value.drop(1) + listOf(seatNo)
-                updateStatus(seatNo, "Selected")
-                updateStatus(removedSeat, "Available")
-            } else {
-                if (selectedSeat.value.none { it == seatNo }) {
-                    selectedSeat.value += listOf(seatNo)
+            if (travelStatus.value == 1) {
+                if (selectedSeatDeparture.value.size == totalPassenger) {
+                    val removedSeat = selectedSeatDeparture.value[0]
+                    selectedSeatDeparture.value =
+                        selectedSeatDeparture.value.drop(1) + listOf(seatNo)
                     updateStatus(seatNo, "Selected")
+                    updateStatus(removedSeat, "Available")
+                } else {
+                    if (selectedSeatDeparture.value.none { it == seatNo }) {
+                        selectedSeatDeparture.value += listOf(seatNo)
+                        updateStatus(seatNo, "Selected")
+                    }
+                }
+            } else {
+                if (selectedSeatReturn.value.size == totalPassenger) {
+                    val removedSeat = selectedSeatReturn.value[0]
+                    selectedSeatReturn.value =
+                        selectedSeatReturn.value.drop(1) + listOf(seatNo)
+                    updateStatus(seatNo, "Selected")
+                    updateStatus(removedSeat, "Available")
+                } else {
+                    if (selectedSeatReturn.value.none { it == seatNo }) {
+                        selectedSeatReturn.value += listOf(seatNo)
+                        updateStatus(seatNo, "Selected")
+                    }
                 }
             }
         }
     }
 
     private fun updateStatus(seatNo: String, status: String) = viewModelScope.launch {
-        seatList.value = seatList.value.map { seat ->
-            if (seat.seatNumber == seatNo) {
-                seat.copy(status = status)
-            } else {
-                seat
+        if (travelStatus.value == 1) {
+            seatListDeparture.value = seatListDeparture.value.map { seat ->
+                if (seat.seatNumber == seatNo) {
+                    seat.copy(status = status)
+                } else {
+                    seat
+                }
             }
+            seatList.value = seatListDeparture.value
+        } else {
+            seatListReturn.value = seatListReturn.value.map { seat ->
+                if (seat.seatNumber == seatNo) {
+                    seat.copy(status = status)
+                } else {
+                    seat
+                }
+            }
+            seatList.value = seatListReturn.value
+        }
+    }
+
+    fun updateTravelStatus(status: Int) = viewModelScope.launch {
+        travelStatus.value = status
+        updateSeatList()
+    }
+
+    private fun updateSeatList() = viewModelScope.launch {
+        if (travelStatus.value == 1) {
+            seatList.value = seatListDeparture.value
+        } else {
+            seatList.value = seatListReturn.value
         }
     }
 
     fun getSeats(): String {
-        var seats = selectedSeat.value[0]
-        for (i in 1..<selectedSeat.value.size) {
-            seats += "-${selectedSeat.value[i]}"
+        var seats: String = ""
+        if (travelStatus.value == 1) {
+            seats = selectedSeatDeparture.value[0]
+            for (i in 1..<selectedSeatDeparture.value.size) {
+                seats += "-${selectedSeatDeparture.value[i]}"
+            }
+        } else {
+            seats = selectedSeatReturn.value[0]
+            for (i in 1..<selectedSeatReturn.value.size) {
+                seats += "-${selectedSeatReturn.value[i]}"
+            }
         }
         return seats
     }

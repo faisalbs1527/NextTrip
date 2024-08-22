@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -44,6 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
+import com.example.nexttrip.components.ClassButton
 import com.example.nexttrip.components.DetailsSection
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.PassengerInput
@@ -54,6 +56,7 @@ import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
+import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.utils.getDateWithDay
 
@@ -66,8 +69,10 @@ fun AddingInfoScreen(
     val context = LocalContext.current
 
     val departureFlight by sharedViewModel.departureFlight.collectAsState()
+    val returnFlight by sharedViewModel.returnFlight.collectAsState()
     val bookingData by sharedViewModel.bookingdata.collectAsState()
-    println(bookingData)
+    val seatsDeparture by sharedViewModel.selectedSeatsDeparture.collectAsState()
+    val seatsReturn by sharedViewModel.selectedSeatsReturn.collectAsState()
 
     val viewModel: AddingInfoViewModel = hiltViewModel()
 
@@ -77,18 +82,24 @@ fun AddingInfoScreen(
 
     val passengerList by viewModel.passengerList.collectAsState()
 
-    val selectedSeats by viewModel.selectedSeat.collectAsState()
+    val selectedSeatsDeparture by viewModel.selectedSeatDeparture.collectAsState()
 
+    val selectedSeatsReturn by viewModel.selectedSeatReturn.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getSeatPlans(departureFlight.flightNumber)
-    }
+    val travelStatus by viewModel.travelStatus.collectAsState()
 
     var pageStatus by remember {
-        mutableStateOf(1)
+        mutableIntStateOf(1)
     }
     var titleText by remember {
         mutableStateOf("Passenger Details")
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getSeatPlans(
+            departureFlight.flightNumber,
+            returnFlight.flightNumber
+        )
     }
 
     Scaffold(
@@ -114,16 +125,43 @@ fun AddingInfoScreen(
                         ).show()
                     }
                 } else if (pageStatus == 2) {
-                    if (selectedSeats.size < passengers) {
-                        Toast.makeText(
-                            context,
-                            "Please select all the seats!!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    if (bookingData.roundway) {
+                        if (travelStatus == 1) {
+                            if (selectedSeatsDeparture.size < passengers) {
+                                Toast.makeText(
+                                    context,
+                                    "Please select all the seats!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                sharedViewModel.updateSelectedSeatsDeparture(viewModel.getSeats())
+                                viewModel.updateTravelStatus(2)
+                            }
+                        } else {
+                            if (selectedSeatsReturn.size < passengers) {
+                                Toast.makeText(
+                                    context,
+                                    "Please select all the seats!!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                sharedViewModel.updateSelectedSeatsReturn(viewModel.getSeats())
+                                pageStatus = 3
+                                titleText = "Ticket Confirmation"
+                            }
+                        }
                     } else {
-                        sharedViewModel.updateSelectedSeats(viewModel.getSeats())
-                        pageStatus = 3
-                        titleText = "Ticket Confirmation"
+                        if (selectedSeatsDeparture.size < passengers) {
+                            Toast.makeText(
+                                context,
+                                "Please select all the seats!!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            sharedViewModel.updateSelectedSeatsDeparture(viewModel.getSeats())
+                            pageStatus = 3
+                            titleText = "Ticket Confirmation"
+                        }
                     }
                 } else if (pageStatus == 3) {
                     pageStatus = 4
@@ -161,14 +199,21 @@ fun AddingInfoScreen(
                                     1 -> {
                                         navController.popBackStack()
                                     }
+
                                     2 -> {
-                                        pageStatus = 1
-                                        titleText = "Passenger Details"
+                                        if (travelStatus == 1) {
+                                            pageStatus = 1
+                                            titleText = "Passenger Details"
+                                        } else {
+                                            viewModel.updateTravelStatus(1)
+                                        }
                                     }
+
                                     3 -> {
                                         pageStatus = 2
                                         titleText = "Select Seats"
                                     }
+
                                     4 -> {
                                         pageStatus = 3
                                         titleText = "Ticket Confirmation"
@@ -220,45 +265,60 @@ fun AddingInfoScreen(
                     }
                 }
                 HorizontalLine()
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 20.dp, end = 20.dp, top = 12.dp)
+                        .padding(start = 20.dp, end = 20.dp, top = 12.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = titleText,
-                        fontSize = 22.sp,
-                        fontFamily = Font_SFPro,
-                        modifier = Modifier.padding(top = 8.dp),
-                        fontWeight = FontWeight(600)
-                    )
-                    if (pageStatus == 1) {
-                        Row(
-                            modifier = Modifier.padding(bottom = 4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            TicketText(text = "${bookingData.adults} Adults", size = 14)
-                            Box(
-                                modifier = Modifier
-                                    .height(10.dp)
-                                    .width(1.dp)
-                                    .background(color = Color.Black.copy(alpha = .4f))
-                            )
-                            TicketText(text = "${bookingData.childs} Childrens", size = 14)
-                            Box(
-                                modifier = Modifier
-                                    .height(10.dp)
-                                    .width(1.dp)
-                                    .background(color = Color.Black.copy(alpha = .4f))
-                            )
-                            TicketText(text = "${bookingData.infants} Infants", size = 14)
-                        }
-                    } else if (pageStatus == 2) {
-                        TicketText(
-                            text = "(${selectedSeats.size} of $passengers selected)",
-                            size = 14
+                    Column(
+                        modifier = Modifier
+                    ) {
+                        Text(
+                            text = titleText,
+                            fontSize = 22.sp,
+                            fontFamily = Font_SFPro,
+                            modifier = Modifier.padding(top = 8.dp),
+                            fontWeight = FontWeight(600)
                         )
+                        if (pageStatus == 1) {
+                            Row(
+                                modifier = Modifier.padding(bottom = 4.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TicketText(text = "${bookingData.adults} Adults", size = 14)
+                                Box(
+                                    modifier = Modifier
+                                        .height(10.dp)
+                                        .width(1.dp)
+                                        .background(color = Color.Black.copy(alpha = .4f))
+                                )
+                                TicketText(text = "${bookingData.childs} Childrens", size = 14)
+                                Box(
+                                    modifier = Modifier
+                                        .height(10.dp)
+                                        .width(1.dp)
+                                        .background(color = Color.Black.copy(alpha = .4f))
+                                )
+                                TicketText(text = "${bookingData.infants} Infants", size = 14)
+                            }
+                        } else if (pageStatus == 2) {
+                            TicketText(
+                                text = if (travelStatus == 1) "(${selectedSeatsDeparture.size} of $passengers selected)" else "(${selectedSeatsReturn.size} of $passengers selected)",
+                                size = 14
+                            )
+                        }
+                    }
+                    if (pageStatus == 2 && bookingData.roundway) {
+                        ClassButton(
+                            text = if (travelStatus == 1) "Departure" else "Return",
+                            textColor = Color.Black,
+                            containerColor = black40.copy(0.1f)
+                        ) {
+
+                        }
                     }
                 }
                 when (pageStatus) {
@@ -306,6 +366,7 @@ fun AddingInfoScreen(
                             }
                         }
                     }
+
                     2 -> {
                         Box(
                             modifier = Modifier.fillMaxSize()
@@ -322,6 +383,7 @@ fun AddingInfoScreen(
                             }
                         }
                     }
+
                     3 -> {
                         Box(
                             modifier = Modifier.fillMaxSize()
@@ -333,12 +395,16 @@ fun AddingInfoScreen(
                             ) {
                                 DetailsSection(
                                     passengerList = passengerList,
-                                    selectedSeats = viewModel.getSeats(),
-                                    flightData = departureFlight
+                                    selectedSeatsDeparture = seatsDeparture,
+                                    flightDataDeparture = departureFlight,
+                                    flightDataReturn = returnFlight,
+                                    flightBookingData = bookingData,
+                                    selectedSeatsReturn = seatsReturn
                                 )
                             }
                         }
                     }
+
                     4 -> {
                         Box(
                             modifier = Modifier.fillMaxSize()
@@ -348,7 +414,7 @@ fun AddingInfoScreen(
                                     .fillMaxWidth()
                                     .padding(horizontal = 20.dp)
                             ) {
-                                PaymentSection("$" + departureFlight.price.toString())
+                                PaymentSection("$" + (departureFlight.price + returnFlight.price).toString())
                             }
                         }
                     }

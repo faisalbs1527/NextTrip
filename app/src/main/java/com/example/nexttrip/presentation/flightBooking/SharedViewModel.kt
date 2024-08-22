@@ -18,7 +18,9 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         private set
     var passengerList = MutableStateFlow<List<PassengerData>>(emptyList())
         private set
-    var selectedSeats = MutableStateFlow<String>("")
+    var selectedSeatsDeparture = MutableStateFlow<String>("")
+
+    var selectedSeatsReturn = MutableStateFlow<String>("")
 
     fun updateDepartureFlight(flight: FlightsData) {
         departureFlight.value = flight
@@ -36,7 +38,10 @@ class SharedViewModel @Inject constructor() : ViewModel() {
         passengerList.value = passengers
     }
 
-    fun updateSelectedSeats(seats: String) {
-        selectedSeats.value = seats
+    fun updateSelectedSeatsDeparture(seats: String) {
+        selectedSeatsDeparture.value = seats
+    }
+    fun updateSelectedSeatsReturn(seats: String) {
+        selectedSeatsReturn.value = seats
     }
 }
