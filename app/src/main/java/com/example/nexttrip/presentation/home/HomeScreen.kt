@@ -126,7 +126,7 @@ fun HomeScreenSkeleton(navController: NavController) {
             ButtonCustom(
                 modifier = Modifier.padding(top = 20.dp),
                 text = "Search Flight Now"
-            ){
+            ) {
 
             }
             Row(
@@ -169,8 +169,15 @@ fun HomeScreenSkeleton(navController: NavController) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(itemsList) { item ->
-                    ServiceItem(title = item.title, image = item.image) {
-                        navController.navigate(Screen.BookingScreen.route)
+                    ServiceItem(
+                        serviceId = item.id,
+                        title = item.title,
+                        image = item.image
+                    ) { serviceId ->
+                        when (serviceId) {
+                            1 -> navController.navigate(Screen.BookingScreen.route)
+                            2 -> navController.navigate(Screen.ReservationScreen.route)
+                        }
                     }
                 }
             }

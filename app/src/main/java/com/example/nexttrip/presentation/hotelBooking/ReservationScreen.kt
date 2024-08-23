@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -44,6 +45,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.AddReturn
 import com.example.nexttrip.components.ButtonRound
 import com.example.nexttrip.components.DatePickerModel
@@ -59,7 +62,9 @@ import com.example.nexttrip.utils.currentDateMillis
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BookingScreen() {
+fun ReservationScreen(
+    navController: NavController = rememberNavController()
+) {
 
     val viewModel: ReservationViewModel = hiltViewModel()
     val checkIn by viewModel.checkIn.collectAsState()
@@ -242,7 +247,7 @@ fun BookingScreen() {
                 ButtonRound(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(top = 402.dp, bottom = 16.dp)
+                        .offset(y = 45.dp)
                 ) {
 
                 }
@@ -276,5 +281,5 @@ fun BookingScreen() {
 @Preview(showBackground = true)
 @Composable
 private fun ShowReservationScreen() {
-    BookingScreen()
+    ReservationScreen()
 }
