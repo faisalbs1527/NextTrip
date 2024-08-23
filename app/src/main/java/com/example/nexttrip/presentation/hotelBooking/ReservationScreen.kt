@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -19,8 +18,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.AirlineSeatReclineNormal
-import androidx.compose.material.icons.filled.BedroomParent
 import androidx.compose.material.icons.filled.ContentPasteGo
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.LocationOn
@@ -47,10 +44,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.nexttrip.components.AddReturn
 import com.example.nexttrip.components.ButtonRound
 import com.example.nexttrip.components.DatePickerModel
 import com.example.nexttrip.components.HorizontalLine
+import com.example.nexttrip.components.HotelBottomSheet
 import com.example.nexttrip.components.PickerBox
 import com.example.nexttrip.components.SelectBoxWithText
 import com.example.nexttrip.components.formatDate
@@ -69,6 +66,7 @@ fun ReservationScreen(
     val viewModel: ReservationViewModel = hiltViewModel()
     val checkIn by viewModel.checkIn.collectAsState()
     val checkOut by viewModel.checkOut.collectAsState()
+    val roomList by viewModel.roomList.collectAsState()
 
     var showDatePicker by remember {
         mutableStateOf(false)
@@ -203,7 +201,7 @@ fun ReservationScreen(
                             modifier = Modifier.weight(1f),
                             modifierIcon = Modifier.padding(end = 4.dp),
                             title = "GUESTS",
-                            contentText = String.format("%02d", 4),
+                            contentText = String.format("%02d", viewModel.getTotalGuests()),
                             icon = Icons.Default.People
                         ) {
                             showBottomSheet = true
@@ -211,7 +209,7 @@ fun ReservationScreen(
                         PickerBox(
                             modifier = Modifier.weight(1f),
                             title = "ROOMS",
-                            contentText = "1",
+                            contentText = roomList.size.toString(),
                             icon = Icons.Default.House
                         ) {
                             showBottomSheet = true
@@ -240,6 +238,9 @@ fun ReservationScreen(
 
                         }
                         SelectBoxWithText(text = "Friends") {
+
+                        }
+                        SelectBoxWithText(text = "Solo") {
 
                         }
                     }
@@ -275,6 +276,11 @@ fun ReservationScreen(
                 showDatePicker = false
             }
         )
+    }
+    if (showBottomSheet) {
+        HotelBottomSheet(onDismiss = { showBottomSheet = false }) { roomList ->
+            viewModel.updateRoomList(roomList)
+        }
     }
 }
 
