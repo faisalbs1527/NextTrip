@@ -201,7 +201,7 @@ fun ReservationScreen(
                             modifier = Modifier.weight(1f),
                             modifierIcon = Modifier.padding(end = 4.dp),
                             title = "GUESTS",
-                            contentText = String.format("%02d", viewModel.getTotalGuests()),
+                            contentText =  viewModel.getTotalGuests(),
                             icon = Icons.Default.People
                         ) {
                             showBottomSheet = true

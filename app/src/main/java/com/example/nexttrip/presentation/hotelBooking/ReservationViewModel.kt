@@ -15,7 +15,7 @@ class ReservationViewModel : ViewModel() {
     var checkOut = MutableStateFlow(nextDate)
         private set
 
-    var roomList = MutableStateFlow<List<RoomData>>(listOf(RoomData()))
+    var roomList = MutableStateFlow(listOf(RoomData()))
         private set
 
     fun onUpdateCheckIN(date: String) = viewModelScope.launch {
@@ -31,10 +31,10 @@ class ReservationViewModel : ViewModel() {
     }
 
     fun getTotalGuests(): String {
-        var total: Int = 0
+        var total = 0
         for (room in roomList.value) {
             total += room.totalGuest
         }
-        return total.toString()
+        return String.format("%02d", total)
     }
 }

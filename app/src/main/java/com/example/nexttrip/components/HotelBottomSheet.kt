@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
@@ -72,41 +75,54 @@ fun HotelBottomSheet(
             )
         }
         HorizontalLine()
-        Column(
-            modifier = Modifier.fillMaxWidth()
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            for (room in roomList) {
-                Room(room)
-            }
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(
+                        state = rememberScrollState()
+                    )
             ) {
-                Text(
-                    text = "More than 4 guests?",
-                    fontSize = 16.sp,
-                    fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(300),
-                    modifier = Modifier.padding(start = 12.dp, top = 8.dp)
-                )
-                AddRoomButton {
-                    roomCount++
-                    roomList += RoomData(roomNo = roomCount)
-                }
-                ButtonCustom(
-                    modifier = Modifier
-                        .padding(top = 12.dp, bottom = 32.dp, start = 12.dp, end = 12.dp),
-                    text = "Done"
-                ) {
-                    scope
-                        .launch { sheetState.hide() }
-                        .invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                onDone(roomList)
-                                onDismiss()
-                            }
+                for (room in roomList) {
+                    Room(room) {
+                        roomList = roomList.filter { it != room }
+                        roomList = roomList.mapIndexed { index, roomData ->
+                            roomData.copy(roomNo = index + 1)
                         }
+                    }
+                }
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "More than 4 guests?",
+                        fontSize = 16.sp,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(300),
+                        modifier = Modifier.padding(start = 12.dp, top = 8.dp)
+                    )
+                    AddRoomButton {
+                        roomCount++
+                        roomList += RoomData(roomNo = roomCount)
+                    }
+                    ButtonCustom(
+                        modifier = Modifier
+                            .padding(top = 12.dp, bottom = 32.dp, start = 12.dp, end = 12.dp),
+                        text = "Done"
+                    ) {
+                        scope
+                            .launch { sheetState.hide() }
+                            .invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onDone(roomList)
+                                    onDismiss()
+                                }
+                            }
+                    }
                 }
             }
         }
@@ -123,18 +139,35 @@ private fun Show() {
 
 @Composable
 fun Room(
-    room: RoomData
+    room: RoomData,
+    onRemove: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "Room ${room.roomNo}",
-            fontSize = 22.sp,
-            fontFamily = Font_SFPro,
-            fontWeight = FontWeight(600),
-            modifier = Modifier.padding(start = 12.dp, top = 8.dp)
-        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Room ${room.roomNo}",
+                fontSize = 22.sp,
+                fontFamily = Font_SFPro,
+                fontWeight = FontWeight(600)
+            )
+            ClassButton(
+                text = "Remove",
+                textColor = if (room.roomNo == 1) black40 else Color.White,
+                containerColor = if (room.roomNo == 1) black40.copy(0.1f) else black40
+            ) {
+                if (room.roomNo != 1) {
+                    onRemove()
+                }
+            }
+        }
         HorizontalLine()
         GuestAdditionRow(title = "Adult", count = room.adult, limit = 4) {
             room.adult = it
