@@ -8,6 +8,7 @@ import java.time.DateTimeException
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -77,6 +78,27 @@ fun getMonth(date: LocalDate?): String {
 @RequiresApi(Build.VERSION_CODES.O)
 fun getYear(date: LocalDate?): String {
     return date?.year?.toString() ?: ""
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun convertToISO8601(dateString: String, timeString: String): String {
+    // Define the input date and time format
+    val dateFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    // Combine date and time strings
+    val combinedDateTimeString = "$dateString $timeString"
+    val combinedFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy HH:mm")
+
+    // Parse the combined date and time string into a LocalDateTime object
+    val localDateTime = LocalDateTime.parse(combinedDateTimeString, combinedFormatter)
+
+    // Convert LocalDateTime to ISO 8601 format with Zulu time (UTC)
+    val iso8601Formatter =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(ZoneOffset.UTC)
+    val iso8601String = localDateTime.atZone(ZoneOffset.UTC).format(iso8601Formatter)
+
+    return iso8601String
 }
 
 val currentDateMillis = System.currentTimeMillis()

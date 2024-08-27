@@ -1,7 +1,7 @@
 package com.example.nexttrip.di
 
 import com.example.nexttrip.data.DestinationRepoImpl
-import com.example.nexttrip.data.network.FlightRepoImpl
+import com.example.nexttrip.data.FlightRepoImpl
 import com.example.nexttrip.domain.repository.DestinationRepository
 import com.example.nexttrip.domain.repository.FlightRepository
 import dagger.Binds

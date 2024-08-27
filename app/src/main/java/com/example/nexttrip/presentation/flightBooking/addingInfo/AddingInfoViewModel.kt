@@ -115,13 +115,16 @@ class AddingInfoViewModel @Inject constructor(
         return isComplete
     }
 
-    fun getSeatPlans(flightNoDeparture: String, flightNoReturn: String) = viewModelScope.launch {
-        val response1 = repository.getSeatPlans(flightNoDeparture)
-        val response2 = repository.getSeatPlans(flightNoReturn)
-        seatListDeparture.value = response1.seatPlan.seats
-        seatListReturn.value = response2.seatPlan.seats
-        updateSeatList()
-    }
+    fun getSeatPlans(flightNoDeparture: String, flightNoReturn: String, roundWay: Boolean) =
+        viewModelScope.launch {
+            val response1 = repository.getSeatPlans(flightNoDeparture)
+            seatListDeparture.value = response1.seatPlan.seats
+            if (roundWay) {
+                val response2 = repository.getSeatPlans(flightNoReturn)
+                seatListReturn.value = response2.seatPlan.seats
+            }
+            updateSeatList()
+        }
 
     private fun isSelectable(seatNo: String, classType: String): Boolean {
         if (travelStatus.value == 1) {
