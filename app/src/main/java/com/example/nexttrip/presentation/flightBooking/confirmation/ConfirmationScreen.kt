@@ -100,7 +100,7 @@ fun ConfirmationScreen(
                             width = barcodeWidth
                         )
                     }
-
+                    sharedViewModel.saveBookingInfo()
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.HomeScreen.route) { inclusive = true }
                     }

@@ -98,7 +98,8 @@ fun AddingInfoScreen(
     LaunchedEffect(key1 = Unit) {
         viewModel.getSeatPlans(
             departureFlight.flightNumber,
-            returnFlight.flightNumber
+            returnFlight.flightNumber,
+            bookingData.roundway
         )
     }
 
