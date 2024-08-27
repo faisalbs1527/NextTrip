@@ -16,6 +16,7 @@ import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.home.HomeScreen
+import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
@@ -88,6 +89,9 @@ fun SetUpNavGraph(
             route = Screen.ConfirmationScreen.route
         ) {
             ConfirmationScreen(navController = navController, sharedViewModel = sharedViewModel)
+        }
+        composable(route = Screen.ReservationScreen.route) {
+            ReservationScreen(navController = navController)
         }
     }
 

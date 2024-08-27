@@ -20,11 +20,11 @@ import com.example.nexttrip.utils.createDate
 //)
 
 val itemsList = listOf(
-    ServiceItemData("Flight", R.drawable.plane),
-    ServiceItemData("Hotel", R.drawable.hotel),
-    ServiceItemData("Travel", R.drawable.travel),
-    ServiceItemData("Bus", R.drawable.bus),
-    ServiceItemData("Car", R.drawable.car)
+    ServiceItemData(1, "Flight", R.drawable.plane),
+    ServiceItemData(2, "Hotel", R.drawable.hotel),
+    ServiceItemData(3, "Travel", R.drawable.travel),
+    ServiceItemData(4, "Bus", R.drawable.bus),
+    ServiceItemData(5, "Car", R.drawable.car)
 )
 
 val from = AirportsData(
@@ -87,7 +87,7 @@ val dummyPassengerList = listOf(
         title = "MR.",
         firstName = "Faisal",
         lastName = "Ahammed",
-        birthDate = createDate("8","5","2000"),
+        birthDate = createDate("8", "5", "2000"),
         status = "Adult",
         passengerNo = "1"
     ),
@@ -95,7 +95,7 @@ val dummyPassengerList = listOf(
         title = "MR.",
         firstName = "G M",
         lastName = "Taskin",
-        birthDate = createDate("8","5","2000"),
+        birthDate = createDate("8", "5", "2000"),
         status = "Adult",
         passengerNo = "2"
     )

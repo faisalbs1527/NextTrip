@@ -24,9 +24,10 @@ import com.example.nexttrip.R
 
 @Composable
 fun ServiceItem(
+    serviceId: Int = 1,
     title: String,
     image: Int,
-    onClick: () -> Unit
+    onClick: (Int) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -40,7 +41,7 @@ fun ServiceItem(
                     shape = RoundedCornerShape(16.dp)
                 )
                 .clickable {
-                    onClick()
+                    onClick(serviceId)
                 }
         ) {
             Icon(
@@ -65,5 +66,5 @@ fun ServiceItem(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ServiceItem(title = "Flight", image = R.drawable.bus,{})
+    ServiceItem(title = "Flight", image = R.drawable.bus, onClick = {})
 }
