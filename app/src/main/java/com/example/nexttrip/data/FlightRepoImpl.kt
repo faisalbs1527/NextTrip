@@ -22,7 +22,6 @@ class FlightRepoImpl @Inject constructor(
         withContext(Dispatchers.IO) {
             val response = apiService.getSeatPlans()
             val seatList = response.find { it.flightNumber == flightNo }
-            println(seatList)
             return@withContext seatList!!
         }
 

@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.nexttrip.presentation.MainScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
@@ -30,14 +31,17 @@ fun SetUpNavGraph(
     sharedViewModel: SharedViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = Screen.MainScreen.route) {
+            MainScreen(navController = navController, selectedItem = 1)
+        }
         composable(route = Screen.HomeScreen.route) {
-            HomeScreen(navController)
+            MainScreen(navController = navController, selectedItem = 1)
         }
         composable(route = Screen.PopularDestination.route) {
             PopularDestinationScreen(navController)
         }
         composable(route = Screen.BookingScreen.route) {
-            BookingScreen(navController)
+            MainScreen(navController = navController, selectedItem = 3)
         }
         composable(
             route = Screen.SearchScreen.route,
@@ -92,6 +96,10 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.ReservationScreen.route) {
             ReservationScreen(navController = navController)
+        }
+
+        composable(route = Screen.MyBookingScreen.route) {
+            MainScreen(navController = navController, selectedItem = 2)
         }
     }
 

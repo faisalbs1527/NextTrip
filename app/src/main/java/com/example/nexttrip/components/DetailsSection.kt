@@ -32,7 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
-import com.example.nexttrip.presentation.departureData
+import com.example.nexttrip.utils.departureData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData

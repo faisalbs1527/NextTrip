@@ -36,13 +36,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
-import com.example.nexttrip.presentation.bookingInfoData
-import com.example.nexttrip.presentation.departureData
-import com.example.nexttrip.presentation.dummyPassengerList
+import com.example.nexttrip.utils.bookingInfoData
+import com.example.nexttrip.utils.departureData
+import com.example.nexttrip.utils.dummyPassengerList
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData
-import com.example.nexttrip.presentation.returnData
+import com.example.nexttrip.utils.returnData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red80

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,10 +54,10 @@ import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.components.formattedDateToMillis
 import com.example.nexttrip.components.getNextDate
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.from
+import com.example.nexttrip.utils.from
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
-import com.example.nexttrip.presentation.to
+import com.example.nexttrip.utils.to
 import com.example.nexttrip.ui.theme.Font_Lato
 import com.example.nexttrip.ui.theme.Font_LatoBold
 import com.example.nexttrip.ui.theme.NextTripTheme
@@ -64,14 +65,14 @@ import com.example.nexttrip.utils.currentDateMillis
 import com.google.gson.Gson
 
 @Composable
-fun BookingScreen(navController: NavController) {
-    BookingScreenSkeleton(navController)
+fun BookingScreen(navController: NavController, innerPadding: PaddingValues) {
+    BookingScreenSkeleton(navController, innerPadding)
 }
 
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun BookingScreenSkeleton(navController: NavController) {
+fun BookingScreenSkeleton(navController: NavController, innerPadding: PaddingValues) {
 
     val viewModel: BookingViewModel = hiltViewModel()
 
@@ -125,7 +126,11 @@ fun BookingScreenSkeleton(navController: NavController) {
     if (toJson.isNotEmpty()) toData.value = Gson().fromJson(toJson, AirportsData::class.java)
 
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
         Column(
             modifier = Modifier
                 .background(color = Color.Gray.copy(alpha = 0.2f))
@@ -449,6 +454,6 @@ fun BookingScreenSkeleton(navController: NavController) {
 @Composable
 private fun ShowBooking() {
     NextTripTheme {
-        BookingScreenSkeleton(rememberNavController())
+        BookingScreenSkeleton(rememberNavController(), PaddingValues(0.dp))
     }
 }

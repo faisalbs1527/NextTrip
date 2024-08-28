@@ -1,4 +1,4 @@
-package com.example.nexttrip.presentation
+package com.example.nexttrip.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -8,7 +8,6 @@ import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
-import com.example.nexttrip.utils.createDate
 
 
 //val destinationList = listOf(
