@@ -2,6 +2,7 @@ package com.example.nexttrip.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.ImageBitmap
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData

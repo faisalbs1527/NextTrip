@@ -11,6 +11,7 @@ import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.utils.convertToISO8601
 import com.example.nexttrip.utils.getTime
+import com.example.nexttrip.utils.ticketDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -57,7 +58,8 @@ class SharedViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun saveBookingInfo() = viewModelScope.launch {
+    fun saveBookingInfo(ticket: ByteArray) = viewModelScope.launch {
+        val currDateTime = ticketDate()
         val ticketEntityDeparture = TicketEntity(
             flightNo = departureFlight.value.flightNumber,
             departureCity = bookingdata.value.departureCity,
@@ -69,7 +71,9 @@ class SharedViewModel @Inject constructor(
             arrivalTime = convertToISO8601(
                 bookingdata.value.departureDate,
                 getTime(departureFlight.value.arrivalTime)
-            )
+            ),
+            ticket = ticket,
+            ticketName = "ticket_$currDateTime"
         )
         repository.saveFlightTicketInfo(ticketEntityDeparture)
 
@@ -85,7 +89,9 @@ class SharedViewModel @Inject constructor(
                 arrivalTime = convertToISO8601(
                     bookingdata.value.arrivalDate,
                     getTime(returnFlight.value.arrivalTime)
-                )
+                ),
+                ticket = ticket,
+                ticketName = "ticket_$currDateTime"
             )
             repository.saveFlightTicketInfo(ticketEntityReturn)
         }

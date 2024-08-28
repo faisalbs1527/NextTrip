@@ -11,5 +11,7 @@ data class TicketEntity(
     val departureCity: String,
     val arrivalCity: String,
     val departureTime: String,
-    val arrivalTime: String
+    val arrivalTime: String,
+    val ticket: ByteArray,
+    val ticketName: String
 )

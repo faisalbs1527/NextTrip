@@ -12,6 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,9 +32,10 @@ import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 
 @Composable
-fun MyBookingsScreen(navController: NavController, innerPadding: PaddingValues) {
-
-    val viewModel: MyBookingViewModel = hiltViewModel()
+fun MyBookingsScreen(
+    navController: NavController, innerPadding: PaddingValues,
+    viewModel: MyBookingViewModel = hiltViewModel()
+) {
 
     val bookings by viewModel.ticketInfo.collectAsState()
 
@@ -47,7 +52,7 @@ fun MyBookingsScreen(navController: NavController, innerPadding: PaddingValues) 
             modifier = Modifier
                 .background(color = Color.Gray.copy(0.2f))
                 .fillMaxSize()
-                .padding(vertical = 30.dp)
+                .padding(top = 30.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -62,7 +67,7 @@ fun MyBookingsScreen(navController: NavController, innerPadding: PaddingValues) 
                         .weight(.1f)
                         .size(36.dp)
                         .clickable {
-
+                            navController.popBackStack()
                         }
                 )
                 Row(
@@ -85,19 +90,29 @@ fun MyBookingsScreen(navController: NavController, innerPadding: PaddingValues) 
                     .fillMaxWidth()
             ) {
                 items(bookings) { booking ->
-                    BookingItem(booking)
+                    BookingItem(booking) {
+                        viewModel.getTicket(booking.id)
+                        navController.navigate(Screen.PdfViewScreen.route)
+                    }
                 }
             }
         }
     }
 }
 
+
 @Composable
-fun BookingItem(booking: TicketEntity) {
+fun BookingItem(
+    booking: TicketEntity,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .padding(horizontal = 20.dp, vertical = 8.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(

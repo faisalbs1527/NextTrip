@@ -16,6 +16,7 @@ import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.home.HomeScreen
 import com.example.nexttrip.presentation.model.NavItems
+import com.example.nexttrip.presentation.myBooking.MyBookingViewModel
 import com.example.nexttrip.presentation.myBooking.MyBookingsScreen
 
 @SuppressLint("RestrictedApi")
@@ -23,7 +24,8 @@ import com.example.nexttrip.presentation.myBooking.MyBookingsScreen
 @Composable
 fun MainScreen(
     navController: NavController,
-    selectedItem: Int
+    selectedItem: Int,
+    myBookingViewModel: MyBookingViewModel
 ) {
 
     val items = listOf(
@@ -61,7 +63,8 @@ fun MainScreen(
 
             Screen.MyBookingScreen.route -> MyBookingsScreen(
                 navController = navController,
-                innerPadding = innerPadding
+                innerPadding = innerPadding,
+                viewModel = myBookingViewModel
             )
 
             Screen.BookingScreen.route -> BookingScreen(
