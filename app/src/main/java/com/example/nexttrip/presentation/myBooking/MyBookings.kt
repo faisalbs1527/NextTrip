@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.*
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.domain.model.TicketEntity
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
@@ -65,9 +67,11 @@ fun MyBookingsScreen(
                     contentDescription = "",
                     modifier = Modifier
                         .weight(.1f)
-                        .size(36.dp)
+                        .size(28.dp)
                         .clickable {
-                            navController.popBackStack()
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                            }
                         }
                 )
                 Row(
@@ -88,6 +92,7 @@ fun MyBookingsScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(top = 12.dp)
             ) {
                 items(bookings) { booking ->
                     BookingItem(booking) {
@@ -106,46 +111,48 @@ fun BookingItem(
     booking: TicketEntity,
     onClick: () -> Unit
 ) {
-    Card(
+
+    Column(
         modifier = Modifier
-            .padding(horizontal = 20.dp, vertical = 8.dp)
             .fillMaxWidth()
+            .padding(horizontal = 20.dp, vertical = 8.dp)
+            .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+            .padding(vertical = 16.dp, horizontal = 8.dp)
             .clickable {
                 onClick()
-            },
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+            }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = "Flight ${booking.flightNo}",
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 18.sp
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "From: ${booking.departureCity}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "To: ${booking.arrivalCity}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Departure Date: ${booking.departureTime}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Text(
-                text = "Arrival Date: ${booking.arrivalTime}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        Text(
+            text = "Flight ${booking.flightNo}",
+            fontFamily = Font_SFPro,
+            style = MaterialTheme.typography.titleMedium,
+            fontSize = 18.sp
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "From: ${booking.departureCity}",
+            fontFamily = Font_SFPro,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = "To: ${booking.arrivalCity}",
+            fontFamily = Font_SFPro,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Departure Date: ${booking.departureTime}",
+            fontFamily = Font_SFPro,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = "Arrival Date: ${booking.arrivalTime}",
+            fontFamily = Font_SFPro,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
