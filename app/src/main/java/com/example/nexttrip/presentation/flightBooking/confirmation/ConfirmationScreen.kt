@@ -75,6 +75,7 @@ fun ConfirmationScreen(
     var pageStatus by remember {
         mutableIntStateOf(1)
     }
+
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
@@ -89,7 +90,7 @@ fun ConfirmationScreen(
                     pageStatus = 2
                     titleText = "Ticket"
                 } else if (pageStatus == 2) {
-                    createPdfFromComposable(context) {
+                    val ticket = createPdfFromComposable(context) {
                         TicketSection(
                             departureFlight = departureFlight,
                             returnFlight = returnFlight,
@@ -100,7 +101,7 @@ fun ConfirmationScreen(
                             width = barcodeWidth
                         )
                     }
-                    sharedViewModel.saveBookingInfo()
+                    sharedViewModel.saveBookingInfo(ticket)
                     navController.navigate(Screen.HomeScreen.route) {
                         popUpTo(Screen.HomeScreen.route) { inclusive = true }
                     }

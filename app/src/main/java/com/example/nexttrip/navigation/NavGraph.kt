@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.nexttrip.presentation.MainScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
@@ -20,6 +21,8 @@ import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
+import com.example.nexttrip.presentation.myBooking.MyBookingViewModel
+import com.example.nexttrip.presentation.myBooking.ViewPdfScreen
 import com.google.gson.Gson
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -27,17 +30,33 @@ import com.google.gson.Gson
 fun SetUpNavGraph(
     navController: NavHostController,
     startDestination: String,
-    sharedViewModel: SharedViewModel = hiltViewModel()
+    sharedViewModel: SharedViewModel = hiltViewModel(),
+    myBookingViewModel: MyBookingViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = Screen.MainScreen.route) {
+            MainScreen(
+                navController = navController,
+                selectedItem = 1,
+                myBookingViewModel = myBookingViewModel
+            )
+        }
         composable(route = Screen.HomeScreen.route) {
-            HomeScreen(navController)
+            MainScreen(
+                navController = navController,
+                selectedItem = 1,
+                myBookingViewModel = myBookingViewModel
+            )
         }
         composable(route = Screen.PopularDestination.route) {
             PopularDestinationScreen(navController)
         }
         composable(route = Screen.BookingScreen.route) {
-            BookingScreen(navController)
+            MainScreen(
+                navController = navController,
+                selectedItem = 3,
+                myBookingViewModel = myBookingViewModel
+            )
         }
         composable(
             route = Screen.SearchScreen.route,
@@ -92,6 +111,18 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.ReservationScreen.route) {
             ReservationScreen(navController = navController)
+        }
+
+        composable(route = Screen.MyBookingScreen.route) {
+            MainScreen(
+                navController = navController,
+                selectedItem = 2,
+                myBookingViewModel = myBookingViewModel
+            )
+        }
+
+        composable(route = Screen.PdfViewScreen.route) {
+            ViewPdfScreen(navController = navController, viewModel = myBookingViewModel)
         }
     }
 

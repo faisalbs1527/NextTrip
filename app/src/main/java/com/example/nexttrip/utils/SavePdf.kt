@@ -9,6 +9,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.nexttrip.utils.ticketDate
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -18,8 +19,7 @@ import java.util.Locale
 
 
 fun savePdfToDownloads(context: Context, pdfDocument: PdfDocument) {
-    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-    val currentDateTime = dateFormat.format(Date())
+    val currentDateTime = ticketDate()
     val fileName = "ticket_$currentDateTime.pdf"
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

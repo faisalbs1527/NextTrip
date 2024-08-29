@@ -4,12 +4,15 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.components.getNextDate
+import java.text.SimpleDateFormat
 import java.time.DateTimeException
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun getDuration(startDateTime: String, endDateTime: String): String {
@@ -99,6 +102,12 @@ fun convertToISO8601(dateString: String, timeString: String): String {
     val iso8601String = localDateTime.atZone(ZoneOffset.UTC).format(iso8601Formatter)
 
     return iso8601String
+}
+
+fun ticketDate(): String{
+    val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+    val currentDateTime = dateFormat.format(Date())
+    return currentDateTime
 }
 
 val currentDateMillis = System.currentTimeMillis()

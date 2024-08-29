@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,17 +40,17 @@ import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.PlanCard
 import com.example.nexttrip.components.ServiceItem
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.itemsList
+import com.example.nexttrip.utils.itemsList
 import com.example.nexttrip.ui.theme.NextTripTheme
 
 @Composable
-fun HomeScreen(navController: NavController) {
-    HomeScreenSkeleton(navController)
+fun HomeScreen(navController: NavController, innerPadding: PaddingValues) {
+    HomeScreenSkeleton(navController, innerPadding)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenSkeleton(navController: NavController) {
+fun HomeScreenSkeleton(navController: NavController, innerPadding: PaddingValues) {
 
     val viewModel: HomeViewModel = hiltViewModel()
 
@@ -59,7 +60,11 @@ fun HomeScreenSkeleton(navController: NavController) {
         viewModel.getDestinations()
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(innerPadding)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()

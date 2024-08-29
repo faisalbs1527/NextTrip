@@ -2,16 +2,20 @@ package com.example.nexttrip.utils
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.pdf.PdfDocument
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.drawToBitmap
 import savePdfToDownloads
+import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 
-fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit) {
+fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit): ByteArray {
     val composeView = ComposeView(context).apply {
         setContent {
             composable()
@@ -50,6 +54,8 @@ fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit
     }
 
     // Save the PDF to a file
-    savePdfToDownloads(context,  pdfDocument)
+    savePdfToDownloads(context, pdfDocument)
     pdfDocument.close()
+
+    return bitmap.toByteArray()
 }
