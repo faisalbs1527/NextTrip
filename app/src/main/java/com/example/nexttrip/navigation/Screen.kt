@@ -34,4 +34,6 @@ sealed class Screen(val route: String) {
     data object MyBookingScreen : Screen(route = "MyBookingScreen")
 
     data object PdfViewScreen : Screen(route = "PdfView")
+
+    data object AvailableHotelScreen : Screen(route = "availableHotels")
 }

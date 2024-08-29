@@ -17,7 +17,9 @@ import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.home.HomeScreen
+import com.example.nexttrip.presentation.hotelBooking.AvailableHotelScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
+import com.example.nexttrip.presentation.hotelBooking.ReservationViewModel
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
@@ -31,7 +33,8 @@ fun SetUpNavGraph(
     navController: NavHostController,
     startDestination: String,
     sharedViewModel: SharedViewModel = hiltViewModel(),
-    myBookingViewModel: MyBookingViewModel = hiltViewModel()
+    myBookingViewModel: MyBookingViewModel = hiltViewModel(),
+    reservationViewModel: ReservationViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Screen.MainScreen.route) {
@@ -110,7 +113,7 @@ fun SetUpNavGraph(
             ConfirmationScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(route = Screen.ReservationScreen.route) {
-            ReservationScreen(navController = navController)
+            ReservationScreen(navController = navController, viewModel = reservationViewModel)
         }
 
         composable(route = Screen.MyBookingScreen.route) {
@@ -123,6 +126,10 @@ fun SetUpNavGraph(
 
         composable(route = Screen.PdfViewScreen.route) {
             ViewPdfScreen(navController = navController, viewModel = myBookingViewModel)
+        }
+
+        composable(route = Screen.AvailableHotelScreen.route) {
+            AvailableHotelScreen(navController = navController, viewModel = reservationViewModel)
         }
     }
 

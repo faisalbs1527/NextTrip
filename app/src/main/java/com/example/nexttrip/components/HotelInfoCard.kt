@@ -33,7 +33,9 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.model.AvailableHotelData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.blue80
 import com.example.nexttrip.ui.theme.gray
@@ -41,9 +43,13 @@ import com.example.nexttrip.ui.theme.green90
 import com.example.nexttrip.ui.theme.red10
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
-fun HotelInfoCard() {
+fun HotelInfoCard(
+    hotel: AvailableHotelData
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,8 +60,8 @@ fun HotelInfoCard() {
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.hotelimage),
+            AsyncImage(
+                model = hotel.image,
                 contentDescription = "",
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,7 +89,7 @@ fun HotelInfoCard() {
             }
         }
         Text(
-            text = "Beachfront Paradise Hotel",
+            text = hotel.name,
             fontFamily = Font_SFPro,
             fontSize = 18.sp,
             fontWeight = FontWeight(600),
@@ -101,7 +107,7 @@ fun HotelInfoCard() {
                 modifier = Modifier.size(14.dp)
             )
             Text(
-                text = "789 Seaside Rd, Cox's Bazar, BD",
+                text = hotel.location,
                 fontSize = 12.sp,
                 color = Color.Black.copy(0.5f),
                 fontFamily = Font_SFPro
@@ -118,7 +124,7 @@ fun HotelInfoCard() {
                     .padding(horizontal = 8.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "10% OFF",
+                    text = "${hotel.discount}% OFF",
                     fontSize = 12.sp,
                     color = Color.White,
                     fontFamily = Font_SFPro,
@@ -139,7 +145,7 @@ fun HotelInfoCard() {
                     modifier = Modifier.size(14.dp)
                 )
                 Text(
-                    text = "5.00 Star",
+                    text = "${hotel.rating} Star",
                     fontSize = 12.sp,
                     color = Color.Black.copy(0.5f),
                     fontFamily = Font_SFPro
@@ -162,14 +168,14 @@ fun HotelInfoCard() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "BDT 9,500",
+                    text = "BDT " + formatNumber(hotel.startPriceActual),
                     fontSize = 12.sp,
                     color = red40.copy(.8f),
                     fontFamily = Font_SFPro,
                     textDecoration = TextDecoration.LineThrough,
                 )
                 Text(
-                    text = "BDT 9,500",
+                    text = "BDT " + formatNumber(hotel.startPriceDiscount),
                     fontSize = 14.sp,
                     color = blue80,
                     fontFamily = Font_SFPro,
@@ -229,5 +235,11 @@ fun HotelInfoCard() {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    HotelInfoCard()
+//    HotelInfoCard()
+}
+
+fun formatNumber(number: Int): String {
+    val numberFormat = NumberFormat.getInstance(Locale.US)
+    val formattedNumber = numberFormat.format(number)
+    return formattedNumber
 }
