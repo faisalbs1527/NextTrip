@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nexttrip.domain.model.hotelbooking.Room
 import com.example.nexttrip.domain.model.hotelbooking.toAvailableHotel
+import com.example.nexttrip.domain.model.hotelbooking.toAvailableRoomInfo
 import com.example.nexttrip.domain.repository.HotelRepository
 import com.example.nexttrip.presentation.model.AvailableHotelData
+import com.example.nexttrip.presentation.model.AvailableRoomInfo
 import com.example.nexttrip.presentation.model.RoomData
 import com.example.nexttrip.utils.currentDate
 import com.example.nexttrip.utils.nextDate
@@ -28,6 +30,9 @@ class ReservationViewModel @Inject constructor(
         private set
 
     var hotelList = MutableStateFlow<List<AvailableHotelData>>(emptyList())
+        private set
+
+    var availableRooms = MutableStateFlow<List<AvailableRoomInfo>>(emptyList())
         private set
 
     private var selectedHotelId = MutableStateFlow(0)
@@ -68,6 +73,16 @@ class ReservationViewModel @Inject constructor(
 
     fun getSelectedHotelInfo() = viewModelScope.launch {
         selectedHotel.value = hotelList.value.find { it.id == selectedHotelId.value }!!
+    }
+
+    fun getAvailableRooms(roomX: RoomData) = viewModelScope.launch {
+        val currHotel = hotelList.value.find { it.id == selectedHotelId.value }!!
+
+        currHotel.rooms.forEach { roomY ->
+            if (roomX.adult <= roomY.capacity) {
+                availableRooms.value += roomY.toAvailableRoomInfo()
+            }
+        }
     }
 
     private fun checkAvailability(hotelRooms: List<Room>): Boolean {

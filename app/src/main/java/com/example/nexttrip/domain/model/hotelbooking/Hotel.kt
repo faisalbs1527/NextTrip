@@ -35,5 +35,6 @@ fun Hotel.toAvailableHotel() = AvailableHotelData(
     smoking = policies.smoking,
     complimentaryService = complimentary_services,
     checkIn = check_in_time,
-    checkOut = check_out_time
+    checkOut = check_out_time,
+    rooms = rooms
 )

@@ -16,6 +16,7 @@ import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.hotelBooking.AvailableHotelScreen
+import com.example.nexttrip.presentation.hotelBooking.AvailableRoomScreen
 import com.example.nexttrip.presentation.hotelBooking.HotelDetailsScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationViewModel
@@ -126,11 +127,14 @@ fun SetUpNavGraph(
             ViewPdfScreen(navController = navController, viewModel = myBookingViewModel)
         }
 
-        composable(route = Screen.AvailableHotelScreen.route){
-            AvailableHotelScreen(navController= navController, viewModel = reservationViewModel)
+        composable(route = Screen.AvailableHotelScreen.route) {
+            AvailableHotelScreen(navController = navController, viewModel = reservationViewModel)
         }
-        composable(route = Screen.HotelDetailsScreen.route){
-            HotelDetailsScreen(navController= navController, viewModel = reservationViewModel)
+        composable(route = Screen.HotelDetailsScreen.route) {
+            HotelDetailsScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.AvailableRoomScreen.route) {
+            AvailableRoomScreen(navController = navController, viewModel = reservationViewModel)
         }
     }
 

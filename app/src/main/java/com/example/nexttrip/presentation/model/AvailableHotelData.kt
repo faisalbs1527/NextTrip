@@ -1,5 +1,7 @@
 package com.example.nexttrip.presentation.model
 
+import com.example.nexttrip.domain.model.hotelbooking.Room
+
 data class AvailableHotelData(
     val id: Int = 0,
     val name: String = "",
@@ -15,5 +17,6 @@ data class AvailableHotelData(
     val smoking: String = "",
     val complimentaryService: List<String> = emptyList(),
     val checkIn: String = "",
-    val checkOut: String = ""
+    val checkOut: String = "",
+    val rooms: List<Room> = emptyList()
 )

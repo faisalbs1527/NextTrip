@@ -49,6 +49,7 @@ import com.example.nexttrip.R
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.TicketText
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
@@ -82,7 +83,7 @@ fun HotelDetailsScreen(
                     end = 20.dp
                 )
             ) {
-
+                navController.navigate(Screen.AvailableRoomScreen.route)
             }
         }
     ) { innerPadding ->
@@ -120,7 +121,7 @@ fun HotelDetailsScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Cox's Bazaar",
+                            text = "Hotel Details",
                             fontFamily = Font_SFPro,
                             fontSize = 20.sp,
                             color = red40,
