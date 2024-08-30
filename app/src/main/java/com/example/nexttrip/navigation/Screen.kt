@@ -36,4 +36,6 @@ sealed class Screen(val route: String) {
     data object PdfViewScreen : Screen(route = "PdfView")
 
     data object AvailableHotelScreen : Screen(route = "availableHotels")
+
+    data object HotelDetailsScreen : Screen(route = "hotelDetails")
 }

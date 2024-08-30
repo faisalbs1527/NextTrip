@@ -1,8 +1,8 @@
 package com.example.nexttrip.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,23 +24,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AvailableHotelData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.blue80
 import com.example.nexttrip.ui.theme.gray
-import com.example.nexttrip.ui.theme.green90
-import com.example.nexttrip.ui.theme.red10
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 import java.text.NumberFormat
@@ -48,12 +41,16 @@ import java.util.Locale
 
 @Composable
 fun HotelInfoCard(
-    hotel: AvailableHotelData
+    hotel: AvailableHotelData,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+            .clickable {
+                onClick()
+            }
     ) {
         Box(
             modifier = Modifier

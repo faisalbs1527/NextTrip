@@ -28,5 +28,12 @@ fun Hotel.toAvailableHotel() = AvailableHotelData(
     rating = rating,
     discount = ceil(((start_price_actual - start_price_discount) * 100).toDouble() / start_price_actual).toInt(),
     startPriceActual = start_price_actual,
-    startPriceDiscount = start_price_discount
+    startPriceDiscount = start_price_discount,
+    description = description,
+    cancellationPolicy = policies.cancellation_policy,
+    pets = policies.pets,
+    smoking = policies.smoking,
+    complimentaryService = complimentary_services,
+    checkIn = check_in_time,
+    checkOut = check_out_time
 )

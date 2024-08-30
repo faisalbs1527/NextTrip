@@ -30,6 +30,10 @@ class ReservationViewModel @Inject constructor(
     var hotelList = MutableStateFlow<List<AvailableHotelData>>(emptyList())
         private set
 
+    private var selectedHotelId = MutableStateFlow(0)
+
+    var selectedHotel = MutableStateFlow<AvailableHotelData>(AvailableHotelData())
+
     fun onUpdateCheckIN(date: String) = viewModelScope.launch {
         checkIn.value = date
     }
@@ -40,6 +44,10 @@ class ReservationViewModel @Inject constructor(
 
     fun updateRoomList(rooms: List<RoomData>) = viewModelScope.launch {
         roomList.value = rooms
+    }
+
+    fun updateSelectedHotelId(id: Int) = viewModelScope.launch {
+        selectedHotelId.value = id
     }
 
     fun getTotalGuests(): String {
@@ -56,6 +64,10 @@ class ReservationViewModel @Inject constructor(
             checkAvailability(it.rooms)
         }
         hotelList.value = availableHotels.map { it.toAvailableHotel() }
+    }
+
+    fun getSelectedHotelInfo() = viewModelScope.launch {
+        selectedHotel.value = hotelList.value.find { it.id == selectedHotelId.value }!!
     }
 
     private fun checkAvailability(hotelRooms: List<Room>): Boolean {

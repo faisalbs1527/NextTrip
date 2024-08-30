@@ -38,7 +38,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.HotelInfoCard
-import com.example.nexttrip.components.TicketInfo
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
@@ -118,7 +117,7 @@ fun AvailableHotelScreen(
                                 .width(1.dp)
                                 .background(color = Color.Black.copy(alpha = .4f))
                         )
-                        TicketText(text = rooms.size.toString()+" rooms", size = 12)
+                        TicketText(text = rooms.size.toString() + " rooms", size = 12)
                     }
                 }
                 Icon(
@@ -152,8 +151,11 @@ fun AvailableHotelScreen(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(hotelList){
-                    HotelInfoCard(it)
+                items(hotelList) {
+                    HotelInfoCard(it) {
+                        viewModel.updateSelectedHotelId(it.id)
+                        navController.navigate(Screen.HotelDetailsScreen.route)
+                    }
                 }
             }
         }

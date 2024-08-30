@@ -10,19 +10,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.nexttrip.presentation.MainScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
-import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
-import com.example.nexttrip.presentation.home.HomeScreen
 import com.example.nexttrip.presentation.hotelBooking.AvailableHotelScreen
+import com.example.nexttrip.presentation.hotelBooking.HotelDetailsScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationViewModel
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
-import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.myBooking.MyBookingViewModel
 import com.example.nexttrip.presentation.myBooking.ViewPdfScreen
 import com.google.gson.Gson
@@ -128,8 +126,11 @@ fun SetUpNavGraph(
             ViewPdfScreen(navController = navController, viewModel = myBookingViewModel)
         }
 
-        composable(route = Screen.AvailableHotelScreen.route) {
-            AvailableHotelScreen(navController = navController, viewModel = reservationViewModel)
+        composable(route = Screen.AvailableHotelScreen.route){
+            AvailableHotelScreen(navController= navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.HotelDetailsScreen.route){
+            HotelDetailsScreen(navController= navController, viewModel = reservationViewModel)
         }
     }
 
