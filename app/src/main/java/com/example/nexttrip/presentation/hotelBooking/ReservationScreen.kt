@@ -17,7 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ContentPasteGo
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.LocationOn
@@ -96,7 +96,7 @@ fun ReservationScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos, contentDescription = "",
+                    imageVector = Icons.Filled.ArrowBackIos, contentDescription = "",
                     modifier = Modifier
                         .weight(.1f)
                         .size(30.dp)
@@ -146,7 +146,7 @@ fun ReservationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.LocationOn,
-                            contentDescription = "Departure",
+                            contentDescription = "",
                             tint = Color.Black.copy(alpha = .6f),
                             modifier = Modifier
                                 .size(24.dp)
@@ -279,8 +279,8 @@ fun ReservationScreen(
         )
     }
     if (showBottomSheet) {
-        HotelBottomSheet(onDismiss = { showBottomSheet = false }) { roomList ->
-            viewModel.updateRoomList(roomList)
+        HotelBottomSheet(rooms= roomList,onDismiss = { showBottomSheet = false }) { rooms ->
+            viewModel.updateRoomList(rooms)
         }
     }
 }

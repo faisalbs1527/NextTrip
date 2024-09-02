@@ -45,6 +45,7 @@ import kotlin.math.min
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HotelBottomSheet(
+    rooms: List<RoomData>,
     onDismiss: () -> Unit,
     onDone: (List<RoomData>) -> Unit
 ) {
@@ -52,10 +53,10 @@ fun HotelBottomSheet(
     val scope = rememberCoroutineScope()
 
     var roomCount by remember {
-        mutableIntStateOf(1)
+        mutableIntStateOf(rooms.size)
     }
     var roomList by remember {
-        mutableStateOf(listOf(RoomData()))
+        mutableStateOf(rooms)
     }
 
     ModalBottomSheet(
@@ -86,7 +87,21 @@ fun HotelBottomSheet(
                     )
             ) {
                 for (room in roomList) {
-                    Room(room) {
+                    Room(room = room,
+                        onUpdateAdult = {
+                            roomList = roomList.map { roomData ->
+                                if (roomData.roomNo == room.roomNo) {
+                                    roomData.copy(adult = it)
+                                } else roomData
+                            }
+                        },
+                        onUpdateChild = {
+                            roomList = roomList.map { roomData ->
+                                if (roomData.roomNo == room.roomNo) {
+                                    roomData.copy(children = it)
+                                } else roomData
+                            }
+                        }) {
                         roomList = roomList.filter { it != room }
                         roomList = roomList.mapIndexed { index, roomData ->
                             roomData.copy(roomNo = index + 1)
@@ -132,7 +147,7 @@ fun HotelBottomSheet(
 @Preview
 @Composable
 private fun Show() {
-    HotelBottomSheet(onDismiss = {}) {
+    HotelBottomSheet(rooms = listOf(RoomData()), onDismiss = {}) {
 
     }
 }
@@ -140,6 +155,8 @@ private fun Show() {
 @Composable
 fun Room(
     room: RoomData,
+    onUpdateAdult: (Int) -> Unit,
+    onUpdateChild: (Int) -> Unit,
     onRemove: () -> Unit
 ) {
     Column(
@@ -171,6 +188,7 @@ fun Room(
         HorizontalLine()
         GuestAdditionRow(title = "Adult", count = room.adult, limit = 4) {
             room.adult = it
+            onUpdateAdult(it)
         }
         HorizontalLine()
         GuestAdditionRow(
@@ -180,6 +198,7 @@ fun Room(
             limit = room.adult
         ) {
             room.children = it
+            onUpdateChild(it)
         }
         Spacer(modifier = Modifier.padding(top = 32.dp))
     }

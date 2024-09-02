@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.hotelBooking
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nexttrip.domain.model.hotelbooking.Room
@@ -37,7 +38,7 @@ class ReservationViewModel @Inject constructor(
 
     private var selectedHotelId = MutableStateFlow(0)
 
-    var selectedHotel = MutableStateFlow<AvailableHotelData>(AvailableHotelData())
+    var selectedHotel = MutableStateFlow(AvailableHotelData())
 
     fun onUpdateCheckIN(date: String) = viewModelScope.launch {
         checkIn.value = date
@@ -55,10 +56,12 @@ class ReservationViewModel @Inject constructor(
         selectedHotelId.value = id
     }
 
+    @SuppressLint("DefaultLocale")
     fun getTotalGuests(): String {
         var total = 0
         for (room in roomList.value) {
-            total += room.totalGuest
+            total += room.adult
+            total += room.children
         }
         return String.format("%02d", total)
     }
