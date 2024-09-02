@@ -33,6 +33,9 @@ class ReservationViewModel @Inject constructor(
     var hotelList = MutableStateFlow<List<AvailableHotelData>>(emptyList())
         private set
 
+    var selectedRooms = MutableStateFlow(listOf(RoomData()))
+        private set
+
     var availableRooms = MutableStateFlow<List<AvailableRoomInfo>>(emptyList())
         private set
 
@@ -54,6 +57,10 @@ class ReservationViewModel @Inject constructor(
 
     fun updateSelectedHotelId(id: Int) = viewModelScope.launch {
         selectedHotelId.value = id
+    }
+
+    fun updateSelectedRooms()= viewModelScope.launch {
+        
     }
 
     @SuppressLint("DefaultLocale")

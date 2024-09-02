@@ -17,6 +17,8 @@ import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScre
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
 import com.example.nexttrip.presentation.hotelBooking.AvailableHotelScreen
 import com.example.nexttrip.presentation.hotelBooking.AvailableRoomScreen
+import com.example.nexttrip.presentation.hotelBooking.BookingConfirmationScreen
+import com.example.nexttrip.presentation.hotelBooking.BookingSummaryScreen
 import com.example.nexttrip.presentation.hotelBooking.HotelDetailsScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationViewModel
@@ -135,6 +137,15 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.AvailableRoomScreen.route) {
             AvailableRoomScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.BookingSummaryScreen.route) {
+            BookingSummaryScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.HotelConfirmation.route) {
+            BookingConfirmationScreen(
+                navController = navController,
+                viewModel = reservationViewModel
+            )
         }
     }
 

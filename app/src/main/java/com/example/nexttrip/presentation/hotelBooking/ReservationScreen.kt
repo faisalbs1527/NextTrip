@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ContentPasteGo
 import androidx.compose.material.icons.filled.House
@@ -96,7 +97,7 @@ fun ReservationScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBackIos, contentDescription = "",
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos, contentDescription = "",
                     modifier = Modifier
                         .weight(.1f)
                         .size(30.dp)

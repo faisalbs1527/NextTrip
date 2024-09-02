@@ -18,7 +18,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,9 +40,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
+import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.RoomInfoCard
 import com.example.nexttrip.components.TicketText
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.utils.getDateWithDay
@@ -53,7 +57,7 @@ fun AvailableRoomScreen(
 ) {
     val checkInDate by viewModel.checkIn.collectAsState()
     val checkOutDate by viewModel.checkOut.collectAsState()
-    val roomList by viewModel.availableRooms.collectAsState()
+    val availableRooms by viewModel.availableRooms.collectAsState()
     val rooms by viewModel.roomList.collectAsState()
 
     var currRoomId by remember {
@@ -63,79 +67,98 @@ fun AvailableRoomScreen(
     LaunchedEffect(currRoomId) {
         viewModel.getAvailableRooms(rooms[currRoomId])
     }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .background(color = Color.Gray.copy(0.2f))
-                .fillMaxSize()
-                .padding(vertical = 30.dp, horizontal = 20.dp)
-
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos, contentDescription = "",
-                    modifier = Modifier
-                        .size(26.dp)
-                        .clickable {
-                            navController.popBackStack()
-                        }
+    Scaffold(
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            ButtonCustom(
+                text = "Next",
+                modifier = Modifier.padding(
+                    start = 20.dp,
+                    end = 20.dp
                 )
+            ) {
+                navController.navigate(Screen.BookingSummaryScreen.route)
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(color = Color.Gray.copy(0.2f))
+                    .fillMaxSize()
+                    .padding(top = 30.dp, bottom = 56.dp, start = 20.dp, end = 20.dp)
 
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Select Rooms",
-                        fontFamily = Font_SFPro,
-                        fontSize = 20.sp,
-                        color = red40,
-                        fontWeight = FontWeight(600)
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(26.dp)
+                            .clickable {
+                                navController.popBackStack()
+                            }
                     )
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(
+                            text = "Select Rooms",
+                            fontFamily = Font_SFPro,
+                            fontSize = 20.sp,
+                            color = red40,
+                            fontWeight = FontWeight(600)
+                        )
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            TicketText(text = getDateWithDay(checkInDate), size = 12)
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                TicketText(text = getDateWithDay(checkInDate), size = 12)
 
-                            TicketText(text = "to", size = 12)
-                            TicketText(
-                                text = getDateWithDay(checkOutDate),
-                                size = 12
+                                TicketText(text = "to", size = 12)
+                                TicketText(
+                                    text = getDateWithDay(checkOutDate),
+                                    size = 12
+                                )
+
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .height(8.dp)
+                                    .width(1.dp)
+                                    .background(color = Color.Black.copy(alpha = .4f))
                             )
+                            TicketText(text = rooms.size.toString() + " rooms", size = 12)
+                        }
+                    }
+                    Icon(
+                        painter = painterResource(id = R.drawable.filter), contentDescription = "",
+                        modifier = Modifier.size(30.dp),
+                        tint = Color.Black
+                    )
+                }
+                HorizontalLine()
+
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(availableRooms) {
+                        RoomInfoCard(room = it) {
 
                         }
-                        Box(
-                            modifier = Modifier
-                                .height(8.dp)
-                                .width(1.dp)
-                                .background(color = Color.Black.copy(alpha = .4f))
-                        )
-                        TicketText(text = rooms.size.toString() + " rooms", size = 12)
-                    }
-                }
-                Icon(
-                    painter = painterResource(id = R.drawable.filter), contentDescription = "",
-                    modifier = Modifier.size(30.dp),
-                    tint = Color.Black
-                )
-            }
-            HorizontalLine()
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(roomList) {
-                    RoomInfoCard(room = it) {
-
                     }
                 }
             }
