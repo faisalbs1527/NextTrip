@@ -3,6 +3,7 @@ package com.example.nexttrip.di
 import com.example.nexttrip.data.network.ApiClient
 import com.example.nexttrip.data.network.api.DestinationAPI
 import com.example.nexttrip.data.network.api.FlightAPI
+import com.example.nexttrip.data.network.api.HotelAPI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +31,11 @@ class ApiModule {
     @Singleton
     fun provideFlightApi(retrofit: Retrofit): FlightAPI {
         return retrofit.create(FlightAPI::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideHotelApi(retrofit: Retrofit): HotelAPI {
+        return retrofit.create(HotelAPI::class.java)
     }
 }

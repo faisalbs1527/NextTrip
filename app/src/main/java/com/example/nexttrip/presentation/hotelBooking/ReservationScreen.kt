@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ContentPasteGo
 import androidx.compose.material.icons.filled.House
 import androidx.compose.material.icons.filled.LocationOn
@@ -53,6 +54,7 @@ import com.example.nexttrip.components.SelectBoxWithText
 import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.components.formattedDateToMillis
 import com.example.nexttrip.components.getNextDate
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.utils.currentDateMillis
@@ -60,10 +62,10 @@ import com.example.nexttrip.utils.currentDateMillis
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ReservationScreen(
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    viewModel: ReservationViewModel = hiltViewModel()
 ) {
 
-    val viewModel: ReservationViewModel = hiltViewModel()
     val checkIn by viewModel.checkIn.collectAsState()
     val checkOut by viewModel.checkOut.collectAsState()
     val roomList by viewModel.roomList.collectAsState()
@@ -145,7 +147,7 @@ fun ReservationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.LocationOn,
-                            contentDescription = "Departure",
+                            contentDescription = "",
                             tint = Color.Black.copy(alpha = .6f),
                             modifier = Modifier
                                 .size(24.dp)
@@ -201,7 +203,7 @@ fun ReservationScreen(
                             modifier = Modifier.weight(1f),
                             modifierIcon = Modifier.padding(end = 4.dp),
                             title = "GUESTS",
-                            contentText =  viewModel.getTotalGuests(),
+                            contentText = viewModel.getTotalGuests(),
                             icon = Icons.Default.People
                         ) {
                             showBottomSheet = true
@@ -250,7 +252,7 @@ fun ReservationScreen(
                         .align(Alignment.BottomCenter)
                         .offset(y = 45.dp)
                 ) {
-
+                    navController.navigate(Screen.AvailableHotelScreen.route)
                 }
             }
         }
@@ -278,8 +280,8 @@ fun ReservationScreen(
         )
     }
     if (showBottomSheet) {
-        HotelBottomSheet(onDismiss = { showBottomSheet = false }) { roomList ->
-            viewModel.updateRoomList(roomList)
+        HotelBottomSheet(rooms= roomList,onDismiss = { showBottomSheet = false }) { rooms ->
+            viewModel.updateRoomList(rooms)
         }
     }
 }

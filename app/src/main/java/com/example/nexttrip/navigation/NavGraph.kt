@@ -10,17 +10,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.nexttrip.presentation.MainScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
-import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoScreen
 import com.example.nexttrip.presentation.flightBooking.confirmation.ConfirmationScreen
-import com.example.nexttrip.presentation.home.HomeScreen
+import com.example.nexttrip.presentation.hotelBooking.AvailableHotelScreen
+import com.example.nexttrip.presentation.hotelBooking.AvailableRoomScreen
+import com.example.nexttrip.presentation.hotelBooking.BookingConfirmationScreen
+import com.example.nexttrip.presentation.hotelBooking.BookingSummaryScreen
+import com.example.nexttrip.presentation.hotelBooking.HotelDetailsScreen
 import com.example.nexttrip.presentation.hotelBooking.ReservationScreen
+import com.example.nexttrip.presentation.hotelBooking.ReservationViewModel
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
-import com.example.nexttrip.presentation.model.FlightsData
 import com.example.nexttrip.presentation.myBooking.MyBookingViewModel
 import com.example.nexttrip.presentation.myBooking.ViewPdfScreen
 import com.google.gson.Gson
@@ -31,7 +34,8 @@ fun SetUpNavGraph(
     navController: NavHostController,
     startDestination: String,
     sharedViewModel: SharedViewModel = hiltViewModel(),
-    myBookingViewModel: MyBookingViewModel = hiltViewModel()
+    myBookingViewModel: MyBookingViewModel = hiltViewModel(),
+    reservationViewModel: ReservationViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Screen.MainScreen.route) {
@@ -110,7 +114,7 @@ fun SetUpNavGraph(
             ConfirmationScreen(navController = navController, sharedViewModel = sharedViewModel)
         }
         composable(route = Screen.ReservationScreen.route) {
-            ReservationScreen(navController = navController)
+            ReservationScreen(navController = navController, viewModel = reservationViewModel)
         }
 
         composable(route = Screen.MyBookingScreen.route) {
@@ -123,6 +127,25 @@ fun SetUpNavGraph(
 
         composable(route = Screen.PdfViewScreen.route) {
             ViewPdfScreen(navController = navController, viewModel = myBookingViewModel)
+        }
+
+        composable(route = Screen.AvailableHotelScreen.route) {
+            AvailableHotelScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.HotelDetailsScreen.route) {
+            HotelDetailsScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.AvailableRoomScreen.route) {
+            AvailableRoomScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.BookingSummaryScreen.route) {
+            BookingSummaryScreen(navController = navController, viewModel = reservationViewModel)
+        }
+        composable(route = Screen.HotelConfirmation.route) {
+            BookingConfirmationScreen(
+                navController = navController,
+                viewModel = reservationViewModel
+            )
         }
     }
 

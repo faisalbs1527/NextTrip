@@ -108,6 +108,7 @@ fun HomeScreenSkeleton(navController: NavController, innerPadding: PaddingValues
                 active = false,
                 onActiveChange = {},
                 modifier = Modifier
+                    .fillMaxWidth()
                     .height(56.dp),
                 shape = RoundedCornerShape(4.dp),
                 placeholder = {

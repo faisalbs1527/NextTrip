@@ -24,17 +24,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
+import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 
 @Composable
 fun PaymentSection(
-    payment: String
+    actualPayment: String = "$500.00",
+    payment: String,
+    isIncludeDiscount: Boolean = false
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -70,13 +74,27 @@ fun PaymentSection(
                     fontWeight = FontWeight(500),
                     color = gray
                 )
-                Text(
-                    text = payment,
-                    fontSize = 24.sp,
-                    fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(600),
-                    color = red80
-                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (isIncludeDiscount) {
+                        Text(
+                            text = actualPayment,
+                            fontSize = 24.sp,
+                            color = gray.copy(.8f),
+                            fontFamily = Font_SFPro,
+                            textDecoration = TextDecoration.LineThrough,
+                        )
+                    }
+                    Text(
+                        text = payment,
+                        fontSize = 24.sp,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(600),
+                        color = red80
+                    )
+                }
             }
             HorizontalLine()
             Column(
@@ -130,5 +148,5 @@ fun PaymentSection(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    PaymentSection("$2200.00")
+    PaymentSection(payment = "$2200.00")
 }
