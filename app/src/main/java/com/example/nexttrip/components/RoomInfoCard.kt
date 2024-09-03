@@ -45,6 +45,7 @@ import com.example.nexttrip.ui.theme.red40
 @Composable
 fun RoomInfoCard(
     room: AvailableRoomInfo,
+    isSelected: Boolean,
     onClick: () -> Unit
 ) {
     Column(
@@ -69,7 +70,7 @@ fun RoomInfoCard(
                     modifier = Modifier
                         .fillMaxSize()
                         .clip(shape = RoundedCornerShape(4.dp)),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop
                 )
             }
             Column(
@@ -103,10 +104,14 @@ fun RoomInfoCard(
                         text = "Bed Type might change depending on availability",
                         fontSize = 12.sp,
                         color = Color.Black.copy(0.5f),
-                        fontFamily = Font_SFPro
+                        fontFamily = Font_SFPro,
+                        maxLines = 2
                     )
                 }
-                InfoSectionWithIcon(icon = Icons.Default.RoomPreferences, text = "${room.noOfBeds} Beds")
+                InfoSectionWithIcon(
+                    icon = Icons.Default.RoomPreferences,
+                    text = "${room.noOfBeds} Beds"
+                )
                 InfoSectionWithIcon(icon = Icons.Default.AcUnit, text = room.acStatus)
             }
         }
@@ -167,7 +172,10 @@ fun RoomInfoCard(
             }
             Row(
                 modifier = Modifier
-                    .background(color = red40, shape = RoundedCornerShape(4.dp))
+                    .background(
+                        color = if (isSelected) black40.copy(.2f) else red40,
+                        shape = RoundedCornerShape(4.dp)
+                    )
                     .padding(horizontal = 16.dp, vertical = 6.dp)
                     .clickable {
                         onClick()
@@ -176,7 +184,7 @@ fun RoomInfoCard(
                 Text(
                     text = "SELECT",
                     fontSize = 14.sp,
-                    color = Color.White,
+                    color = if (isSelected) Color.Black else Color.White,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(500),
                 )
@@ -188,7 +196,7 @@ fun RoomInfoCard(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-//    RoomInfoCard()
+    RoomInfoCard(AvailableRoomInfo(), false) {}
 }
 
 @Composable

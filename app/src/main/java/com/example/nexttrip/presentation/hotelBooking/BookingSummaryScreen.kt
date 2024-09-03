@@ -44,6 +44,7 @@ import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.InfoRow
 import com.example.nexttrip.components.PaymentMethod
 import com.example.nexttrip.components.PaymentSection
+import com.example.nexttrip.components.formatNumber
 import com.example.nexttrip.domain.model.hotelbooking.Hotel
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableHotelData
@@ -76,6 +77,7 @@ fun BookingSummaryScreen(
                     end = 20.dp
                 )
             ) {
+                viewModel.saveBookingData()
                 navController.navigate(Screen.HotelConfirmation.route)
             }
         }
@@ -134,7 +136,11 @@ fun BookingSummaryScreen(
                         room = roomList.size.toString()
                     )
                 }
-                PaymentSection(payment = "5,600 TK")
+                PaymentSection(
+                    actualPayment = viewModel.getTotalActualPrice(),
+                    payment = viewModel.getTotalDiscountPrice(),
+                    isIncludeDiscount = true
+                )
             }
         }
     }
@@ -148,7 +154,7 @@ private fun ShowBookingSummary() {
 
 @Composable
 fun HotelInfoSection(
-    hotel : AvailableHotelData
+    hotel: AvailableHotelData
 ) {
     Row(
         modifier = Modifier

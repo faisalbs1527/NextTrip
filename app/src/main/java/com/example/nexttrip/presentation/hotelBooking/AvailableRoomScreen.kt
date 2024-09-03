@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -45,7 +46,9 @@ import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.RoomInfoCard
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
+import com.example.nexttrip.presentation.model.AvailableRoomInfo
 import com.example.nexttrip.ui.theme.Font_SFPro
+import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.utils.getDateWithDay
 
@@ -55,13 +58,24 @@ fun AvailableRoomScreen(
     navController: NavController = rememberNavController(),
     viewModel: ReservationViewModel = hiltViewModel()
 ) {
-    val checkInDate by viewModel.checkIn.collectAsState()
-    val checkOutDate by viewModel.checkOut.collectAsState()
+
     val availableRooms by viewModel.availableRooms.collectAsState()
     val rooms by viewModel.roomList.collectAsState()
 
     var currRoomId by remember {
         mutableIntStateOf(0)
+    }
+
+    var currRoomState by remember {
+        mutableIntStateOf(1)
+    }
+
+    var currSelectedRoom by remember {
+        mutableStateOf(AvailableRoomInfo())
+    }
+
+    var isRoomSelected by remember {
+        mutableStateOf(false)
     }
 
     LaunchedEffect(currRoomId) {
@@ -75,9 +89,20 @@ fun AvailableRoomScreen(
                 modifier = Modifier.padding(
                     start = 20.dp,
                     end = 20.dp
-                )
+                ),
+                buttonColor = if (isRoomSelected) red40 else black40.copy(.2f),
+                textColor = if (isRoomSelected) Color.White else Color.Black
             ) {
-                navController.navigate(Screen.BookingSummaryScreen.route)
+                if (isRoomSelected) {
+                    viewModel.updateSelectedRooms(currSelectedRoom)
+                    if (currRoomState < rooms.size) {
+                        currRoomId++
+                        currRoomState++
+                        isRoomSelected = false
+                    } else {
+                        navController.navigate(Screen.BookingSummaryScreen.route)
+                    }
+                }
             }
         }
     ) { innerPadding ->
@@ -112,7 +137,7 @@ fun AvailableRoomScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Select Rooms",
+                            text = "Select Room $currRoomState",
                             fontFamily = Font_SFPro,
                             fontSize = 20.sp,
                             color = red40,
@@ -122,19 +147,14 @@ fun AvailableRoomScreen(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(4.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                TicketText(text = getDateWithDay(checkInDate), size = 12)
-
-                                TicketText(text = "to", size = 12)
-                                TicketText(
-                                    text = getDateWithDay(checkOutDate),
-                                    size = 12
-                                )
-
-                            }
+                            TicketText(text = "Adults: ${rooms[currRoomId].adult}", size = 12)
+                            Box(
+                                modifier = Modifier
+                                    .height(8.dp)
+                                    .width(1.dp)
+                                    .background(color = Color.Black.copy(alpha = .4f))
+                            )
+                            TicketText(text = "Children: ${rooms[currRoomId].children}", size = 12)
                             Box(
                                 modifier = Modifier
                                     .height(8.dp)
@@ -156,8 +176,9 @@ fun AvailableRoomScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     items(availableRooms) {
-                        RoomInfoCard(room = it) {
-
+                        RoomInfoCard(room = it, isSelected = currSelectedRoom.roomId == it.roomId) {
+                            currSelectedRoom = it
+                            isRoomSelected = true
                         }
                     }
                 }

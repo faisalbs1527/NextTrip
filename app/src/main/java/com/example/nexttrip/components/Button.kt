@@ -28,17 +28,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_Lato
 import com.example.nexttrip.ui.theme.Font_SFPro
+import com.example.nexttrip.ui.theme.black40
+import com.example.nexttrip.ui.theme.gray
+import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.ui.theme.red80
 
 @Composable
 fun ButtonCustom(
     modifier: Modifier = Modifier,
     text: String,
+    buttonColor: Color = red40,
+    textColor: Color = Color.White,
     onClick:() -> Unit
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF8A1C40), shape = RoundedCornerShape(4.dp))
+            .background(color = buttonColor, shape = RoundedCornerShape(4.dp))
             .clickable {
                 onClick()
             }
@@ -54,7 +60,7 @@ fun ButtonCustom(
             Text(
                 text = text,
                 fontSize = 18.sp,
-                color = Color.White
+                color = textColor
             )
         }
     }

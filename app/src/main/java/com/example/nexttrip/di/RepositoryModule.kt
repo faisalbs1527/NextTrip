@@ -2,7 +2,7 @@ package com.example.nexttrip.di
 
 import com.example.nexttrip.data.DestinationRepoImpl
 import com.example.nexttrip.data.FlightRepoImpl
-import com.example.nexttrip.data.network.HotelRepoImpl
+import com.example.nexttrip.data.HotelRepoImpl
 import com.example.nexttrip.domain.repository.DestinationRepository
 import com.example.nexttrip.domain.repository.FlightRepository
 import com.example.nexttrip.domain.repository.HotelRepository

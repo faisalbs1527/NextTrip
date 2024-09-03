@@ -3,6 +3,8 @@ package com.example.nexttrip.presentation.hotelBooking
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nexttrip.components.formatNumber
+import com.example.nexttrip.domain.model.hotelbooking.HotelBookingData
 import com.example.nexttrip.domain.model.hotelbooking.Room
 import com.example.nexttrip.domain.model.hotelbooking.toAvailableHotel
 import com.example.nexttrip.domain.model.hotelbooking.toAvailableRoomInfo
@@ -33,7 +35,7 @@ class ReservationViewModel @Inject constructor(
     var hotelList = MutableStateFlow<List<AvailableHotelData>>(emptyList())
         private set
 
-    var selectedRooms = MutableStateFlow(listOf(RoomData()))
+    var selectedRooms = MutableStateFlow<List<AvailableRoomInfo>>(emptyList())
         private set
 
     var availableRooms = MutableStateFlow<List<AvailableRoomInfo>>(emptyList())
@@ -59,8 +61,24 @@ class ReservationViewModel @Inject constructor(
         selectedHotelId.value = id
     }
 
-    fun updateSelectedRooms()= viewModelScope.launch {
-        
+    fun updateSelectedRooms(room: AvailableRoomInfo) = viewModelScope.launch {
+        selectedRooms.value += room
+    }
+
+    fun getTotalActualPrice(): String {
+        var actualPrice = 0
+        selectedRooms.value.forEach {
+            actualPrice += it.actualPrice
+        }
+        return "BDT " + formatNumber(actualPrice)
+    }
+
+    fun getTotalDiscountPrice(): String {
+        var discountPrice = 0
+        selectedRooms.value.forEach {
+            discountPrice += it.discountPrice
+        }
+        return "BDT " + formatNumber(discountPrice)
     }
 
     @SuppressLint("DefaultLocale")
@@ -86,13 +104,21 @@ class ReservationViewModel @Inject constructor(
     }
 
     fun getAvailableRooms(roomX: RoomData) = viewModelScope.launch {
+        availableRooms.value = emptyList()
         val currHotel = hotelList.value.find { it.id == selectedHotelId.value }!!
 
         currHotel.rooms.forEach { roomY ->
-            if (roomX.adult <= roomY.capacity) {
+            var alreadySelected = false
+            selectedRooms.value.forEach {
+                if (it.roomId == roomY.room_id) {
+                    alreadySelected = true
+                }
+            }
+            if (!alreadySelected && roomX.adult <= roomY.capacity) {
                 availableRooms.value += roomY.toAvailableRoomInfo()
             }
         }
+        println(availableRooms)
     }
 
     private fun checkAvailability(hotelRooms: List<Room>): Boolean {
@@ -107,5 +133,25 @@ class ReservationViewModel @Inject constructor(
             if (!isAvailable) return false
         }
         return true
+    }
+
+    fun saveBookingData() = viewModelScope.launch {
+        repository.saveHotelBookingInfo(
+            HotelBookingData(
+                checkIn = checkIn.value,
+                checkOut = checkOut.value,
+                bookingDate = currentDate,
+                hotelName = selectedHotel.value.name,
+                rooms = selectedRooms.value.size
+            )
+        )
+    }
+
+    private fun getRoomIds(): List<Int> {
+        val rooms = emptyList<Int>().toMutableList()
+        selectedRooms.value.forEach {
+            rooms += it.roomId
+        }
+        return rooms
     }
 }
