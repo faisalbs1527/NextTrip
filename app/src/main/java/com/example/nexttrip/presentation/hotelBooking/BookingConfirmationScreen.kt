@@ -55,7 +55,9 @@ fun BookingConfirmationScreen(
                     end = 20.dp
                 )
             ) {
-                navController.navigate(Screen.HomeScreen.route)
+                navController.navigate(Screen.HomeScreen.route) {
+                    popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                }
             }
         }
     ) { innerPadding ->
