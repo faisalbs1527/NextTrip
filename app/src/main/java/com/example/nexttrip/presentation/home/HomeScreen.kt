@@ -183,6 +183,7 @@ fun HomeScreenSkeleton(navController: NavController, innerPadding: PaddingValues
                         when (serviceId) {
                             1 -> navController.navigate(Screen.BookingScreen.route)
                             2 -> navController.navigate(Screen.ReservationScreen.route)
+                            4 -> navController.navigate(Screen.BusReservationScreen.route)
                         }
                     }
                 }

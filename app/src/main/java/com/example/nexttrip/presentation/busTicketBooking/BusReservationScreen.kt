@@ -25,6 +25,8 @@ import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +38,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonRound
 import com.example.nexttrip.components.CustomTextField
 import com.example.nexttrip.components.DatePickerModel
@@ -49,16 +54,13 @@ import com.example.nexttrip.utils.currentDateMillis
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BusReservationScreen() {
+fun BusReservationScreen(
+    navController: NavController = rememberNavController(),
+    viewModel: BusReservationViewModel = hiltViewModel()
+) {
 
 
-    var filteredCities by remember { mutableStateOf(cityList) }
-
-    fun updateSuggestions(query: String) {
-        filteredCities = cityList.filter { it.contains(query, ignoreCase = true) }
-    }
-
-    val citiesToShow = filteredCities.take(3)
+    val citiesToShow by viewModel.citiesToShow.collectAsState()
 
     var fromText by remember { mutableStateOf("") }
     var toText by remember { mutableStateOf("") }
@@ -71,6 +73,10 @@ fun BusReservationScreen() {
 
     var showDatePicker by remember {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.getCities()
     }
 
 
@@ -104,7 +110,7 @@ fun BusReservationScreen() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 90.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 94.dp, start = 20.dp, end = 20.dp)
                 .verticalScroll(
                     state = rememberScrollState()
                 )
@@ -129,12 +135,12 @@ fun BusReservationScreen() {
                         placeholder = fromCity.ifEmpty { "From" },
                         onValueChange = {
                             fromText = it
-                            updateSuggestions(it)
+                            viewModel.updateSuggestions(it)
                         },
                         cityList = citiesToShow,
                         onSelect = {
                             fromCity = it
-                            filteredCities = cityList
+                            viewModel.updateSuggestions("")
                             fromText = ""
                         },
                         iconRotation = 0f
@@ -149,12 +155,12 @@ fun BusReservationScreen() {
                         placeholder = toCity.ifEmpty { "To" },
                         onValueChange = {
                             toText = it
-                            updateSuggestions(it)
+                            viewModel.updateSuggestions(it)
                         },
                         cityList = citiesToShow,
                         onSelect = {
                             toCity = it
-                            filteredCities = cityList
+                            viewModel.updateSuggestions("")
                             toText = ""
                         },
                         iconRotation = 180f

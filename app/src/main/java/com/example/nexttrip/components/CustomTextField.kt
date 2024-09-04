@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.nexttrip.presentation.model.CityData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.utils.cityList
 
@@ -32,7 +33,7 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     onSelect: (String) -> Unit,
     placeholder: String,
-    cityList: List<String>,
+    cityList: List<CityData>,
     iconRotation: Float
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -135,10 +136,10 @@ fun CustomTextField(
                             tint = Color.Black.copy(.6f)
                         )
                         Text(
-                            text = city,
+                            text = city.name,
                             modifier = Modifier
                                 .clickable {
-                                    onSelect(city)
+                                    onSelect(city.name)
                                     isExpanded = false
                                     focusManager.clearFocus()
                                 }
@@ -172,7 +173,7 @@ fun ShowCustomTextField() {
             text = it
             updateSuggestions(it)
         },
-        cityList = filteredCities,
+        cityList = emptyList(),
         onSelect = {
             text = it
             filteredCities = cityList
