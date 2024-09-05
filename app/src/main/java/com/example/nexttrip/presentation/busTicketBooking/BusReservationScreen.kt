@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.busTicketBooking
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -34,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +48,7 @@ import com.example.nexttrip.components.CustomTextField
 import com.example.nexttrip.components.DatePickerModel
 import com.example.nexttrip.components.SelectBoxWithText
 import com.example.nexttrip.components.formatDate
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red80
 import com.example.nexttrip.utils.cityList
@@ -59,17 +62,16 @@ fun BusReservationScreen(
     viewModel: BusReservationViewModel = hiltViewModel()
 ) {
 
+    val context = LocalContext.current
 
     val citiesToShow by viewModel.citiesToShow.collectAsState()
+    val travelDate by viewModel.travelDate.collectAsState()
 
     var fromText by remember { mutableStateOf("") }
     var toText by remember { mutableStateOf("") }
     var fromCity by remember { mutableStateOf("") }
     var toCity by remember { mutableStateOf("") }
 
-    var travelDate by remember {
-        mutableStateOf(formatDate(currentDateMillis))
-    }
 
     var showDatePicker by remember {
         mutableStateOf(false)
@@ -241,7 +243,16 @@ fun BusReservationScreen(
                         .align(Alignment.BottomCenter)
                         .offset(y = 45.dp)
                 ) {
-
+                    viewModel.updateRoute(fromCity, toCity)
+                    if (viewModel.isAllOk(fromCity, toCity)) {
+                        navController.navigate(Screen.AvailableBusScreen.route)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Please Fill up all the fields!!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
         }
@@ -252,7 +263,7 @@ fun BusReservationScreen(
             fromDate = currentDateMillis,
             onDateSelected = { selectedDate ->
                 if (selectedDate != null) {
-                    travelDate = formatDate(selectedDate)
+                    viewModel.updateTravelDate(formatDate(selectedDate))
                 }
                 showDatePicker = false
             },

@@ -9,7 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.nexttrip.presentation.MainScreen
+import com.example.nexttrip.presentation.busTicketBooking.AvailableBusScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationScreen
+import com.example.nexttrip.presentation.busTicketBooking.BusReservationViewModel
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
@@ -36,7 +38,8 @@ fun SetUpNavGraph(
     startDestination: String,
     sharedViewModel: SharedViewModel = hiltViewModel(),
     myBookingViewModel: MyBookingViewModel = hiltViewModel(),
-    reservationViewModel: ReservationViewModel = hiltViewModel()
+    reservationViewModel: ReservationViewModel = hiltViewModel(),
+    busReservationViewModel: BusReservationViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Screen.MainScreen.route) {
@@ -149,7 +152,10 @@ fun SetUpNavGraph(
             )
         }
         composable(route = Screen.BusReservationScreen.route) {
-            BusReservationScreen()
+            BusReservationScreen(navController = navController, viewModel = busReservationViewModel)
+        }
+        composable(route = Screen.AvailableBusScreen.route) {
+            AvailableBusScreen(navController = navController, viewModel = busReservationViewModel)
         }
     }
 

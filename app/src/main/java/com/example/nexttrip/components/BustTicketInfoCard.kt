@@ -1,5 +1,7 @@
 package com.example.nexttrip.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,12 +26,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexttrip.presentation.model.AvailableBusData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.getBusDuration
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BustTicketInfoCard() {
+fun BustTicketInfoCard(
+    bus: AvailableBusData,
+    onClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,7 +54,7 @@ fun BustTicketInfoCard() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Hanif Enterprise",
+                text = bus.companyName,
                 color = Color.Black,
                 fontSize = 20.sp,
                 fontFamily = Font_SFPro,
@@ -58,7 +66,7 @@ fun BustTicketInfoCard() {
                     .padding(horizontal = 28.dp, vertical = 4.dp)
             ) {
                 Text(
-                    text = "AC",
+                    text = bus.coachType,
                     color = Color.White,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(500),
@@ -78,12 +86,12 @@ fun BustTicketInfoCard() {
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "06:30",
+                    text = bus.busSchedule.departureTime,
                     fontSize = 24.sp,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(400)
                 )
-                TicketText(text = "Dhaka", size = 15)
+                TicketText(text = bus.from, size = 15)
             }
 
             Column(
@@ -114,7 +122,12 @@ fun BustTicketInfoCard() {
                     )
                     ForwardArrow(modifier = Modifier.weight(.4f))
                 }
-                TicketText(text = "7h 30m", size = 12)
+                TicketText(
+                    text = getBusDuration(
+                        bus.busSchedule.departureTime,
+                        bus.busSchedule.arrivalTime
+                    ), size = 12
+                )
 
             }
 
@@ -124,12 +137,12 @@ fun BustTicketInfoCard() {
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "14:00",
+                    text = bus.busSchedule.arrivalTime,
                     fontSize = 24.sp,
                     fontFamily = Font_SFPro,
                     fontWeight = FontWeight(400)
                 )
-                TicketText(text = "Cox's Bazar", size = 15)
+                TicketText(text = bus.to, size = 15)
             }
 
         }
@@ -150,10 +163,10 @@ fun BustTicketInfoCard() {
                     modifier = Modifier.size(15.dp),
                     tint = red80
                 )
-                TicketText(text = "12", size = 12)
+                TicketText(text = bus.availableSeats.toString(), size = 12)
             }
             Text(
-                text = "BDT 1200",
+                text = "BDT ${bus.price}",
                 fontSize = 18.sp,
                 color = red40,
                 fontFamily = Font_SFPro,
@@ -166,5 +179,7 @@ fun BustTicketInfoCard() {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    BustTicketInfoCard()
+//    BustTicketInfoCard(
+//        onClick = {}
+//    )
 }
