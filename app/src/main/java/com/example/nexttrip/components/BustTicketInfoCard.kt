@@ -43,7 +43,7 @@ fun BustTicketInfoCard(
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
             .clickable {
-
+                onClick()
             }
     ) {
         Row(

@@ -22,6 +22,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -44,12 +45,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonRound
+import com.example.nexttrip.components.ClassButton
 import com.example.nexttrip.components.CustomTextField
 import com.example.nexttrip.components.DatePickerModel
 import com.example.nexttrip.components.SelectBoxWithText
 import com.example.nexttrip.components.formatDate
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
+import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 import com.example.nexttrip.utils.cityList
 import com.example.nexttrip.utils.currentDateMillis
@@ -94,25 +97,49 @@ fun BusReservationScreen(
                 .background(color = red80)
                 .padding(vertical = 30.dp, horizontal = 20.dp)
         ) {
-            Text(
-                text = "NextTrip",
-                fontSize = 28.sp,
-                fontFamily = Font_SFPro,
-                fontWeight = FontWeight(500),
-                color = Color.White
-            )
-            Text(
-                text = "Book your bus!!",
-                fontSize = 18.sp,
-                color = Color.White.copy(.7f),
-                fontFamily = Font_SFPro,
-                fontWeight = FontWeight(400)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
+            ) {
+                Column {
+                    Text(
+                        text = "NextTrip",
+                        fontSize = 28.sp,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(500),
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Book your bus!!",
+                        fontSize = 18.sp,
+                        color = Color.White.copy(.7f),
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(400)
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+                        .padding(horizontal = 12.dp, vertical = 4.dp)
+                        .clickable {
+                            navController.popBackStack()
+                        }
+                ) {
+                    Text(
+                        text = "Back",
+                        color = red80,
+                        fontFamily = Font_SFPro,
+                        fontWeight = FontWeight(600),
+                    )
+                }
+
+            }
         }
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 94.dp, start = 20.dp, end = 20.dp)
+                .padding(top = 110.dp, start = 20.dp, end = 20.dp)
                 .verticalScroll(
                     state = rememberScrollState()
                 )

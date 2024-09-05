@@ -1,5 +1,7 @@
 package com.example.nexttrip.presentation.busTicketBooking
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +45,7 @@ import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.utils.getDateWithDay
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AvailableBusScreen(
     navController: NavController = rememberNavController(),
@@ -50,6 +53,7 @@ fun AvailableBusScreen(
 ) {
     val buses by viewModel.availableBuses.collectAsState()
     val route by viewModel.route.collectAsState()
+    val travelDate by viewModel.travelDate.collectAsState()
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getBuses()
@@ -88,7 +92,7 @@ fun AvailableBusScreen(
                         color = red40,
                         fontWeight = FontWeight(600)
                     )
-                    TicketText(text = "14 Sep,2024", size = 12)
+                    TicketText(text = travelDate, size = 12)
 
                 }
                 Icon(
@@ -124,7 +128,9 @@ fun AvailableBusScreen(
             ) {
                 items(buses) {
                     BustTicketInfoCard(it) {
-
+                        viewModel.updateBusSelection(it.busNo)
+                        viewModel.getSeatList()
+                        navController.navigate(Screen.SeatSelectionScreen.route)
                     }
                 }
             }
