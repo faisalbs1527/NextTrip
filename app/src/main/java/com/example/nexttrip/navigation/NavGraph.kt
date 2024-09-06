@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.nexttrip.presentation.MainScreen
 import com.example.nexttrip.presentation.busTicketBooking.AvailableBusScreen
+import com.example.nexttrip.presentation.busTicketBooking.BookingDetailsScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationViewModel
 import com.example.nexttrip.presentation.busTicketBooking.SeatSelectionScreen
@@ -160,6 +161,9 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.SeatSelectionScreen.route) {
             SeatSelectionScreen(navController = navController, viewModel = busReservationViewModel)
+        }
+        composable(route = Screen.BusBookingDetails.route) {
+            BookingDetailsScreen(navController = navController, viewModel = busReservationViewModel)
         }
     }
 

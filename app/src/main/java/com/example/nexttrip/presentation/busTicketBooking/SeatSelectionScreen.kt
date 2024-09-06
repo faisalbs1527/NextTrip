@@ -40,10 +40,8 @@ import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.IdentificationBox
 import com.example.nexttrip.components.SeatBox
 import com.example.nexttrip.components.TicketText
-import com.example.nexttrip.domain.model.Seat
 import com.example.nexttrip.domain.model.busTicketBooking.SeatData
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.presentation.flightBooking.addingInfo.AddingInfoViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.green40
@@ -60,7 +58,7 @@ fun SeatSelectionScreen(
     val route by viewModel.route.collectAsState()
     val travelDate by viewModel.travelDate.collectAsState()
     val selectedSeats by viewModel.selectedSeats.collectAsState()
-
+    val totalPrice by viewModel.totalPrice.collectAsState()
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
@@ -75,7 +73,7 @@ fun SeatSelectionScreen(
                 textColor = if (selectedSeats.isNotEmpty()) Color.White else Color.Black
             ) {
                 if (selectedSeats.isNotEmpty()) {
-
+                    navController.navigate(Screen.BusBookingDetails.route)
                 }
             }
         }
@@ -153,6 +151,29 @@ fun SeatSelectionScreen(
                         IdentificationBox(color = red10, text = "Available")
                         IdentificationBox(color = green40, text = "Selected")
                         IdentificationBox(color = red80, text = "Booked")
+                    }
+                    HorizontalLine()
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "${selectedSeats.size} ticket(s) selected",
+                            fontFamily = Font_SFPro,
+                            fontSize = 18.sp,
+                            color = red80,
+                            fontWeight = FontWeight(600)
+                        )
+                        Text(
+                            text = "BDT $totalPrice",
+                            fontFamily = Font_SFPro,
+                            fontSize = 18.sp,
+                            color = red80,
+                            fontWeight = FontWeight(600)
+                        )
                     }
                     HorizontalLine()
                     Column(

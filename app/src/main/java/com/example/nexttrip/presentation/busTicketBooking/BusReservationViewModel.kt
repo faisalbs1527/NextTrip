@@ -2,7 +2,6 @@ package com.example.nexttrip.presentation.busTicketBooking
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.nexttrip.domain.model.busTicketBooking.SeatData
 import com.example.nexttrip.domain.model.busTicketBooking.toAvailableBusData
 import com.example.nexttrip.domain.model.busTicketBooking.toCityData
@@ -12,7 +11,6 @@ import com.example.nexttrip.presentation.model.CityData
 import com.example.nexttrip.utils.currentDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,9 +19,13 @@ class BusReservationViewModel @Inject constructor(
     private val repository: BusTicketRepository
 ) : ViewModel() {
     private var cityList = MutableStateFlow<List<CityData>>(emptyList())
-    private var fromLoc = MutableStateFlow("")
-    private var toLoc = MutableStateFlow("")
+
     private var selectedbus = MutableStateFlow("")
+
+    var fromLoc = MutableStateFlow("")
+        private set
+    var toLoc = MutableStateFlow("")
+        private set
 
     var citiesToShow = MutableStateFlow<List<CityData>>(emptyList())
         private set
@@ -42,6 +44,8 @@ class BusReservationViewModel @Inject constructor(
 
     var selectedSeats = MutableStateFlow<List<String>>(emptyList())
         private set
+    var totalPrice = MutableStateFlow(0)
+        private set
 
     private fun getAvailableSeats(seatList: List<SeatData>): Int {
         var seats = 0
@@ -49,6 +53,19 @@ class BusReservationViewModel @Inject constructor(
             if (it.status == "Available") {
                 seats++
             }
+        }
+        return seats
+    }
+
+    fun getSelectedBus(): AvailableBusData {
+        val bus = availableBuses.value.find { it.busNo == selectedbus.value }
+        return bus!!
+    }
+
+    fun getSeats(): String {
+        var seats: String = selectedSeats.value[0]
+        for (i in 1..<selectedSeats.value.size) {
+            seats += "-${selectedSeats.value[i]}"
         }
         return seats
     }
@@ -69,6 +86,7 @@ class BusReservationViewModel @Inject constructor(
 
     fun clearSeats() = viewModelScope.launch {
         selectedSeats.value = emptyList()
+        totalPrice.value = 0
     }
 
     fun updateRoute(from: String, to: String) = viewModelScope.launch {
@@ -135,6 +153,7 @@ class BusReservationViewModel @Inject constructor(
             } else {
                 if (selectedSeats.value.none { it == seatNo }) {
                     selectedSeats.value += listOf(seatNo)
+                    totalPrice.value = selectedSeats.value.size * getSelectedBus().price.toInt()
                     updateSeatStatus(seatNo, "Selected")
                 }
             }

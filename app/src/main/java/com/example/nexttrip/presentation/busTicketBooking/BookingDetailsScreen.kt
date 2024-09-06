@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,6 +31,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,6 +41,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ForwardArrow
 import com.example.nexttrip.components.IconInfoRow
@@ -49,7 +55,17 @@ import com.example.nexttrip.ui.theme.red80
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun BookingDetailsScreen() {
+fun BookingDetailsScreen(
+    navController: NavController = rememberNavController(),
+    viewModel: BusReservationViewModel = hiltViewModel()
+) {
+
+    val from by viewModel.fromLoc.collectAsState()
+    val to by viewModel.toLoc.collectAsState()
+    val travelDate by viewModel.travelDate.collectAsState()
+    val selectedBus = viewModel.getSelectedBus()
+    val selectedSeats = viewModel.getSeats()
+    val totalPrice by viewModel.totalPrice.collectAsState()
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
@@ -106,7 +122,7 @@ fun BookingDetailsScreen() {
                             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
                             .padding(horizontal = 12.dp, vertical = 4.dp)
                             .clickable {
-
+                                navController.popBackStack()
                             }
                     ) {
                         Text(
@@ -133,52 +149,52 @@ fun BookingDetailsScreen() {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(color = Color.White)
-                            .padding(horizontal = 8.dp, vertical = 12.dp)
+                            .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+                            .padding(horizontal = 12.dp, vertical = 20.dp)
                     ) {
                         Text(
-                            text = "Hanif Enterprise",
+                            text = selectedBus.companyName,
                             fontSize = 24.sp,
                             fontFamily = Font_SFPro,
                             fontWeight = FontWeight(400),
-                            modifier = Modifier.padding(bottom = 8.dp)
+                            modifier = Modifier.padding(bottom = 12.dp)
                         )
                         InfoSection(
-                            departure = "Dhaka",
-                            arrival = "Chittagong"
+                            departure = from,
+                            arrival = to
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "Seat",
-                            text = "3A",
+                            text = selectedSeats,
                             icon = Icons.Default.AirlineSeatReclineNormal
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "Travel Date",
-                            text = "26 Aug,2024",
+                            text = travelDate,
                             icon = Icons.Default.CalendarMonth
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "Departure",
-                            text = "10:00",
+                            text = selectedBus.busSchedule.departureTime,
                             icon = Icons.Default.Timer
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "Arrival",
-                            text = "18:30",
+                            text = selectedBus.busSchedule.arrivalTime,
                             icon = Icons.Default.Timer
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "Total Price",
-                            text = "BDT 1200",
+                            text = "BDT $totalPrice",
                             icon = Icons.Default.Paid
                         )
                         IconInfoRow(
-                            modifier = Modifier.padding(top = 12.dp),
+                            modifier = Modifier.padding(top = 16.dp),
                             title = "PickUp Points",
                             text = "",
                             icon = Icons.Default.AddLocationAlt
@@ -187,8 +203,8 @@ fun BookingDetailsScreen() {
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 12.dp),
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
-                            items(4) {
-                                PickUpBox(text = "Abdullahpur")
+                            items(selectedBus.busSchedule.pickupPoints) {
+                                PickUpBox(text = it)
                             }
                         }
                     }
