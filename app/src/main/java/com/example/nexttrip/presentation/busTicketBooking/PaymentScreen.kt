@@ -1,7 +1,11 @@
 package com.example.nexttrip.presentation.busTicketBooking
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +30,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,17 +39,23 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.components.BusTicket
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationMessage
 import com.example.nexttrip.components.PaymentSection
+import com.example.nexttrip.components.TicketSection
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
+import com.example.nexttrip.utils.createPdfFromComposable
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PaymentScreen(
     navController: NavController = rememberNavController(),
     viewModel: BusReservationViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
 
     var pageStatus by remember {
         mutableIntStateOf(1)
@@ -51,13 +63,24 @@ fun PaymentScreen(
     var pageTitle by remember {
         mutableStateOf("Payment")
     }
+    var buttonText by remember {
+        mutableStateOf("Confirm")
+    }
+    var barcodeWidth by remember {
+        mutableIntStateOf(200)
+    }
     val totalPayment by viewModel.totalPrice.collectAsState()
+    val travelDate by viewModel.travelDate.collectAsState()
+    val fromLoc by viewModel.fromLoc.collectAsState()
+    val toLoc by viewModel.toLoc.collectAsState()
+    val seats = viewModel.getSeats()
+    val selectedBus = viewModel.getSelectedBus()
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
             ButtonCustom(
-                text = if (pageStatus == 1) "Confirm" else "View Ticket",
+                text = buttonText,
                 modifier = Modifier.padding(
                     start = 20.dp,
                     end = 20.dp
@@ -66,6 +89,27 @@ fun PaymentScreen(
                 if (pageStatus == 1) {
                     pageStatus = 2
                     pageTitle = "Confirmation"
+                    buttonText = "View Ticket"
+                } else if (pageStatus == 2) {
+                    pageStatus = 3
+                    pageTitle = "Ticket"
+                    buttonText = "Download Ticket"
+                } else if (pageStatus == 3) {
+                    val ticket = createPdfFromComposable(context) {
+                        BusTicket(
+                            busData = selectedBus,
+                            fromLoc = fromLoc,
+                            toLoc = toLoc,
+                            travelDate = travelDate,
+                            seats = seats,
+                            totalFare = totalPayment.toString(),
+                            barcodeWidth = barcodeWidth
+                        )
+                    }
+                    navController.navigate(Screen.HomeScreen.route) {
+                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                    }
+                    Toast.makeText(context, "Ticket saved!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -124,6 +168,26 @@ fun PaymentScreen(
                     }
 
                     2 -> ConfirmationMessage(message = "Your payment is successful.\n A nice journey is waiting for you")
+                    3 -> Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .onGloballyPositioned {
+                                barcodeWidth = it.size.width
+                            }
+                            .padding(vertical = 20.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BusTicket(
+                            busData = selectedBus,
+                            fromLoc = fromLoc,
+                            toLoc = toLoc,
+                            travelDate = travelDate,
+                            seats = seats,
+                            totalFare = totalPayment.toString(),
+                            barcodeWidth = barcodeWidth
+                        )
+                    }
                 }
 
             }

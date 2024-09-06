@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.components.BusTravelLocationSection
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ForwardArrow
 import com.example.nexttrip.components.IconInfoRow
@@ -160,9 +161,17 @@ fun BookingDetailsScreen(
                             fontWeight = FontWeight(400),
                             modifier = Modifier.padding(bottom = 12.dp)
                         )
-                        InfoSection(
+                        BusTravelLocationSection(
                             departure = from,
-                            arrival = to
+                            arrival = to,
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = gray.copy(.1f),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(12.dp)
                         )
                         IconInfoRow(
                             modifier = Modifier.padding(top = 16.dp),
@@ -190,7 +199,7 @@ fun BookingDetailsScreen(
                         )
                         IconInfoRow(
                             modifier = Modifier.padding(top = 16.dp),
-                            title = "Total Price",
+                            title = "Total Fare",
                             text = "BDT $totalPrice",
                             icon = Icons.Default.Paid
                         )
@@ -219,81 +228,6 @@ fun BookingDetailsScreen(
 @Composable
 private fun Show() {
     BookingDetailsScreen()
-}
-
-@Composable
-fun InfoSection(
-    departure: String,
-    arrival: String
-) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 8.dp)
-            .border(width = 1.dp, color = gray.copy(.1f), shape = RoundedCornerShape(8.dp)),
-        contentAlignment = Alignment.Center
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(.3f),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = departure,
-                    fontSize = 18.sp,
-                    fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(500)
-                )
-            }
-
-            Column(
-                modifier = Modifier.weight(.4f),
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .weight(.4f)
-                            .padding(vertical = 8.dp)
-                            .height(1.dp)
-                            .background(color = Color.Black.copy(alpha = .2f))
-                    )
-                    Icon(
-                        imageVector = Icons.Default.DirectionsBus,
-                        contentDescription = "",
-                        tint = red40,
-                        modifier = Modifier
-                            .weight(.2f)
-                            .graphicsLayer { rotationZ = 0f }
-                    )
-                    ForwardArrow(modifier = Modifier.weight(.4f))
-                }
-            }
-
-            Column(
-                modifier = Modifier.weight(.3f),
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = arrival,
-                    fontSize = 18.sp,
-                    fontFamily = Font_SFPro,
-                    fontWeight = FontWeight(500)
-                )
-            }
-
-        }
-    }
 }
 
 @Composable
