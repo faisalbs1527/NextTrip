@@ -65,6 +65,10 @@ class ReservationViewModel @Inject constructor(
         selectedRooms.value += room
     }
 
+    fun clearSelectedRooms() = viewModelScope.launch {
+        selectedRooms.value = emptyList()
+    }
+
     fun getTotalActualPrice(): String {
         var actualPrice = 0
         selectedRooms.value.forEach {

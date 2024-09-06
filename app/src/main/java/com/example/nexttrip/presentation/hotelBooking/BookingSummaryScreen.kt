@@ -3,6 +3,7 @@ package com.example.nexttrip.presentation.hotelBooking
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -93,7 +95,7 @@ fun BookingSummaryScreen(
                 modifier = Modifier
                     .background(color = Color.Gray.copy(alpha = 0.2f))
                     .fillMaxSize()
-                    .padding(vertical = 30.dp, horizontal = 20.dp)
+                    .padding(top = 30.dp, bottom = 56.dp, start = 20.dp,end = 20.dp)
                     .verticalScroll(
                         state = rememberScrollState()
                     )
@@ -108,6 +110,10 @@ fun BookingSummaryScreen(
                         modifier = Modifier
                             .weight(.1f)
                             .size(30.dp)
+                            .clickable {
+                                viewModel.clearSelectedRooms()
+                                navController.popBackStack()
+                            }
                     )
                     Text(
                         text = "Booking Summary",
@@ -160,21 +166,22 @@ fun HotelInfoSection(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             model = hotel.image,
             contentDescription = "",
             modifier = Modifier
-                .fillMaxSize()
+                .weight(.4f)
+                .height(100.dp)
                 .clip(shape = RoundedCornerShape(4.dp)),
             contentScale = ContentScale.Crop
         )
         Column(
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 4.dp, top = 4.dp),
+                .weight(.6f)
+                .padding(start = 4.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
@@ -232,10 +239,10 @@ fun BookingInfoSection(
             .padding(bottom = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        InfoRow(title = "Booking Date", text = "Sep 2,2024")
-        InfoRow(title = "Check In", text = "Sep 4,2024")
-        InfoRow(title = "Check Out", text = "Sep 5,2024")
-        InfoRow(title = "Guests", text = "2")
-        InfoRow(title = "Room(s)", text = "1")
+        InfoRow(title = "Booking Date", text = bookingDate)
+        InfoRow(title = "Check In", text = checkIn)
+        InfoRow(title = "Check Out", text = checkOut)
+        InfoRow(title = "Guests", text = guests)
+        InfoRow(title = "Room(s)", text = room)
     }
 }
