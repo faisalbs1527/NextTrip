@@ -47,6 +47,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ForwardArrow
 import com.example.nexttrip.components.IconInfoRow
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.gray
@@ -79,7 +80,7 @@ fun BookingDetailsScreen(
                 buttonColor = red40,
                 textColor = Color.White
             ) {
-
+                navController.navigate(Screen.BusPaymentScreen.route)
             }
         }
     ) { innerPadding ->

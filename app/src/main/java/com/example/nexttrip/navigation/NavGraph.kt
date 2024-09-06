@@ -13,6 +13,7 @@ import com.example.nexttrip.presentation.busTicketBooking.AvailableBusScreen
 import com.example.nexttrip.presentation.busTicketBooking.BookingDetailsScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationViewModel
+import com.example.nexttrip.presentation.busTicketBooking.PaymentScreen
 import com.example.nexttrip.presentation.busTicketBooking.SeatSelectionScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
@@ -164,6 +165,9 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.BusBookingDetails.route) {
             BookingDetailsScreen(navController = navController, viewModel = busReservationViewModel)
+        }
+        composable(route = Screen.BusPaymentScreen.route) {
+            PaymentScreen(navController = navController, viewModel = busReservationViewModel)
         }
     }
 
