@@ -167,7 +167,7 @@ fun PaymentScreen(
                 Box(modifier = Modifier.fillMaxSize()) {
                     ViewTicket(
                         ticket = ticketBitmap?.asImageBitmap(),
-                        ticketName = "3217836217",
+                        ticketName = fileName,
                         onBackPress = {
                             navController.navigate(Screen.HomeScreen.route) {
                                 popUpTo(Screen.HomeScreen.route) { inclusive = true }

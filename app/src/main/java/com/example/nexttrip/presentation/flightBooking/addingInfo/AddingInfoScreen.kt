@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +52,7 @@ import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.PassengerInput
 import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.SeatPlan
+import com.example.nexttrip.components.TicketSection
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
@@ -58,7 +60,10 @@ import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.createBitmapFromComposable
 import com.example.nexttrip.utils.getDateWithDay
+import com.example.nexttrip.utils.ticketDate
+import com.example.nexttrip.utils.toByteArray
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -74,6 +79,7 @@ fun AddingInfoScreen(
     val seatsDeparture by sharedViewModel.selectedSeatsDeparture.collectAsState()
     val seatsReturn by sharedViewModel.selectedSeatsReturn.collectAsState()
 
+
     val viewModel: AddingInfoViewModel = hiltViewModel()
 
     viewModel.addPassenger(bookingData.adults, bookingData.childs, bookingData.infants)
@@ -88,12 +94,18 @@ fun AddingInfoScreen(
 
     val travelStatus by viewModel.travelStatus.collectAsState()
 
+    var barcodeWidth by remember {
+        mutableIntStateOf(200)
+    }
+
     var pageStatus by remember {
         mutableIntStateOf(1)
     }
     var titleText by remember {
         mutableStateOf("Passenger Details")
     }
+    val currentDateTime = ticketDate()
+    val fileName = "flightTicket_$currentDateTime.pdf"
 
     LaunchedEffect(key1 = Unit) {
         viewModel.getSeatPlans(
@@ -168,6 +180,19 @@ fun AddingInfoScreen(
                     pageStatus = 4
                     titleText = "Payment"
                 } else if (pageStatus == 4) {
+                    val ticketBitmap = createBitmapFromComposable(context) {
+                        TicketSection(
+                            departureFlight = departureFlight,
+                            returnFlight = returnFlight,
+                            bookingData = bookingData,
+                            passengerList = passengerList,
+                            seatsDeparture = seatsDeparture,
+                            seatsReturn = seatsReturn,
+                            width = barcodeWidth
+                        )
+                    }
+                    sharedViewModel.upDateTicketBitmap(ticketBitmap, fileName)
+                    sharedViewModel.saveBookingInfo(ticketBitmap.toByteArray(), fileName)
                     navController.navigate(Screen.ConfirmationScreen.route)
                 }
             }
@@ -187,6 +212,9 @@ fun AddingInfoScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .onGloballyPositioned {
+                            barcodeWidth = it.size.width
+                        }
                         .padding(horizontal = 20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {

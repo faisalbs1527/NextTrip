@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nexttrip.domain.model.TicketEntity
 import com.example.nexttrip.domain.repository.FlightRepository
-import com.example.nexttrip.utils.byteArrayToBitmap
 import com.example.nexttrip.utils.toImageBitmap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,7 +1,13 @@
 package com.example.nexttrip.presentation.flightBooking
 
+import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.nexttrip.domain.model.TicketEntity
@@ -33,6 +39,12 @@ class SharedViewModel @Inject constructor(
 
     var selectedSeatsReturn = MutableStateFlow<String>("")
 
+    var ticketBitmap = MutableStateFlow<Bitmap?>(null)
+        private set
+    var ticketName = MutableStateFlow("")
+        private set
+
+
     fun updateDepartureFlight(flight: FlightsData) {
         departureFlight.value = flight
     }
@@ -58,7 +70,7 @@ class SharedViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun saveBookingInfo(ticket: ByteArray) = viewModelScope.launch {
+    fun saveBookingInfo(ticket: ByteArray,fileName: String) = viewModelScope.launch {
         val currDateTime = ticketDate()
         val ticketEntityDeparture = TicketEntity(
             flightNo = departureFlight.value.flightNumber,
@@ -73,7 +85,7 @@ class SharedViewModel @Inject constructor(
                 getTime(departureFlight.value.arrivalTime)
             ),
             ticket = ticket,
-            ticketName = "ticket_$currDateTime"
+            ticketName = fileName
         )
         repository.saveFlightTicketInfo(ticketEntityDeparture)
 
@@ -91,9 +103,14 @@ class SharedViewModel @Inject constructor(
                     getTime(returnFlight.value.arrivalTime)
                 ),
                 ticket = ticket,
-                ticketName = "ticket_$currDateTime"
+                ticketName = fileName
             )
             repository.saveFlightTicketInfo(ticketEntityReturn)
         }
+    }
+
+    fun upDateTicketBitmap(bitmap: Bitmap, fileName: String) = viewModelScope.launch {
+        ticketBitmap.value = bitmap
+        ticketName.value = fileName
     }
 }
