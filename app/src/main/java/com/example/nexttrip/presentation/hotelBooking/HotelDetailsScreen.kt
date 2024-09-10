@@ -1,6 +1,7 @@
 package com.example.nexttrip.presentation.hotelBooking
 
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -32,10 +33,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +60,8 @@ import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.MapUtils
+import com.example.nexttrip.utils.RequestLocationPermission
 import com.example.nexttrip.utils.getDateWithDay
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,6 +70,8 @@ fun HotelDetailsScreen(
     navController: NavController = rememberNavController(),
     viewModel: ReservationViewModel = hiltViewModel()
 ) {
+
+    val context = LocalContext.current
 
     val checkInDate by viewModel.checkIn.collectAsState()
     val checkOutDate by viewModel.checkOut.collectAsState()
@@ -247,6 +257,28 @@ fun HotelDetailsScreen(
                                 fontFamily = Font_SFPro
                             )
                         }
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .background(color = red40, shape = RoundedCornerShape(4.dp))
+                            .padding(horizontal = 10.dp, vertical = 4.dp)
+                            .clickable {
+                                MapUtils.showDestination(
+                                    selectedHotel.latitude,
+                                    selectedHotel.longitude,
+                                    selectedHotel.name,
+                                    context
+                                )
+                            }
+                    ) {
+                        Text(
+                            text = "View On Map",
+                            fontSize = 14.sp,
+                            color = Color.White,
+                            fontFamily = Font_SFPro,
+                            fontWeight = FontWeight(500),
+                        )
                     }
                     Spacer(modifier = Modifier.size(16.dp))
                     HorizontalLine()
