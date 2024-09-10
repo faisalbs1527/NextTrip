@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -270,8 +271,15 @@ fun HotelDetailsScreen(
                                     selectedHotel.name,
                                     context
                                 )
-                            }
+                            },
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.MyLocation, contentDescription = "",
+                            tint = Color.White,
+                            modifier = Modifier.size(14.dp)
+                        )
                         Text(
                             text = "View On Map",
                             fontSize = 14.sp,
