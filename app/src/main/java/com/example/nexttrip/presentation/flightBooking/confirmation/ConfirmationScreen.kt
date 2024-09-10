@@ -1,5 +1,6 @@
 package com.example.nexttrip.presentation.flightBooking.confirmation
 
+import android.graphics.Bitmap
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -30,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -42,11 +44,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationStatus
 import com.example.nexttrip.components.TicketSection
+import com.example.nexttrip.components.ViewTicket
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.utils.createPdfFromBitmap
 import com.example.nexttrip.utils.createPdfFromComposable
+import com.example.nexttrip.utils.ticketDate
 
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -58,16 +63,11 @@ fun ConfirmationScreen(
 
     val context = LocalContext.current
 
-    val passengerList by sharedViewModel.passengerList.collectAsState()
-    val selectedSeatsDeparture by sharedViewModel.selectedSeatsDeparture.collectAsState()
-    val selectedSeatsReturn by sharedViewModel.selectedSeatsReturn.collectAsState()
     val departureFlight by sharedViewModel.departureFlight.collectAsState()
     val returnFlight by sharedViewModel.returnFlight.collectAsState()
-    val bookingData by sharedViewModel.bookingdata.collectAsState()
 
-    var barcodeWidth by remember {
-        mutableIntStateOf(200)
-    }
+    val ticketBitmap by sharedViewModel.ticketBitmap.collectAsState()
+    val fileName by sharedViewModel.ticketName.collectAsState()
 
     var titleText by remember {
         mutableStateOf("Payment Confirmation")
@@ -79,33 +79,18 @@ fun ConfirmationScreen(
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            ButtonCustom(
-                text = if (pageStatus == 1) "View Ticket" else "Download Ticket",
-                modifier = Modifier.padding(
-                    start = 20.dp,
-                    end = 20.dp
-                )
-            ) {
-                if (pageStatus == 1) {
-                    pageStatus = 2
-                    titleText = "Ticket"
-                } else if (pageStatus == 2) {
-                    val ticket = createPdfFromComposable(context) {
-                        TicketSection(
-                            departureFlight = departureFlight,
-                            returnFlight = returnFlight,
-                            bookingData = bookingData,
-                            passengerList = passengerList,
-                            seatsDeparture = selectedSeatsDeparture,
-                            seatsReturn = selectedSeatsReturn,
-                            width = barcodeWidth
-                        )
+            if (pageStatus == 1) {
+                ButtonCustom(
+                    text = "View Ticket",
+                    modifier = Modifier.padding(
+                        start = 20.dp,
+                        end = 20.dp
+                    )
+                ) {
+                    if (pageStatus == 1) {
+                        pageStatus = 2
+                        titleText = "Ticket"
                     }
-                    sharedViewModel.saveBookingInfo(ticket)
-                    navController.navigate(Screen.HomeScreen.route) {
-                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                    }
-                    Toast.makeText(context, "Ticket saved!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -115,46 +100,46 @@ fun ConfirmationScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Column(
-                modifier = Modifier
-                    .background(color = Color.Gray.copy(0.2f))
-                    .fillMaxSize()
-                    .padding(vertical = 30.dp)
-            ) {
-                Row(
+            if (pageStatus == 1) {
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .background(color = Color.Gray.copy(0.2f))
+                        .fillMaxSize()
+                        .padding(vertical = 30.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                        contentDescription = "",
-                        modifier = Modifier
-                            .weight(.1f)
-                            .size(36.dp)
-                            .clickable {
-                                navController.navigate(Screen.HomeScreen.route) {
-                                    popUpTo(Screen.HomeScreen.route) { inclusive = true }
-                                }
-                            }
-                    )
                     Row(
                         modifier = Modifier
-                            .weight(.8f),
-                        horizontalArrangement = Arrangement.Center
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = titleText,
-                            fontFamily = Font_SFPro,
-                            fontSize = 20.sp,
-                            color = red40,
-                            fontWeight = FontWeight(600)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
+                            contentDescription = "",
+                            modifier = Modifier
+                                .weight(.1f)
+                                .size(36.dp)
+                                .clickable {
+                                    navController.navigate(Screen.HomeScreen.route) {
+                                        popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                                    }
+                                }
                         )
+                        Row(
+                            modifier = Modifier
+                                .weight(.8f),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = titleText,
+                                fontFamily = Font_SFPro,
+                                fontSize = 20.sp,
+                                color = red40,
+                                fontWeight = FontWeight(600)
+                            )
+                        }
+                        Spacer(modifier = Modifier.weight(.1f))
                     }
-                    Spacer(modifier = Modifier.weight(.1f))
-                }
-                if (pageStatus == 1) {
                     Row(
                         modifier = Modifier
                             .fillMaxSize()
@@ -164,26 +149,24 @@ fun ConfirmationScreen(
                     ) {
                         ConfirmationStatus("$" + (departureFlight.price + returnFlight.price).toString())
                     }
-                } else {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .onGloballyPositioned {
-                                barcodeWidth = it.size.width
+                }
+            } else {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    ViewTicket(
+                        ticket = ticketBitmap?.asImageBitmap(),
+                        ticketName = fileName,
+                        onBackPress = {
+                            navController.navigate(Screen.HomeScreen.route) {
+                                popUpTo(Screen.HomeScreen.route) { inclusive = true }
                             }
-                            .padding(vertical = 20.dp, horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TicketSection(
-                            departureFlight = departureFlight,
-                            returnFlight = returnFlight,
-                            bookingData = bookingData,
-                            passengerList = passengerList,
-                            seatsDeparture = selectedSeatsDeparture,
-                            seatsReturn = selectedSeatsReturn,
-                            width = barcodeWidth
-                        )
+                        }) {
+                        ticketBitmap?.let { createPdfFromBitmap(context, it, fileName) }
+                        navController.navigate(Screen.HomeScreen.route) {
+                            popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                        }
+                        Toast.makeText(context, "Ticket saved!", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -18,9 +18,7 @@ import java.util.Date
 import java.util.Locale
 
 
-fun savePdfToDownloads(context: Context, pdfDocument: PdfDocument) {
-    val currentDateTime = ticketDate()
-    val fileName = "ticket_$currentDateTime.pdf"
+fun savePdfToDownloads(context: Context, pdfDocument: PdfDocument, fileName: String) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         // Use MediaStore for Android 10 and above

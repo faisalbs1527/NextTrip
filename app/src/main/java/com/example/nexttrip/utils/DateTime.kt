@@ -9,6 +9,7 @@ import java.time.DateTimeException
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -104,10 +105,25 @@ fun convertToISO8601(dateString: String, timeString: String): String {
     return iso8601String
 }
 
-fun ticketDate(): String{
+fun ticketDate(): String {
     val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
     val currentDateTime = dateFormat.format(Date())
     return currentDateTime
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun getBusDuration(startTime: String, endTime: String): String {
+    val formatter = DateTimeFormatter.ofPattern("HH:mm")
+
+    val time1 = LocalTime.parse("12:30", formatter)
+    val time2 = LocalTime.parse("18:45", formatter)
+
+    val duration = Duration.between(time1, time2)
+
+    val hours = duration.toHours()
+    val minutes = duration.toMinutes() % 60
+
+    return "${hours}h ${minutes}m"
 }
 
 val currentDateMillis = System.currentTimeMillis()

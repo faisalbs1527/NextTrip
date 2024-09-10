@@ -2,6 +2,7 @@ package com.example.nexttrip.presentation.hotelBooking
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
+import com.example.nexttrip.components.ConfirmationMessage
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.green80
@@ -82,6 +84,11 @@ fun BookingConfirmationScreen(
                         modifier = Modifier
                             .weight(.1f)
                             .size(30.dp)
+                            .clickable {
+                                navController.navigate(Screen.HomeScreen.route) {
+                                    popUpTo(Screen.HomeScreen.route) { inclusive = true }
+                                }
+                            }
                     )
                     Text(
                         text = "Confirmation",
@@ -94,63 +101,7 @@ fun BookingConfirmationScreen(
                     )
                     Spacer(modifier = Modifier.weight(.1f))
                 }
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 40.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color = Color.White)
-                            .padding(horizontal = 32.dp, vertical = 24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .background(color = Color.Transparent, shape = CircleShape)
-                                .border(width = 4.dp, color = green80, shape = CircleShape)
-                                .padding(8.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Done,
-                                contentDescription = "Box Icon",
-                                tint = green80,
-                                modifier = Modifier.size(42.dp)
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 16.dp, bottom = 8.dp),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Congratulations!!",
-                                fontSize = 24.sp,
-                                fontFamily = Font_SFPro,
-                                modifier = Modifier.padding(top = 8.dp),
-                                fontWeight = FontWeight(600),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = "Your hotel stay is secured.\nCounting down to your dream vacation",
-                                fontSize = 16.sp,
-                                fontFamily = Font_SFPro,
-                                fontWeight = FontWeight(400),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }
+                ConfirmationMessage(message = "Your hotel stay is secured.\nCounting down to your dream vacation")
             }
         }
     }

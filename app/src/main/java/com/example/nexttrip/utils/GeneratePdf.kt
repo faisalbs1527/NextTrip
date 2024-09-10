@@ -16,6 +16,8 @@ import java.io.ByteArrayOutputStream
 import kotlin.math.ceil
 
 fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit): ByteArray {
+    val currentDateTime = ticketDate()
+    val fileName = "AirTicket_$currentDateTime.pdf"
     val composeView = ComposeView(context).apply {
         setContent {
             composable()
@@ -54,8 +56,28 @@ fun createPdfFromComposable(context: Context, composable: @Composable () -> Unit
     }
 
     // Save the PDF to a file
-    savePdfToDownloads(context, pdfDocument)
+    savePdfToDownloads(context, pdfDocument, fileName)
     pdfDocument.close()
 
     return bitmap.toByteArray()
+}
+
+fun createPdfFromBitmap(context: Context, bitmap: Bitmap,fileName: String) {
+    val pageHeight = 1920
+    val pageWidth = bitmap.width
+    val contentHeight = bitmap.height
+    val numberOfPages = ceil(contentHeight / pageHeight.toDouble()).toInt()
+    val pdfDocument = PdfDocument()
+    var offset = 0
+    for (pageNumber in 1..numberOfPages) {
+        val pageInfo = PdfDocument.PageInfo.Builder(pageWidth, pageHeight, pageNumber).create()
+        val page = pdfDocument.startPage(pageInfo)
+        page.canvas.drawBitmap(bitmap, 0f, -offset.toFloat(), null)
+        pdfDocument.finishPage(page)
+        offset += pageHeight
+    }
+
+    // Save the PDF to a file
+    savePdfToDownloads(context, pdfDocument,fileName)
+    pdfDocument.close()
 }
