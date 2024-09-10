@@ -6,18 +6,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.json.JSONObject
 import java.io.IOException
 
 class MapUtils {
@@ -82,6 +82,7 @@ class MapUtils {
                 }
             }
         }
+
         fun showDestination(
             destinationLat: Double,
             destinationLng: Double,
@@ -110,7 +111,8 @@ class MapUtils {
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
                 // If Google Maps is not installed, redirect to Google Play to install it
-                val playStoreUri: Uri = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps")
+                val playStoreUri: Uri =
+                    Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.maps")
                 val playStoreIntent = Intent(Intent.ACTION_VIEW, playStoreUri)
                 playStoreIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 context.startActivity(playStoreIntent)
@@ -159,6 +161,35 @@ class MapUtils {
                     ) == PackageManager.PERMISSION_GRANTED)
         }
 
+        fun getLocationDetails(lat: Double, lng: Double) {
+            val client = OkHttpClient()
+            val url =
+                "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&addressdetails=1"
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val request =
+                        Request.Builder().url(url).addHeader("Accept-Language", "en").build()
+                    val response = client.newCall(request).execute()
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val jsonData = response.body?.string()
+                    val jsonObject = JSONObject(jsonData)
+                    val address = jsonObject.getJSONObject("address")
+                    val formattedAddress = address.optString("road", "") + ", " +
+                            address.optString("city", "") + ", " +
+                            address.optString("country", "")
+
+                    // Update UI on the main thread
+                    withContext(Dispatchers.Main) {
+                        println("Address: $formattedAddress")
+                    }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
         fun resolveShortenedUrl(shortUrl: String, callback: (String) -> Unit) {
             val client = OkHttpClient()
             val request = Request.Builder().url(shortUrl).build()
@@ -176,6 +207,7 @@ class MapUtils {
                 }
             })
         }
+
         fun extractLatLngFromUrl(url: String): Pair<Double, Double>? {
             val regex = Regex("""@(-?\d+\.\d+),(-?\d+\.\d+)""")
             val matchResult = regex.find(url) ?: return null
