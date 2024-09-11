@@ -8,6 +8,8 @@ data class AvailableHotelData(
     val image: String = "",
     val rating: Double = 0.1,
     val location: String = "",
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
     val discount: Int = 0,
     val startPriceDiscount: Int = 0,
     val startPriceActual: Int = 0,

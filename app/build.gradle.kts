@@ -110,4 +110,8 @@ dependencies {
     // Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.play.services.location)
+    implementation(libs.accompanist.permissions)
+
+    implementation (libs.osmdroid.android)
 }
