@@ -189,11 +189,12 @@ fun PaymentScreen(
 
 @Composable
 fun TopBar(
+    modifier: Modifier = Modifier,
     pageTitle: String,
     onBackPress: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

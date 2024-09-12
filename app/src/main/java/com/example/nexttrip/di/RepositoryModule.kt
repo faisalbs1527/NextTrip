@@ -4,7 +4,9 @@ import com.example.nexttrip.data.DestinationRepoImpl
 import com.example.nexttrip.data.FlightRepoImpl
 import com.example.nexttrip.data.HotelRepoImpl
 import com.example.nexttrip.data.BusTicketRepoImpl
+import com.example.nexttrip.data.CarBookingRepoImpl
 import com.example.nexttrip.domain.repository.BusTicketRepository
+import com.example.nexttrip.domain.repository.CarBookingRepository
 import com.example.nexttrip.domain.repository.DestinationRepository
 import com.example.nexttrip.domain.repository.FlightRepository
 import com.example.nexttrip.domain.repository.HotelRepository
@@ -26,5 +28,8 @@ abstract class RepositoryModule {
     abstract fun provideHotelRepo(hotelRepoImpl: HotelRepoImpl): HotelRepository
 
     @Binds
-    abstract fun provideBusTicketRepo(busTicketRepoImpl: BusTicketRepoImpl):BusTicketRepository
+    abstract fun provideBusTicketRepo(busTicketRepoImpl: BusTicketRepoImpl): BusTicketRepository
+
+    @Binds
+    abstract fun provideCarBookingRepo(carBookingRepoImpl: CarBookingRepoImpl): CarBookingRepository
 }

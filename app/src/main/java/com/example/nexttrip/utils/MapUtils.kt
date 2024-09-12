@@ -39,10 +39,10 @@ class MapUtils {
                 // Retrieve the last known location
                 fusedLocationProviderClient.lastLocation
                     .addOnSuccessListener { location ->
-                        location?.let {
+                        if (location != null) {
                             // If location is not null, invoke the success callback with latitude and longitude
-                            onGetLastLocationSuccess(Pair(it.latitude, it.longitude))
-                        }?.run {
+                            onGetLastLocationSuccess(Pair(location.latitude, location.longitude))
+                        } else {
                             onGetLastLocationIsNull()
                         }
                     }
@@ -161,12 +161,13 @@ class MapUtils {
                     ) == PackageManager.PERMISSION_GRANTED)
         }
 
-        fun getLocationDetails(lat: Double, lng: Double) {
+        suspend fun getLocationDetails(lat: Double, lng: Double): String {
             val client = OkHttpClient()
             val url =
                 "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&addressdetails=1"
 
-            CoroutineScope(Dispatchers.IO).launch {
+
+            return withContext(Dispatchers.IO) {
                 try {
                     val request =
                         Request.Builder().url(url).addHeader("Accept-Language", "en").build()
@@ -177,15 +178,15 @@ class MapUtils {
                     val jsonObject = JSONObject(jsonData)
                     val address = jsonObject.getJSONObject("address")
                     val formattedAddress = address.optString("road", "") + ", " +
+                            address.optString("suburb", "") + ", " +
                             address.optString("city", "") + ", " +
-                            address.optString("country", "")
+                            address.optString("state", "")
 
-                    // Update UI on the main thread
-                    withContext(Dispatchers.Main) {
-                        println("Address: $formattedAddress")
-                    }
+                    formattedAddress
+
                 } catch (e: IOException) {
                     e.printStackTrace()
+                    ""
                 }
             }
         }
