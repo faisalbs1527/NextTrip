@@ -26,10 +26,16 @@ class CarBookingViewModel @Inject constructor(
         private set
     var destination = MutableStateFlow(LocationDhakaItem())
         private set
+    var currLocation = MutableStateFlow(LocationDhakaItem())
+        private set
 
     fun clearState() = viewModelScope.launch {
         pickUp.value = LocationDhakaItem()
         destination.value = LocationDhakaItem()
+    }
+
+    fun updateCurrLocation(lat: Double, long: Double, address: String) = viewModelScope.launch {
+        currLocation.value = LocationDhakaItem(lat, long, address)
     }
 
     fun updatePickUp(location: LocationDhakaItem) = viewModelScope.launch {

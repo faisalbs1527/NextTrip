@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,10 +23,15 @@ import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.SheetValue.Expanded
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +47,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
@@ -51,6 +59,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
+import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.OsmdroidMapView
 import com.example.nexttrip.domain.model.carBooking.LocationDhakaItem
 import com.example.nexttrip.navigation.Screen
@@ -61,6 +70,7 @@ import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 import com.example.nexttrip.utils.MapUtils
 import com.example.nexttrip.utils.RequestLocationPermission
+import kotlinx.coroutines.launch
 
 @Composable
 fun CarBookingScreen(
@@ -73,18 +83,20 @@ fun CarBookingScreen(
     val carLocations by viewModel.carLocations.collectAsState()
     val pickUp by viewModel.pickUp.collectAsState()
     val destination by viewModel.destination.collectAsState()
+    val currLocation by viewModel.currLocation.collectAsState()
 
     var pickUpText by remember { mutableStateOf("") }
     var destinationText by remember { mutableStateOf("") }
     var curLat by remember { mutableDoubleStateOf(0.0) }
     var curLong by remember { mutableDoubleStateOf(0.0) }
     var curAddress by remember { mutableStateOf("") }
-    var loadCurrLocation by remember { mutableStateOf(false) }
+    var loadCurrLocation by remember { mutableStateOf(true) }
 
 
     LaunchedEffect(key1 = curLat) {
         if (curLat != 0.0) {
             curAddress = MapUtils.getLocationDetails(curLat, curLong)
+            viewModel.updateCurrLocation(curLat, curLong, curAddress)
         }
     }
     LaunchedEffect(key1 = Unit) {
@@ -102,17 +114,21 @@ fun CarBookingScreen(
                     .fillMaxWidth()
                     .weight(.4f)
             ) {
-                OsmdroidMapView(context = context, carLocations = carLocations, onBackPress = {
-                    viewModel.clearState()
-                    navController.popBackStack()
-                })
+                OsmdroidMapView(
+                    context = context,
+                    carLocations = carLocations,
+                    onLocationUpdate = { _, _ -> },
+                    onBackPress = {
+                        viewModel.clearState()
+                        navController.popBackStack()
+                    })
             }
             BottomSection(
                 modifier = Modifier.weight(.6f),
                 fromLoc = pickUpText,
                 toLoc = destinationText,
                 locationToShow = locations,
-                currAddress = curAddress,
+                currAddress = currLocation.name,
                 pickUp = pickUp.name,
                 destination = destination.name,
                 onLocationLoad = {
@@ -195,6 +211,7 @@ private fun ShowScreen() {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSection(
     modifier: Modifier = Modifier,
@@ -213,33 +230,27 @@ fun BottomSection(
     onSelectMap: () -> Unit
 ) {
 
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = Color.White,
-                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-            )
-            .padding(vertical = 20.dp)
-            .verticalScroll(
-                state = rememberScrollState()
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheet(
+        onDismissRequest = {
+            scope.launch { sheetState.show() }
+        },
+        sheetState = sheetState
     ) {
-        Box(
-            modifier = Modifier
-                .width(60.dp)
-                .height(2.dp)
-                .background(color = gray)
-        )
-        Text(
-            text = "Select Your Route",
-            fontSize = 20.sp,
-            fontFamily = Font_SFPro,
-            fontWeight = FontWeight(700),
-            modifier = Modifier.padding(bottom = 4.dp)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Select Your Route",
+                fontSize = 20.sp,
+                fontFamily = Font_SFPro,
+                fontWeight = FontWeight(700),
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -271,67 +282,6 @@ fun BottomSection(
                     onDestinationSelect(it)
                 }
             )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(4.dp))
-                .padding(8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black.copy(.4f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .padding(8.dp)
-                    .clickable {
-                        onSelectMap()
-                    },
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AddLocationAlt, contentDescription = "",
-                    modifier = Modifier.size(24.dp),
-                    tint = red80
-                )
-                Text(
-                    text = "Set on map",
-                    fontSize = 16.sp,
-                    fontFamily = Font_SFPro,
-                    color = red80
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .border(
-                        width = 1.dp,
-                        color = Color.Black.copy(.4f),
-                        shape = RoundedCornerShape(4.dp)
-                    )
-                    .padding(8.dp)
-                    .clickable {
-                        onLocationLoad()
-                    },
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.LocationSearching, contentDescription = "",
-                    modifier = Modifier.size(24.dp),
-                    tint = red80
-                )
-                Text(
-                    text = "Load Current Location",
-                    fontSize = 16.sp,
-                    fontFamily = Font_SFPro,
-                    color = red80
-                )
-            }
         }
         Row(
             modifier = Modifier
@@ -449,6 +399,24 @@ fun LocationBox(
                     )
                     .padding(vertical = 8.dp)
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    IconTextButton(icon = Icons.Default.AddLocationAlt, text = "Set on map") {
+
+                    }
+                    Spacer(modifier = Modifier.size(12.dp))
+                    IconTextButton(icon = Icons.Default.MyLocation, text = "Current Location") {
+
+                    }
+                }
+                if (locations.isNotEmpty()) {
+                    HorizontalLine()
+                }
                 locations.forEach { location ->
                     Row(
                         modifier = Modifier
@@ -479,5 +447,40 @@ fun LocationBox(
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun IconTextButton(
+    icon: ImageVector,
+    text: String,
+    onCLick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = Color.Black.copy(.4f),
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(8.dp)
+            .clickable {
+                onCLick()
+            },
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon, contentDescription = "",
+            modifier = Modifier.size(24.dp),
+            tint = red80
+        )
+        Text(
+            text = text,
+            fontSize = 16.sp,
+            fontFamily = Font_SFPro,
+            color = Color.Black
+        )
     }
 }

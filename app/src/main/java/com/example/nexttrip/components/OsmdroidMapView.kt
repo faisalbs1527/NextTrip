@@ -21,6 +21,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,9 +33,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.nexttrip.R
+import com.example.nexttrip.domain.model.carBooking.LocationDhakaItem
 import com.example.nexttrip.presentation.model.GeoLocation
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red80
+import com.example.nexttrip.utils.MapUtils
 import com.example.nexttrip.utils.MapUtils.Companion.getLocationDetails
 import com.example.nexttrip.utils.carLocation
 import org.osmdroid.api.IMapController
@@ -49,10 +52,17 @@ import org.osmdroid.views.overlay.Marker
 fun OsmdroidMapView(
     context: Context,
     carLocations: List<GeoLocation>,
+    onLocationUpdate: (GeoPoint, String) -> Unit,
     onBackPress: () -> Unit
 ) {
     var geoPoint by remember {
         mutableStateOf(GeoPoint(23.78238439450155, 90.40183813902087))
+    }
+    var geoLocation by remember {
+        mutableStateOf("")
+    }
+    LaunchedEffect(key1 = geoPoint) {
+        geoLocation = getLocationDetails(geoPoint.latitude, geoPoint.longitude)
     }
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -88,6 +98,7 @@ fun OsmdroidMapView(
                                 geoPoint = it
                                 marker.position = it
                                 mapController.setCenter(it)
+                                onLocationUpdate(geoPoint, geoLocation)
                             }
                             return true
                         }

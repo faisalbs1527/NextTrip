@@ -18,6 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.OsmdroidMapView
+import com.example.nexttrip.domain.model.carBooking.LocationDhakaItem
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red80
 
@@ -39,6 +43,11 @@ fun SelectLocationScreen(
 ) {
     val context = LocalContext.current
     val carLocations by viewModel.carLocations.collectAsState()
+    val currLocation by viewModel.currLocation.collectAsState()
+
+    var selectedLocation by remember {
+        mutableStateOf(currLocation)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -50,9 +59,16 @@ fun SelectLocationScreen(
                     .fillMaxWidth()
                     .weight(.8f)
             ) {
-                OsmdroidMapView(context = context, carLocations = carLocations, onBackPress = {
-                    navController.popBackStack()
-                })
+                OsmdroidMapView(
+                    context = context,
+                    carLocations = carLocations,
+                    onLocationUpdate = { geoPoint, geoLocation ->
+                        selectedLocation =
+                            LocationDhakaItem(geoPoint.latitude, geoPoint.longitude, geoLocation)
+                    },
+                    onBackPress = {
+                        navController.popBackStack()
+                    })
             }
             Column(
                 modifier = Modifier
@@ -83,13 +99,16 @@ fun SelectLocationScreen(
                         tint = red80
                     )
                     Text(
-                        text = "Mohakhali,Dhaka",
+                        text = selectedLocation.name,
                         fontSize = 16.sp,
                         fontFamily = Font_SFPro,
                         color = Color.Black
                     )
                 }
-                ButtonCustom(text = "Confirm Destination", modifier = Modifier.padding(horizontal = 20.dp)) {
+                ButtonCustom(
+                    text = "Confirm Destination",
+                    modifier = Modifier.padding(horizontal = 20.dp)
+                ) {
 
                 }
             }
