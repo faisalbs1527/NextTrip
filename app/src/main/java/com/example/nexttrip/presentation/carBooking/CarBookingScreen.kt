@@ -10,26 +10,19 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddLocationAlt
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.LocationSearching
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SheetValue.Expanded
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -46,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -61,16 +55,14 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.OsmdroidMapView
-import com.example.nexttrip.domain.model.carBooking.LocationDhakaItem
+import com.example.nexttrip.domain.model.carBooking.LocationDetails
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
-import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.green80
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 import com.example.nexttrip.utils.MapUtils
 import com.example.nexttrip.utils.RequestLocationPermission
-import kotlinx.coroutines.launch
 
 @Composable
 fun CarBookingScreen(
@@ -90,7 +82,7 @@ fun CarBookingScreen(
     var curLat by remember { mutableDoubleStateOf(0.0) }
     var curLong by remember { mutableDoubleStateOf(0.0) }
     var curAddress by remember { mutableStateOf("") }
-    var loadCurrLocation by remember { mutableStateOf(true) }
+    val loadCurrLocation by remember { mutableStateOf(true) }
 
 
     LaunchedEffect(key1 = curLat) {
@@ -128,12 +120,8 @@ fun CarBookingScreen(
                 fromLoc = pickUpText,
                 toLoc = destinationText,
                 locationToShow = locations,
-                currAddress = currLocation.name,
                 pickUp = pickUp.name,
                 destination = destination.name,
-                onLocationLoad = {
-                    loadCurrLocation = true
-                },
                 onPickUpChange = {
                     pickUpText = it
                     viewModel.updateSuggestions(it)
@@ -142,21 +130,28 @@ fun CarBookingScreen(
                     destinationText = it
                     viewModel.updateSuggestions(it)
                 },
-                onPickUpSelect = {
-                    viewModel.updatePickUp(it)
-                    pickUpText = ""
-                    viewModel.updateSuggestions("")
-                },
-                onDestinationSelect = {
-                    viewModel.updateDestination(it)
-                    destinationText = ""
+                onLocationSelect = { id, location ->
+                    viewModel.updateCurrLocationId(id)
+                    viewModel.updateLocation(location)
+                    if (id == 1) {
+                        pickUpText = ""
+                    } else {
+                        destinationText = ""
+                    }
                     viewModel.updateSuggestions("")
                 },
                 onCurrentLocClick = {
-                    viewModel.updatePickUp(LocationDhakaItem(curLat, curLong, curAddress))
+                    pickUpText = ""
+                    viewModel.updateSuggestions("")
+                    viewModel.updateCurrLocationId(1)
+                    viewModel.updateLocation(currLocation)
                 },
                 onSelectMap = {
+                    viewModel.updateCurrLocationId(it)
                     navController.navigate(Screen.SelectLocationScreen.route)
+                },
+                onChangeFocus = {
+                    if (it == 1) pickUpText = "" else destinationText = ""
                 }
             )
         }
@@ -200,14 +195,12 @@ private fun ShowScreen() {
         fromLoc = "",
         toLoc = "",
         locationToShow = emptyList(),
-        currAddress = "",
         onPickUpChange = {},
         onDestinationChange = {},
-        onLocationLoad = {},
-        onPickUpSelect = {},
-        onDestinationSelect = {},
+        onLocationSelect = { id, location -> },
         onCurrentLocClick = {},
-        onSelectMap = {}
+        onSelectMap = {},
+        onChangeFocus = {}
     )
 }
 
@@ -219,23 +212,21 @@ fun BottomSection(
     toLoc: String,
     pickUp: String = "",
     destination: String = "",
-    locationToShow: List<LocationDhakaItem>,
-    currAddress: String,
-    onLocationLoad: () -> Unit,
+    locationToShow: List<LocationDetails>,
     onPickUpChange: (String) -> Unit,
     onDestinationChange: (String) -> Unit,
-    onPickUpSelect: (LocationDhakaItem) -> Unit,
-    onDestinationSelect: (LocationDhakaItem) -> Unit,
+    onLocationSelect: (Int, LocationDetails) -> Unit,
     onCurrentLocClick: () -> Unit,
-    onSelectMap: () -> Unit
+    onSelectMap: (Int) -> Unit,
+    onChangeFocus: (Int) -> Unit
 ) {
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
         onDismissRequest = {
-            scope.launch { sheetState.show() }
+//            scope.launch { sheetState.show() }
         },
         sheetState = sheetState
     ) {
@@ -245,7 +236,7 @@ fun BottomSection(
         ) {
             Text(
                 text = "Select Your Route",
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 fontFamily = Font_SFPro,
                 fontWeight = FontWeight(700),
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -254,76 +245,44 @@ fun BottomSection(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(4.dp))
                 .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             LocationBox(
                 value = fromLoc,
                 placeholder = pickUp.ifEmpty { "Pick Up" },
                 iconColor = green80,
+                locationId = 1,
                 onValueChange = {
                     onPickUpChange(it)
                 },
                 locations = locationToShow,
-                onSelect = {
-                    onPickUpSelect(it)
-                }
+                onSelect = { id, location ->
+                    onLocationSelect(id, location)
+                },
+                onSelectMap = onSelectMap,
+                onCurrentLocClick = onCurrentLocClick,
+                onChangeFocus = onChangeFocus
             )
             LocationBox(
                 value = toLoc,
                 placeholder = destination.ifEmpty { "Destination" },
                 iconColor = red40,
+                locationId = 2,
                 onValueChange = {
                     onDestinationChange(it)
                 },
                 locations = locationToShow,
-                onSelect = {
-                    onDestinationSelect(it)
-                }
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .border(
-                    width = 1.dp,
-                    color = Color.Black.copy(.4f),
-                    shape = RoundedCornerShape(4.dp)
-                )
-                .padding(8.dp)
-                .clickable {
-                    onCurrentLocClick()
+                onSelect = { id, location ->
+                    onLocationSelect(id, location)
                 },
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.MyLocation, contentDescription = "",
-                tint = red80,
-                modifier = Modifier.size(24.dp)
+                onSelectMap = onSelectMap,
+                onCurrentLocClick = {},
+                onChangeFocus = onChangeFocus
             )
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    text = "Current Location",
-                    fontSize = 16.sp,
-                    color = Color.Black,
-                    fontFamily = Font_SFPro
-                )
-                Text(
-                    text = currAddress,
-                    fontSize = 14.sp,
-                    color = Color.Black.copy(.5f),
-                    fontFamily = Font_SFPro
-                )
-            }
         }
         ButtonCustom(
-            modifier = Modifier.padding(horizontal = 40.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 48.dp, vertical = 20.dp),
             text = "Find a driver"
         ) {
 
@@ -336,11 +295,15 @@ fun LocationBox(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
+    locationId: Int,
     iconColor: Color,
-    locations: List<LocationDhakaItem>,
-    onSelect: (LocationDhakaItem) -> Unit
+    locations: List<LocationDetails>,
+    onSelect: (Int, LocationDetails) -> Unit,
+    onSelectMap: (Int) -> Unit,
+    onCurrentLocClick: () -> Unit,
+    onChangeFocus: (Int) -> Unit
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    var isFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
@@ -349,13 +312,12 @@ fun LocationBox(
             value = value,
             onValueChange = {
                 onValueChange(it)
-                isExpanded = true
             },
             placeholder = {
                 Text(
                     text = placeholder,
                     fontSize = 16.sp,
-                    color = Color.Black.copy(.6f),
+                    color = Color.Black.copy(.7f),
                     fontFamily = Font_SFPro
                 )
             },
@@ -368,23 +330,30 @@ fun LocationBox(
                 )
             },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = red80
+                focusedBorderColor = red80,
+                focusedContainerColor = Color.White,
+                unfocusedContainerColor = Color.White
             ),
             singleLine = true,
             textStyle = TextStyle(
                 fontSize = 16.sp,
-                color = Color.Black,
+                color = Color.Black.copy(.7f),
                 fontFamily = Font_SFPro
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester)
                 .clickable {
                     focusRequester.requestFocus()
-                    isExpanded = true
+                }
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    isFocused = it.isFocused
+                    if (!isFocused) {
+                        onChangeFocus(locationId)
+                    }
                 }
         )
-        if (value.isNotEmpty() && isExpanded) {
+        if (isFocused) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -407,42 +376,47 @@ fun LocationBox(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     IconTextButton(icon = Icons.Default.AddLocationAlt, text = "Set on map") {
-
+                        onSelectMap(locationId)
+                        focusManager.clearFocus()
                     }
-                    Spacer(modifier = Modifier.size(12.dp))
-                    IconTextButton(icon = Icons.Default.MyLocation, text = "Current Location") {
-
+                    if (locationId == 1) {
+                        Spacer(modifier = Modifier.size(12.dp))
+                        IconTextButton(icon = Icons.Default.MyLocation, text = "Current Location") {
+                            onCurrentLocClick()
+                            focusManager.clearFocus()
+                        }
                     }
                 }
-                if (locations.isNotEmpty()) {
-                    HorizontalLine()
-                }
-                locations.forEach { location ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.LocationOn,
-                            contentDescription = "",
-                            tint = Color.Black.copy(.6f)
-                        )
-                        Text(
-                            text = location.name,
+                if (value.isNotEmpty()) {
+                    if (locations.isNotEmpty()) {
+                        HorizontalLine()
+                    }
+                    locations.forEach { location ->
+                        Row(
                             modifier = Modifier
-                                .clickable {
-                                    onSelect(location)
-                                    focusManager.clearFocus()
-                                    isExpanded = false
-                                }
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            fontSize = 16.sp,
-                            fontFamily = Font_SFPro,
-                            color = Color.Black.copy(.6f)
-                        )
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = "",
+                                tint = Color.Black.copy(.6f)
+                            )
+                            Text(
+                                text = location.name,
+                                modifier = Modifier
+                                    .clickable {
+                                        onSelect(locationId, location)
+                                        focusManager.clearFocus()
+                                    }
+                                    .padding(8.dp)
+                                    .fillMaxWidth(),
+                                fontSize = 16.sp,
+                                fontFamily = Font_SFPro,
+                                color = Color.Black.copy(.6f)
+                            )
+                        }
                     }
                 }
             }

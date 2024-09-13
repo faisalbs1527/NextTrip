@@ -32,7 +32,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.OsmdroidMapView
-import com.example.nexttrip.domain.model.carBooking.LocationDhakaItem
+import com.example.nexttrip.domain.model.carBooking.LocationDetails
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red80
 
@@ -64,7 +64,7 @@ fun SelectLocationScreen(
                     carLocations = carLocations,
                     onLocationUpdate = { geoPoint, geoLocation ->
                         selectedLocation =
-                            LocationDhakaItem(geoPoint.latitude, geoPoint.longitude, geoLocation)
+                            LocationDetails(geoPoint.latitude, geoPoint.longitude, geoLocation)
                     },
                     onBackPress = {
                         navController.popBackStack()
@@ -109,7 +109,8 @@ fun SelectLocationScreen(
                     text = "Confirm Destination",
                     modifier = Modifier.padding(horizontal = 20.dp)
                 ) {
-
+                    viewModel.updateLocation(selectedLocation)
+                    navController.popBackStack()
                 }
             }
         }

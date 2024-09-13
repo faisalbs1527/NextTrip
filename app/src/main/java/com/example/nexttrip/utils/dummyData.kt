@@ -2,12 +2,11 @@ package com.example.nexttrip.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.graphics.ImageBitmap
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
-import com.example.nexttrip.presentation.model.GeoLocation
+import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
 
@@ -113,26 +112,4 @@ val cityList = listOf(
     "San Diego",
     "Dallas",
     "San Jose"
-)
-
-val carLocation = listOf(
-    GeoLocation(23.77695924969011,90.39700328337875,0f),
-    GeoLocation(23.77613113123303,90.39247866297734,90f),
-    GeoLocation(23.766429922374797,90.401269354043,180f),
-    GeoLocation(23.774356573926013,90.41122351892608,90f),
-    GeoLocation(23.77908867293702,90.40592324931299,-90f),
-    GeoLocation(23.788788937544666,90.3887296917876,0f),
-    GeoLocation(23.804639031342276,90.39713255824739,0f),
-    GeoLocation(23.824250724150644,90.40782222028639,180f),
-    GeoLocation(23.819524907748303,90.43661950497864,90f),
-    GeoLocation(23.81138001182734,90.39056583213107,-90f),
-    GeoLocation(23.795591536412374,90.37078143806764,-90f),
-    GeoLocation(23.78211450465139,90.37704649618775,180f),
-    GeoLocation(23.739360947758215,90.37297970407468,0f),
-    GeoLocation(23.74751035584785,90.3750680567814,0f),
-    GeoLocation(23.76260050567616,90.36671464595463,180f),
-    GeoLocation(23.744592725127305,90.41024031289413,180f),
-    GeoLocation(23.751836377635172,90.40782222028639,90f),
-    GeoLocation(23.752540600137394,90.39342357794021,-90f),
-    GeoLocation(23.737147440235418,90.39551193064688,-90f)
 )
