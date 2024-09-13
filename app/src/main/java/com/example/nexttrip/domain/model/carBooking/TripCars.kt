@@ -13,7 +13,7 @@ data class TripCars(
     val gearType: String,
     val successfulRides: Int,
     val rating: Double,
-    val availableRoutes: TripRoute
+    val availableRoutes: List<TripRoute>
 )
 
 fun TripCars.toAvailableCarData() = AvailableCarData(

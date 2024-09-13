@@ -62,6 +62,7 @@ class CarBookingViewModel @Inject constructor(
 
     fun getCurrCarLocations() = viewModelScope.launch {
         val response = repository.getCurrentCarLocations()
+        println(response.carLocations)
         carLocations.value = response.carLocations.map { it.toAvailableCarData() }
     }
 

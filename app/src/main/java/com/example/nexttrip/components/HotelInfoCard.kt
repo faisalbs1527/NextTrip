@@ -128,26 +128,7 @@ fun HotelInfoCard(
                     fontWeight = FontWeight(500),
                 )
             }
-            Row(
-                modifier = Modifier
-                    .border(width = 1.dp, color = gray.copy(.4f), shape = RoundedCornerShape(4.dp))
-                    .padding(4.dp),
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Star,
-                    contentDescription = "",
-                    tint = red80,
-                    modifier = Modifier.size(14.dp)
-                )
-                Text(
-                    text = "${hotel.rating} Star",
-                    fontSize = 12.sp,
-                    color = Color.Black.copy(0.5f),
-                    fontFamily = Font_SFPro
-                )
-            }
+            RatingBox(ratingText = "${hotel.rating} Star")
         }
         Column(
             modifier = Modifier.padding(start = 8.dp, top = 12.dp),
