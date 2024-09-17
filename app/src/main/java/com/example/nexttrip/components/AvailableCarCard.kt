@@ -2,6 +2,7 @@ package com.example.nexttrip.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,21 +22,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.R
+import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.ui.theme.Font_SFPro
+import com.example.nexttrip.ui.theme.gray
+import com.example.nexttrip.ui.theme.red10
+import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.ui.theme.red80
 
 @Composable
-fun AvailableCarCard() {
+fun AvailableCarCard(
+    car: AvailableCarData
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
+            .border(width = .5.dp, color = red40, shape = RoundedCornerShape(4.dp))
             .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable {
 
@@ -52,7 +61,7 @@ fun AvailableCarCard() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "BMW Cabrio",
+                    text = car.carName,
                     fontFamily = Font_SFPro,
                     fontSize = 18.sp,
                     fontWeight = FontWeight(600)
@@ -61,7 +70,7 @@ fun AvailableCarCard() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TicketText(text = "Automatic", size = 12)
+                    TicketText(text = car.gearType, size = 12)
                     Box(
                         modifier = Modifier
                             .height(8.dp)
@@ -75,7 +84,7 @@ fun AvailableCarCard() {
                             .width(1.dp)
                             .background(color = Color.Black.copy(alpha = .4f))
                     )
-                    TicketText(text = "Octane", size = 12)
+                    TicketText(text = car.fuelType, size = 12)
                 }
                 Row(
                     modifier = Modifier.padding(vertical = 4.dp),
@@ -89,7 +98,7 @@ fun AvailableCarCard() {
                         modifier = Modifier.size(14.dp)
                     )
                     Text(
-                        text = "800m(5mins away)",
+                        text = "${car.routeInfo.distance}km(${car.routeInfo.duration}mins away)",
                         fontSize = 12.sp,
                         color = red80,
                         fontFamily = Font_SFPro,
@@ -111,9 +120,9 @@ fun AvailableCarCard() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            RatingBox(ratingText = "4.8 Star")
+            RatingBox(ratingText = "${car.rating} Star")
             Text(
-                text = "BDT 350",
+                text = "BDT ${car.price}",
                 fontSize = 20.sp,
                 color = red80,
                 fontFamily = Font_SFPro,
@@ -126,5 +135,5 @@ fun AvailableCarCard() {
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    AvailableCarCard()
+//    AvailableCarCard(AvailableCarData())
 }

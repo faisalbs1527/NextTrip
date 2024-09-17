@@ -156,6 +156,9 @@ fun CarBookingScreen(
                 },
                 onChangeFocus = {
                     if (it == 1) pickUpText = "" else destinationText = ""
+                },
+                onFindDriver = {
+                    navController.navigate(Screen.AvailableCarScreen.route)
                 }
             )
         }
@@ -204,7 +207,8 @@ private fun ShowScreen() {
         onLocationSelect = { id, location -> },
         onCurrentLocClick = {},
         onSelectMap = {},
-        onChangeFocus = {}
+        onChangeFocus = {},
+        onFindDriver = {}
     )
 }
 
@@ -222,7 +226,8 @@ fun BottomSection(
     onLocationSelect: (Int, LocationDetails) -> Unit,
     onCurrentLocClick: () -> Unit,
     onSelectMap: (Int) -> Unit,
-    onChangeFocus: (Int) -> Unit
+    onChangeFocus: (Int) -> Unit,
+    onFindDriver: () -> Unit
 ) {
 
     val sheetState = rememberModalBottomSheetState(
@@ -299,7 +304,7 @@ fun BottomSection(
             modifier = Modifier.padding(horizontal = 48.dp, vertical = 20.dp),
             text = "Find a driver"
         ) {
-
+            onFindDriver()
         }
     }
 }

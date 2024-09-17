@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.app.ActivityCompat
+import com.example.nexttrip.presentation.model.RouteInfo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
@@ -19,6 +20,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.IOException
+import kotlin.math.ceil
 
 class MapUtils {
 
@@ -79,6 +81,42 @@ class MapUtils {
                 }.addOnFailureListener { exception ->
                     // If an error occurs, invoke the failure callback with the exception
                     onGetCurrentLocationFailed(exception)
+                }
+            }
+        }
+
+        suspend fun getDistanceAndDuration(
+            lat1: Double,
+            lon1: Double,
+            lat2: Double,
+            lon2: Double
+        ): RouteInfo {
+            val client = OkHttpClient()
+            val url =
+                "https://router.project-osrm.org/route/v1/driving/$lon1,$lat1;$lon2,$lat2?overview=false"
+
+            return withContext(Dispatchers.IO) {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val responseData = response.body?.string()
+                    responseData?.let {
+                        val json = JSONObject(it)
+                        val routes = json.getJSONArray("routes")
+                        if (routes.length() > 0) {
+                            val route = routes.getJSONObject(0)
+                            val distance =
+                                String.format("%.2f", route.getDouble("distance") / 1000).toDouble() // Convert meters to kilometers
+                            val duration =
+                                ceil(route.getDouble("duration") / 60).toInt() // Convert seconds to minutes
+                            return@withContext RouteInfo(distance, duration)
+                        }
+                    }
+                    return@withContext RouteInfo()
                 }
             }
         }
