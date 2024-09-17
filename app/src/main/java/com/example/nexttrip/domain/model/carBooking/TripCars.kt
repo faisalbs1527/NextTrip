@@ -11,6 +11,7 @@ data class TripCars(
     val riderName: String,
     val fuelType: String,
     val gearType: String,
+    val color: String,
     val successfulRides: Int,
     val rating: Double,
     val availableRoutes: List<TripRoute>
@@ -25,6 +26,7 @@ fun TripCars.toAvailableCarData() = AvailableCarData(
     riderName = riderName,
     fuelType = fuelType,
     gearType = gearType,
+    color = color,
     successfulRides = successfulRides,
     rating = rating,
     availableRoutes = availableRoutes

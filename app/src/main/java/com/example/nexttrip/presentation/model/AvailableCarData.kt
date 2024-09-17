@@ -11,6 +11,7 @@ data class AvailableCarData(
     val riderName: String,
     val fuelType: String,
     val gearType: String,
+    val color: String,
     val successfulRides: Int,
     val rating: Double,
     val availableRoutes: List<TripRoute>
