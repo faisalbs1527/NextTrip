@@ -61,6 +61,7 @@ fun SelectLocationScreen(
             ) {
                 OsmdroidMapView(
                     context = context,
+                    showBackButton = true,
                     carLocations = carLocations,
                     onLocationUpdate = { geoPoint, geoLocation ->
                         selectedLocation =

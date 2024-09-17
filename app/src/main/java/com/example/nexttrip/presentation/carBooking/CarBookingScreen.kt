@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,8 +23,6 @@ import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
-import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SheetValue
@@ -33,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -44,7 +45,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
@@ -52,15 +52,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.SecureFlagPolicy
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.components.AvailableCarCard
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.OsmdroidMapView
+import com.example.nexttrip.components.button.IconTextButton
+import com.example.nexttrip.components.button.TextButton
 import com.example.nexttrip.domain.model.carBooking.LocationDetails
 import com.example.nexttrip.navigation.Screen
+import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.green80
 import com.example.nexttrip.ui.theme.red40
@@ -80,7 +83,9 @@ fun CarBookingScreen(
     val pickUp by viewModel.pickUp.collectAsState()
     val destination by viewModel.destination.collectAsState()
     val currLocation by viewModel.currLocation.collectAsState()
+    val availableCars by viewModel.availableCars.collectAsState()
 
+    var pageState by remember { mutableIntStateOf(1) }
     var pickUpText by remember { mutableStateOf("") }
     var destinationText by remember { mutableStateOf("") }
     var curLat by remember { mutableDoubleStateOf(0.0) }
@@ -99,6 +104,11 @@ fun CarBookingScreen(
         viewModel.getLocationsInDhaka()
         viewModel.getCurrCarLocations()
     }
+    LaunchedEffect(key1 = pageState) {
+        if (pageState == 2) {
+            viewModel.findAvailableCars()
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -112,7 +122,8 @@ fun CarBookingScreen(
             ) {
                 OsmdroidMapView(
                     context = context,
-                    carLocations = carLocations,
+                    carLocations = if (pageState == 1) carLocations else availableCars,
+                    defaultScroll = .4,
                     onLocationUpdate = { _, _ -> },
                     onBackPress = {
                         viewModel.clearState()
@@ -121,11 +132,13 @@ fun CarBookingScreen(
             }
             BottomSection(
                 modifier = Modifier.weight(.6f),
+                pageState = pageState,
                 fromLoc = pickUpText,
                 toLoc = destinationText,
                 locationToShow = locations,
                 pickUp = pickUp.name,
                 destination = destination.name,
+                availableCars = availableCars,
                 onPickUpChange = {
                     pickUpText = it
                     viewModel.updateSuggestions(it)
@@ -158,7 +171,15 @@ fun CarBookingScreen(
                     if (it == 1) pickUpText = "" else destinationText = ""
                 },
                 onFindDriver = {
-                    navController.navigate(Screen.AvailableCarScreen.route)
+                    pageState = 2
+                },
+                onBackPress = {
+                    if (pageState == 1) {
+                        viewModel.clearState()
+                        navController.popBackStack()
+                    } else {
+                        pageState = 1
+                    }
                 }
             )
         }
@@ -199,16 +220,19 @@ fun CarBookingScreen(
 private fun ShowScreen() {
     BottomSection(
         modifier = Modifier.padding(16.dp),
+        pageState = 1,
         fromLoc = "",
         toLoc = "",
         locationToShow = emptyList(),
         onPickUpChange = {},
+        availableCars = emptyList(),
         onDestinationChange = {},
-        onLocationSelect = { id, location -> },
+        onLocationSelect = { _, _ -> },
         onCurrentLocClick = {},
         onSelectMap = {},
         onChangeFocus = {},
-        onFindDriver = {}
+        onFindDriver = {},
+        onBackPress = {}
     )
 }
 
@@ -216,10 +240,12 @@ private fun ShowScreen() {
 @Composable
 fun BottomSection(
     modifier: Modifier = Modifier,
+    pageState: Int,
     fromLoc: String,
     toLoc: String,
     pickUp: String = "",
     destination: String = "",
+    availableCars: List<AvailableCarData>,
     locationToShow: List<LocationDetails>,
     onPickUpChange: (String) -> Unit,
     onDestinationChange: (String) -> Unit,
@@ -227,84 +253,114 @@ fun BottomSection(
     onCurrentLocClick: () -> Unit,
     onSelectMap: (Int) -> Unit,
     onChangeFocus: (Int) -> Unit,
-    onFindDriver: () -> Unit
+    onFindDriver: () -> Unit,
+    onBackPress: () -> Unit
 ) {
 
     val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
+        skipPartiallyExpanded = false,
         confirmValueChange = {
             it != SheetValue.Hidden // Prevent dismissing the sheet by swipe or tap outside
         }
     )
-    val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
-        onDismissRequest = {
-//            scope.launch { sheetState.show() }
-        },
+        onDismissRequest = {},
         sheetState = sheetState,
-        properties = ModalBottomSheetProperties(
-            securePolicy = SecureFlagPolicy.Inherit,
-            isFocusable = true,
-            shouldDismissOnBackPress = false
-        )
+        modifier = modifier
+            .fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Select Your Route",
-                fontSize = 24.sp,
-                fontFamily = Font_SFPro,
-                fontWeight = FontWeight(700),
-                modifier = Modifier.padding(bottom = 4.dp)
-            )
-        }
-        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(horizontal = 8.dp)
+                .padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Top
         ) {
-            LocationBox(
-                value = fromLoc,
-                placeholder = pickUp.ifEmpty { "Pick Up" },
-                iconColor = green80,
-                locationId = 1,
-                onValueChange = {
-                    onPickUpChange(it)
-                },
-                locations = locationToShow,
-                onSelect = { id, location ->
-                    onLocationSelect(id, location)
-                },
-                onSelectMap = onSelectMap,
-                onCurrentLocClick = onCurrentLocClick,
-                onChangeFocus = onChangeFocus
-            )
-            LocationBox(
-                value = toLoc,
-                placeholder = destination.ifEmpty { "Destination" },
-                iconColor = red40,
-                locationId = 2,
-                onValueChange = {
-                    onDestinationChange(it)
-                },
-                locations = locationToShow,
-                onSelect = { id, location ->
-                    onLocationSelect(id, location)
-                },
-                onSelectMap = onSelectMap,
-                onCurrentLocClick = {},
-                onChangeFocus = onChangeFocus
-            )
+            Column {
+                Text(
+                    text = if (pageState == 1) "Select Your Route" else "Available Cars for ride",
+                    fontSize = 24.sp,
+                    fontFamily = Font_SFPro,
+                    fontWeight = FontWeight(700),
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                if (pageState == 2) {
+                    Text(
+                        text = "${availableCars.size} cars found",
+                        fontFamily = Font_SFPro,
+                        fontSize = 16.sp,
+                        color = Color.Black.copy(.5f),
+                        fontWeight = FontWeight(500)
+                    )
+                }
+            }
+            TextButton(buttonText = "Back") {
+                onBackPress()
+            }
         }
-        ButtonCustom(
-            modifier = Modifier.padding(horizontal = 48.dp, vertical = 20.dp),
-            text = "Find a driver"
-        ) {
-            onFindDriver()
+        if (pageState == 1) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                LocationBox(
+                    value = fromLoc,
+                    placeholder = pickUp.ifEmpty { "Pick Up" },
+                    iconColor = green80,
+                    locationId = 1,
+                    onValueChange = {
+                        onPickUpChange(it)
+                    },
+                    locations = locationToShow,
+                    onSelect = { id, location ->
+                        onLocationSelect(id, location)
+                    },
+                    onSelectMap = onSelectMap,
+                    onCurrentLocClick = onCurrentLocClick,
+                    onChangeFocus = onChangeFocus
+                )
+                LocationBox(
+                    value = toLoc,
+                    placeholder = destination.ifEmpty { "Destination" },
+                    iconColor = red40,
+                    locationId = 2,
+                    onValueChange = {
+                        onDestinationChange(it)
+                    },
+                    locations = locationToShow,
+                    onSelect = { id, location ->
+                        onLocationSelect(id, location)
+                    },
+                    onSelectMap = onSelectMap,
+                    onCurrentLocClick = {},
+                    onChangeFocus = onChangeFocus
+                )
+            }
+            ButtonCustom(
+                modifier = Modifier.padding(horizontal = 48.dp, vertical = 20.dp),
+                text = "Find a driver"
+            ) {
+                onFindDriver()
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 8.dp)
+            ) {
+                LazyColumn(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(availableCars) {
+                        AvailableCarCard(it)
+                    }
+                }
+            }
         }
     }
 }
@@ -440,40 +496,5 @@ fun LocationBox(
                 }
             }
         }
-    }
-}
-
-
-@Composable
-fun IconTextButton(
-    icon: ImageVector,
-    text: String,
-    onCLick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .border(
-                width = 1.dp,
-                color = Color.Black.copy(.4f),
-                shape = RoundedCornerShape(4.dp)
-            )
-            .padding(8.dp)
-            .clickable {
-                onCLick()
-            },
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon, contentDescription = "",
-            modifier = Modifier.size(24.dp),
-            tint = red80
-        )
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            fontFamily = Font_SFPro,
-            color = Color.Black
-        )
     }
 }
