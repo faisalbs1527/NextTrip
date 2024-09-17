@@ -45,6 +45,7 @@ import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationMessage
 import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.ViewTicket
+import com.example.nexttrip.components.appBar.SimpleTopBar
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.utils.createBitmapFromComposable
@@ -138,7 +139,7 @@ fun PaymentScreen(
                         .fillMaxSize()
                         .padding(vertical = 30.dp, horizontal = 20.dp)
                 ) {
-                    TopBar(pageTitle = pageTitle) {
+                    SimpleTopBar(pageTitle = pageTitle) {
                         if (pageStatus == 1) {
                             navController.popBackStack()
                         } else {
@@ -184,38 +185,5 @@ fun PaymentScreen(
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TopBar(
-    modifier: Modifier = Modifier,
-    pageTitle: String,
-    onBackPress: () -> Unit
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-            contentDescription = "",
-            modifier = Modifier
-                .weight(.1f)
-                .size(30.dp)
-                .clickable {
-                    onBackPress()
-                }
-        )
-        Text(
-            text = pageTitle,
-            fontSize = 28.sp,
-            fontFamily = Font_SFPro,
-            fontWeight = FontWeight(500),
-            color = Color(0xFF8A1C40),
-            modifier = Modifier.weight(.8f),
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.weight(.1f))
     }
 }
