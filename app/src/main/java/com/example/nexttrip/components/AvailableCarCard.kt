@@ -38,7 +38,8 @@ import com.example.nexttrip.ui.theme.red80
 
 @Composable
 fun AvailableCarCard(
-    car: AvailableCarData
+    car: AvailableCarData,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -47,7 +48,7 @@ fun AvailableCarCard(
             .border(width = .5.dp, color = red40, shape = RoundedCornerShape(4.dp))
             .padding(vertical = 8.dp, horizontal = 8.dp)
             .clickable {
-
+                onClick()
             },
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {

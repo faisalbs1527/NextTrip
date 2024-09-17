@@ -33,7 +33,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -83,8 +82,9 @@ fun CarBookingScreen(
     val destination by viewModel.destination.collectAsState()
     val currLocation by viewModel.currLocation.collectAsState()
     val availableCars by viewModel.availableCars.collectAsState()
+    val pageState by viewModel.bookingScreenState.collectAsState()
 
-    var pageState by remember { mutableIntStateOf(1) }
+
     var pickUpText by remember { mutableStateOf("") }
     var destinationText by remember { mutableStateOf("") }
     var curLat by remember { mutableDoubleStateOf(0.0) }
@@ -170,14 +170,18 @@ fun CarBookingScreen(
                     if (it == 1) pickUpText = "" else destinationText = ""
                 },
                 onFindDriver = {
-                    pageState = 2
+                    viewModel.updateBookingPageState(2)
+                },
+                onSelectCar = {
+                    viewModel.updateCarSelection(it)
+                    navController.navigate(Screen.CarDetailsScreen.route)
                 },
                 onBackPress = {
                     if (pageState == 1) {
                         viewModel.clearState()
                         navController.popBackStack()
                     } else {
-                        pageState = 1
+                        viewModel.updateBookingPageState(1)
                     }
                 }
             )
@@ -231,6 +235,7 @@ private fun ShowScreen() {
         onSelectMap = {},
         onChangeFocus = {},
         onFindDriver = {},
+        onSelectCar = {},
         onBackPress = {}
     )
 }
@@ -253,6 +258,7 @@ fun BottomSection(
     onSelectMap: (Int) -> Unit,
     onChangeFocus: (Int) -> Unit,
     onFindDriver: () -> Unit,
+    onSelectCar: (AvailableCarData) -> Unit,
     onBackPress: () -> Unit
 ) {
 
@@ -356,7 +362,9 @@ fun BottomSection(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     items(availableCars) {
-                        AvailableCarCard(it)
+                        AvailableCarCard(it) {
+                            onSelectCar(it)
+                        }
                     }
                 }
             }

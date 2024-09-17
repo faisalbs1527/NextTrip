@@ -22,6 +22,8 @@ class CarBookingViewModel @Inject constructor(
     private var currLocationId = MutableStateFlow(0)
     private var locationsDhaka = MutableStateFlow<List<LocationDetails>>(emptyList())
 
+    var bookingScreenState = MutableStateFlow(1)
+
     var carLocations = MutableStateFlow<List<AvailableCarData>>(emptyList())
         private set
     var locationsToShow = MutableStateFlow<List<LocationDetails>>(emptyList())
@@ -34,10 +36,16 @@ class CarBookingViewModel @Inject constructor(
         private set
     var availableCars = MutableStateFlow<List<AvailableCarData>>(emptyList())
         private set
+    var selectedCar = MutableStateFlow(AvailableCarData())
+        private set
 
     fun clearState() = viewModelScope.launch {
         pickUp.value = LocationDetails()
         destination.value = LocationDetails()
+    }
+
+    fun updateBookingPageState(state: Int) = viewModelScope.launch {
+        bookingScreenState.value = state
     }
 
     fun updateCurrLocationId(id: Int) = viewModelScope.launch {
@@ -87,6 +95,10 @@ class CarBookingViewModel @Inject constructor(
                 price = getPrice()
             )
         }
+    }
+
+    fun updateCarSelection(car: AvailableCarData) = viewModelScope.launch {
+        selectedCar.value = car
     }
 
     private suspend fun getPrice(): Int {

@@ -181,7 +181,7 @@ fun SetUpNavGraph(
             SelectLocationScreen(navController = navController, viewModel = carBookingViewModel)
         }
         composable(route = Screen.CarDetailsScreen.route) {
-//            CarDetailsScreen(navController = navController, viewModel = carBookingViewModel)
+            CarDetailsScreen(navController = navController, viewModel = carBookingViewModel)
         }
     }
 
