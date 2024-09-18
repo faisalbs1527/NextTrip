@@ -107,7 +107,7 @@ class CarBookingViewModel @Inject constructor(
     }
 
     private suspend fun getPrice(): Int {
-        var price = 0
+        val price: Int
         val routeInfo = MapUtils.getDistanceAndDuration(
             pickUp.value.latitude,
             pickUp.value.longitude,
@@ -129,9 +129,5 @@ class CarBookingViewModel @Inject constructor(
 
     fun getRoutePoints(startLoc: GeoPoint, endLoc: GeoPoint) = viewModelScope.launch {
         routePoints.value = getRouteFromORS(Constants.ORS_KEY, startLoc, endLoc)
-    }
-
-    fun clearRoutePoints() = viewModelScope.launch {
-        routePoints.value = emptyList()
     }
 }

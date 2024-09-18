@@ -112,8 +112,8 @@ fun ticketDate(): String {
 fun getBusDuration(startTime: String, endTime: String): String {
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
 
-    val time1 = LocalTime.parse("12:30", formatter)
-    val time2 = LocalTime.parse("18:45", formatter)
+    val time1 = LocalTime.parse(startTime, formatter)
+    val time2 = LocalTime.parse(endTime, formatter)
 
     val duration = Duration.between(time1, time2)
 

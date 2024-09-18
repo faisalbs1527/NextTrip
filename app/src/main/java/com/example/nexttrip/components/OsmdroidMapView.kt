@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,9 +23,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.nexttrip.R
 import com.example.nexttrip.components.button.TextButton
 import com.example.nexttrip.presentation.model.AvailableCarData
-import com.example.nexttrip.utils.Constants
 import com.example.nexttrip.utils.MapUtils.Companion.getLocationDetails
-import com.example.nexttrip.utils.PolyLineUtils.getRouteFromORS
 import kotlinx.coroutines.launch
 import org.osmdroid.api.IMapController
 import org.osmdroid.events.MapEventsReceiver
