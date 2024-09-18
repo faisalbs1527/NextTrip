@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.nexttrip.R
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
@@ -97,14 +98,14 @@ fun CarDetailsScreen(
                         tint = red80
                     )
                     Text(
-                        text = "${selectedCar.rating}(531 Reviews)",
+                        text = "${selectedCar.rating}(${selectedCar.reviews} Reviews)",
                         fontSize = 14.sp,
                         fontFamily = Font_SFPro,
                         color = gray
                     )
                 }
-                Image(
-                    painter = painterResource(id = R.drawable.carimage),
+                AsyncImage(
+                    model = selectedCar.image,
                     contentDescription = "",
                     modifier = Modifier
                         .fillMaxWidth()

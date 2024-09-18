@@ -12,9 +12,11 @@ data class AvailableCarData(
     val fuelType: String = "",
     val gearType: String = "",
     val color: String = "",
+    val image: String = "",
     var routeInfo: RouteInfo = RouteInfo(),
     var price: Int = 50,
     val successfulRides: Int = 0,
+    val reviews: Int = 0,
     val rating: Double = 0.0,
     val availableRoutes: List<TripRoute> = emptyList()
 )

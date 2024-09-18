@@ -23,11 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.ui.theme.Font_SFPro
@@ -54,11 +56,11 @@ fun AvailableCarCard(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
         ) {
             Column(
-                modifier = Modifier.padding(top = 12.dp),
+                modifier = Modifier.weight(.6f)
+                .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -88,7 +90,6 @@ fun AvailableCarCard(
                     TicketText(text = car.fuelType, size = 12)
                 }
                 Row(
-                    modifier = Modifier.padding(vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -109,11 +110,15 @@ fun AvailableCarCard(
             }
             Box(
                 modifier = Modifier
-                    .height(100.dp)
+                    .weight(.4f)
+                    .height(80.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.carimage),
-                    contentDescription = ""
+                AsyncImage(
+                    model = car.image,
+                    contentDescription = "",
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentScale = ContentScale.Crop
                 )
             }
         }
