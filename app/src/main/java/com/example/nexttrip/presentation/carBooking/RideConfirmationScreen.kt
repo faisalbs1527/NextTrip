@@ -71,6 +71,7 @@ fun RideConfirmationScreen(
 
     val selectedCar by viewModel.selectedCar.collectAsState()
     val pickUpPosition by viewModel.pickUp.collectAsState()
+    val routePoints by viewModel.routePoints.collectAsState()
 
     var pageStatus by remember { mutableIntStateOf(1) }
     var remainingTime by remember { mutableIntStateOf(selectedCar.routeInfo.duration * 60) }
@@ -83,6 +84,12 @@ fun RideConfirmationScreen(
                 remainingTime = 60
             }
         }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.getRoutePoints(
+            GeoPoint(pickUpPosition.latitude, pickUpPosition.longitude),
+            GeoPoint(selectedCar.latitude, selectedCar.longitude)
+        )
     }
 
     Scaffold(
@@ -122,6 +129,7 @@ fun RideConfirmationScreen(
                     pickUpPoint = GeoPoint(pickUpPosition.latitude, pickUpPosition.longitude),
                     selectedCar = selectedCar,
                     remainingTime = remainingTime,
+                    routePoints = routePoints,
                     onCancel = {
                         navController.navigate(Screen.CarBookingScreen.route) {
                             popUpTo(Screen.CarBookingScreen.route) { inclusive = true }
@@ -174,6 +182,7 @@ fun RiderPositionPage(
     context: Context,
     pickUpPoint: GeoPoint,
     selectedCar: AvailableCarData,
+    routePoints: List<GeoPoint>?,
     remainingTime: Int,
     onCancel: () -> Unit,
     onBackHome: () -> Unit
@@ -192,6 +201,7 @@ fun RiderPositionPage(
             showRoute = true,
             defaultScroll = .4,
             zoomLevel = 15.0,
+            routePoints = routePoints,
             currGeoPoint = pickUpPoint,
             carLocations = listOf(selectedCar)
         )

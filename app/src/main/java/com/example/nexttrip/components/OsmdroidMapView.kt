@@ -45,6 +45,7 @@ fun OsmdroidMapView(
     showRoute: Boolean = false,
     defaultScroll: Double = 0.0,
     zoomLevel: Double = 14.0,
+    routePoints: List<GeoPoint>? = emptyList(),
     carLocations: List<AvailableCarData>,
     onLocationUpdate: (GeoPoint, String) -> Unit = { _, _ -> },
     onBackPress: () -> Unit = {}
@@ -57,7 +58,6 @@ fun OsmdroidMapView(
     var geoLocation by remember {
         mutableStateOf("")
     }
-    var routePoints by remember { mutableStateOf<List<GeoPoint>?>(emptyList()) }
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -118,11 +118,6 @@ fun OsmdroidMapView(
 
                 }
                 if (showRoute) {
-                    val carGeoPoint = GeoPoint(carLocations[0].latitude, carLocations[0].longitude)
-
-                    coroutineScope.launch {
-                        routePoints = getRouteFromORS(Constants.ORS_KEY, currGeoPoint, carGeoPoint)
-                    }
                     routePoints?.let { drawRoute(view, it) }
                 }
             }

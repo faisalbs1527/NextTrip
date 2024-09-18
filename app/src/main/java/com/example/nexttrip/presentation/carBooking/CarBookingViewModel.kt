@@ -7,10 +7,13 @@ import com.example.nexttrip.domain.model.carBooking.TripRoute
 import com.example.nexttrip.domain.model.carBooking.toAvailableCarData
 import com.example.nexttrip.domain.repository.CarBookingRepository
 import com.example.nexttrip.presentation.model.AvailableCarData
+import com.example.nexttrip.utils.Constants
 import com.example.nexttrip.utils.MapUtils
+import com.example.nexttrip.utils.PolyLineUtils.getRouteFromORS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.osmdroid.util.GeoPoint
 import javax.inject.Inject
 import kotlin.math.ceil
 
@@ -37,6 +40,8 @@ class CarBookingViewModel @Inject constructor(
     var availableCars = MutableStateFlow<List<AvailableCarData>>(emptyList())
         private set
     var selectedCar = MutableStateFlow(AvailableCarData())
+        private set
+    var routePoints = MutableStateFlow<List<GeoPoint>?>(emptyList())
         private set
 
     fun clearState() = viewModelScope.launch {
@@ -120,5 +125,13 @@ class CarBookingViewModel @Inject constructor(
             }
         }
         return false
+    }
+
+    fun getRoutePoints(startLoc: GeoPoint, endLoc: GeoPoint) = viewModelScope.launch {
+        routePoints.value = getRouteFromORS(Constants.ORS_KEY, startLoc, endLoc)
+    }
+
+    fun clearRoutePoints() = viewModelScope.launch {
+        routePoints.value = emptyList()
     }
 }

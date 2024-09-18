@@ -1,31 +1,25 @@
 package com.example.nexttrip.presentation.carBooking
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,16 +28,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.nexttrip.R
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
+import com.example.nexttrip.components.IconWithText
 import com.example.nexttrip.components.InfoRow
 import com.example.nexttrip.components.appBar.SimpleTopBar
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.ui.theme.Font_SFPro
-import com.example.nexttrip.ui.theme.gray
-import com.example.nexttrip.ui.theme.red80
 
 @Composable
 fun CarDetailsScreen(
@@ -89,22 +81,10 @@ fun CarDetailsScreen(
                     fontWeight = FontWeight(700),
                     modifier = Modifier.padding(vertical = 4.dp)
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Star, contentDescription = "",
-                        modifier = Modifier.size(20.dp),
-                        tint = red80
-                    )
-                    Text(
-                        text = "${selectedCar.rating}(${selectedCar.reviews} Reviews)",
-                        fontSize = 14.sp,
-                        fontFamily = Font_SFPro,
-                        color = gray
-                    )
-                }
+                IconWithText(
+                    imageVector = Icons.Default.Star,
+                    text = "${selectedCar.rating}(${selectedCar.reviews} Reviews)"
+                )
                 AsyncImage(
                     model = selectedCar.image,
                     contentDescription = "",

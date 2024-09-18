@@ -1,18 +1,13 @@
 package com.example.nexttrip.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexttrip.components.button.IconRoundButton
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.green80
 
@@ -39,20 +35,7 @@ fun ConfirmationStatus(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .background(color = Color.Transparent, shape = CircleShape)
-                .border(width = 4.dp, color = green80, shape = CircleShape)
-                .padding(8.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Done,
-                contentDescription = "Box Icon",
-                tint = green80,
-                modifier = Modifier.size(42.dp)
-            )
-        }
+        IconRoundButton(imageVector = Icons.Default.Done, borderWidth = 4.dp, borderColor = green80, iconColor = green80, size = 42.dp)
         Row(
             modifier = Modifier
                 .fillMaxWidth()

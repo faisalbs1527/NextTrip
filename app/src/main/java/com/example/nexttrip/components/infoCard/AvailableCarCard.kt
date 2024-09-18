@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.nexttrip.components.IconWithText
 import com.example.nexttrip.components.RatingBox
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.presentation.model.AvailableCarData
@@ -54,8 +53,9 @@ fun AvailableCarCard(
             verticalAlignment = Alignment.Top
         ) {
             Column(
-                modifier = Modifier.weight(.6f)
-                .padding(top = 12.dp),
+                modifier = Modifier
+                    .weight(.6f)
+                    .padding(top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
@@ -84,24 +84,10 @@ fun AvailableCarCard(
                     )
                     TicketText(text = car.fuelType, size = 12)
                 }
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.LocationOn,
-                        contentDescription = "",
-                        tint = red80,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Text(
-                        text = "${car.routeInfo.distance}km(${car.routeInfo.duration}mins away)",
-                        fontSize = 12.sp,
-                        color = red80,
-                        fontFamily = Font_SFPro,
-                        fontWeight = FontWeight(600)
-                    )
-                }
+                IconWithText(
+                    imageVector = Icons.Default.LocationOn,
+                    text = "${car.routeInfo.distance}km(${car.routeInfo.duration}mins away)"
+                )
             }
             Box(
                 modifier = Modifier
