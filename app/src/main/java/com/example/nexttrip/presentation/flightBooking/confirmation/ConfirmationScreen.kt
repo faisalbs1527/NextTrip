@@ -1,6 +1,5 @@
 package com.example.nexttrip.presentation.flightBooking.confirmation
 
-import android.graphics.Bitmap
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -32,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,16 +41,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.ConfirmationStatus
-import com.example.nexttrip.components.TicketSection
 import com.example.nexttrip.components.ViewTicket
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.SharedViewModel
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
 import com.example.nexttrip.utils.createPdfFromBitmap
-import com.example.nexttrip.utils.createPdfFromComposable
-import com.example.nexttrip.utils.ticketDate
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -75,6 +69,7 @@ fun ConfirmationScreen(
     var pageStatus by remember {
         mutableIntStateOf(1)
     }
+    val totalPrice = departureFlight.price + returnFlight.price
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.Center,
@@ -147,7 +142,10 @@ fun ConfirmationScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        ConfirmationStatus("$" + (departureFlight.price + returnFlight.price).toString())
+                        ConfirmationStatus(
+                            title = "Wohoo! Your flight has been booked",
+                            message = "Payment of $$totalPrice has been received."
+                        )
                     }
                 }
             } else {

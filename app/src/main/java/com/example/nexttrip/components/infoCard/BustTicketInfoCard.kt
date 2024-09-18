@@ -1,4 +1,4 @@
-package com.example.nexttrip.components
+package com.example.nexttrip.components.infoCard
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -23,9 +23,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.nexttrip.components.ForwardArrow
+import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.presentation.model.AvailableBusData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
@@ -174,12 +175,4 @@ fun BustTicketInfoCard(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Show() {
-//    BustTicketInfoCard(
-//        onClick = {}
-//    )
 }

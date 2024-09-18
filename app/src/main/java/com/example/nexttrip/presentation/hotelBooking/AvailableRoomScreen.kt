@@ -43,14 +43,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
-import com.example.nexttrip.components.RoomInfoCard
+import com.example.nexttrip.components.infoCard.RoomInfoCard
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableRoomInfo
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.black40
 import com.example.nexttrip.ui.theme.red40
-import com.example.nexttrip.utils.getDateWithDay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

@@ -5,7 +5,6 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
 import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,24 +27,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.components.BusTicket
 import com.example.nexttrip.components.ButtonCustom
-import com.example.nexttrip.components.ConfirmationMessage
+import com.example.nexttrip.components.ConfirmationStatus
 import com.example.nexttrip.components.PaymentSection
 import com.example.nexttrip.components.ViewTicket
 import com.example.nexttrip.components.appBar.SimpleTopBar
 import com.example.nexttrip.navigation.Screen
-import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.utils.createBitmapFromComposable
 import com.example.nexttrip.utils.createPdfFromBitmap
-import com.example.nexttrip.utils.createPdfFromComposable
 import com.example.nexttrip.utils.ticketDate
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -161,7 +150,17 @@ fun PaymentScreen(
                             PaymentSection(payment = totalPayment.toString())
                         }
 
-                        2 -> ConfirmationMessage(message = "Your payment is successful.\n A nice journey is waiting for you")
+                        2 -> Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = 40.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            ConfirmationStatus(
+                                title = "Congratulations!!",
+                                message = "Your payment is successful.\n A nice journey is waiting for you"
+                            )
+                        }
                     }
                 }
             } else {

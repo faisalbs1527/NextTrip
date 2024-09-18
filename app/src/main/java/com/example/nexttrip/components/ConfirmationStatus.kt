@@ -29,6 +29,8 @@ import com.example.nexttrip.ui.theme.green80
 
 @Composable
 fun ConfirmationStatus(
+    title: String,
+    message: String,
     payment: String = ""
 ) {
     Column(
@@ -60,7 +62,7 @@ fun ConfirmationStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Wohoo! Your flight has been booked",
+                text = title,
                 fontSize = 24.sp,
                 fontFamily = Font_SFPro,
                 modifier = Modifier.padding(top = 8.dp),
@@ -73,7 +75,7 @@ fun ConfirmationStatus(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Payment of $payment has been received.",
+                text = message,
                 fontSize = 16.sp,
                 fontFamily = Font_SFPro,
                 fontWeight = FontWeight(400),
@@ -86,5 +88,8 @@ fun ConfirmationStatus(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    ConfirmationStatus()
+    ConfirmationStatus(
+        title = "Thank you!",
+        message = "Your booking has been placed and sent to Md. Sharif Ahmed"
+    )
 }

@@ -10,8 +10,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
-import com.example.nexttrip.components.NavBar
-import com.example.nexttrip.components.NavBarItem
+import com.example.nexttrip.components.appBar.NavBar
+import com.example.nexttrip.components.appBar.NavBarItem
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.flightBooking.BookingScreen
 import com.example.nexttrip.presentation.home.HomeScreen
