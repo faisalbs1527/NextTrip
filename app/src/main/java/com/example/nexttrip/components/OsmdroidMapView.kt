@@ -44,6 +44,7 @@ fun OsmdroidMapView(
     showBackButton: Boolean = false,
     showRoute: Boolean = false,
     defaultScroll: Double = 0.0,
+    zoomLevel: Double = 14.0,
     carLocations: List<AvailableCarData>,
     onLocationUpdate: (GeoPoint, String) -> Unit = { _, _ -> },
     onBackPress: () -> Unit = {}
@@ -76,7 +77,7 @@ fun OsmdroidMapView(
                     val mapController: IMapController = this.controller
 
                     mapController.setCenter(adjustedCenter(geoPoint, this, defaultScroll))
-                    mapController.setZoom(14.0)
+                    mapController.setZoom(zoomLevel)
                     val mapEventsReceiver = object : MapEventsReceiver {
                         override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
                             p?.let {
