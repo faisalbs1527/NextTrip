@@ -18,6 +18,7 @@ import com.example.nexttrip.presentation.busTicketBooking.SeatSelectionScreen
 import com.example.nexttrip.presentation.carBooking.CarDetailsScreen
 import com.example.nexttrip.presentation.carBooking.CarBookingScreen
 import com.example.nexttrip.presentation.carBooking.CarBookingViewModel
+import com.example.nexttrip.presentation.carBooking.RideConfirmationScreen
 import com.example.nexttrip.presentation.carBooking.SelectLocationScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
@@ -182,6 +183,9 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.CarDetailsScreen.route) {
             CarDetailsScreen(navController = navController, viewModel = carBookingViewModel)
+        }
+        composable(route = Screen.RideConfirmationScreen.route) {
+            RideConfirmationScreen(navController = navController, viewModel = carBookingViewModel)
         }
     }
 

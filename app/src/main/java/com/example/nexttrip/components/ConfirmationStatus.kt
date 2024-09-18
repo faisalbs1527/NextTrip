@@ -24,14 +24,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_SFPro
-import com.example.nexttrip.ui.theme.green40
 import com.example.nexttrip.ui.theme.green80
 
 @Composable
 fun ConfirmationStatus(
     title: String,
     message: String,
-    payment: String = ""
 ) {
     Column(
         modifier = Modifier

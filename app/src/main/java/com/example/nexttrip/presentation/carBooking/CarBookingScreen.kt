@@ -123,7 +123,6 @@ fun CarBookingScreen(
                     context = context,
                     carLocations = if (pageState == 1) carLocations else availableCars,
                     defaultScroll = .4,
-                    onLocationUpdate = { _, _ -> },
                     onBackPress = {
                         viewModel.clearState()
                         navController.popBackStack()

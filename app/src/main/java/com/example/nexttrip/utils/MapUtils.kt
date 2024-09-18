@@ -12,9 +12,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -110,7 +108,8 @@ class MapUtils {
                         if (routes.length() > 0) {
                             val route = routes.getJSONObject(0)
                             val distance =
-                                String.format("%.2f", route.getDouble("distance") / 1000).toDouble() // Convert meters to kilometers
+                                String.format("%.2f", route.getDouble("distance") / 1000)
+                                    .toDouble() // Convert meters to kilometers
                             val duration =
                                 ceil(route.getDouble("duration") / 60).toInt() // Convert seconds to minutes
                             return@withContext RouteInfo(distance, duration)

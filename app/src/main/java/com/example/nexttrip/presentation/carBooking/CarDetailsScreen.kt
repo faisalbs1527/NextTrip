@@ -39,6 +39,7 @@ import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.InfoRow
 import com.example.nexttrip.components.appBar.SimpleTopBar
+import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
@@ -61,7 +62,7 @@ fun CarDetailsScreen(
                     horizontal = 20.dp
                 )
             ) {
-
+                navController.navigate(Screen.RideConfirmationScreen.route)
             }
         }
     ) { innerPadding ->
