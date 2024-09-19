@@ -7,18 +7,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.core.app.ActivityCompat
+import com.example.nexttrip.presentation.model.RouteInfo
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 import java.io.IOException
+import kotlin.math.ceil
 
 class MapUtils {
 
@@ -39,10 +39,10 @@ class MapUtils {
                 // Retrieve the last known location
                 fusedLocationProviderClient.lastLocation
                     .addOnSuccessListener { location ->
-                        location?.let {
+                        if (location != null) {
                             // If location is not null, invoke the success callback with latitude and longitude
-                            onGetLastLocationSuccess(Pair(it.latitude, it.longitude))
-                        }?.run {
+                            onGetLastLocationSuccess(Pair(location.latitude, location.longitude))
+                        } else {
                             onGetLastLocationIsNull()
                         }
                     }
@@ -79,6 +79,43 @@ class MapUtils {
                 }.addOnFailureListener { exception ->
                     // If an error occurs, invoke the failure callback with the exception
                     onGetCurrentLocationFailed(exception)
+                }
+            }
+        }
+
+        suspend fun getDistanceAndDuration(
+            lat1: Double,
+            lon1: Double,
+            lat2: Double,
+            lon2: Double
+        ): RouteInfo {
+            val client = OkHttpClient()
+            val url =
+                "https://router.project-osrm.org/route/v1/driving/$lon1,$lat1;$lon2,$lat2?overview=false"
+
+            return withContext(Dispatchers.IO) {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) throw IOException("Unexpected code $response")
+
+                    val responseData = response.body?.string()
+                    responseData?.let {
+                        val json = JSONObject(it)
+                        val routes = json.getJSONArray("routes")
+                        if (routes.length() > 0) {
+                            val route = routes.getJSONObject(0)
+                            val distance =
+                                String.format("%.2f", route.getDouble("distance") / 1000)
+                                    .toDouble() // Convert meters to kilometers
+                            val duration =
+                                ceil(route.getDouble("duration") / 60).toInt() // Convert seconds to minutes
+                            return@withContext RouteInfo(distance, duration)
+                        }
+                    }
+                    return@withContext RouteInfo()
                 }
             }
         }
@@ -161,12 +198,13 @@ class MapUtils {
                     ) == PackageManager.PERMISSION_GRANTED)
         }
 
-        fun getLocationDetails(lat: Double, lng: Double) {
+        suspend fun getLocationDetails(lat: Double, lng: Double): String {
             val client = OkHttpClient()
             val url =
                 "https://nominatim.openstreetmap.org/reverse?format=json&lat=$lat&lon=$lng&addressdetails=1"
 
-            CoroutineScope(Dispatchers.IO).launch {
+
+            return withContext(Dispatchers.IO) {
                 try {
                     val request =
                         Request.Builder().url(url).addHeader("Accept-Language", "en").build()
@@ -177,15 +215,15 @@ class MapUtils {
                     val jsonObject = JSONObject(jsonData)
                     val address = jsonObject.getJSONObject("address")
                     val formattedAddress = address.optString("road", "") + ", " +
+                            address.optString("suburb", "") + ", " +
                             address.optString("city", "") + ", " +
-                            address.optString("country", "")
+                            address.optString("state", "")
 
-                    // Update UI on the main thread
-                    withContext(Dispatchers.Main) {
-                        println("Address: $formattedAddress")
-                    }
+                    formattedAddress
+
                 } catch (e: IOException) {
                     e.printStackTrace()
+                    ""
                 }
             }
         }

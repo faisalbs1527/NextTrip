@@ -86,9 +86,6 @@ fun getYear(date: LocalDate?): String {
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun convertToISO8601(dateString: String, timeString: String): String {
-    // Define the input date and time format
-    val dateFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 
     // Combine date and time strings
     val combinedDateTimeString = "$dateString $timeString"
@@ -115,8 +112,8 @@ fun ticketDate(): String {
 fun getBusDuration(startTime: String, endTime: String): String {
     val formatter = DateTimeFormatter.ofPattern("HH:mm")
 
-    val time1 = LocalTime.parse("12:30", formatter)
-    val time2 = LocalTime.parse("18:45", formatter)
+    val time1 = LocalTime.parse(startTime, formatter)
+    val time2 = LocalTime.parse(endTime, formatter)
 
     val duration = Duration.between(time1, time2)
 
@@ -124,6 +121,13 @@ fun getBusDuration(startTime: String, endTime: String): String {
     val minutes = duration.toMinutes() % 60
 
     return "${hours}h ${minutes}m"
+}
+
+fun formatTime(seconds: Int): String {
+    val minutes = seconds / 60
+    val secondsDisplay = seconds % 60
+    val formattedTime = String.format("%02d:%02d", minutes, secondsDisplay)
+    return formattedTime
 }
 
 val currentDateMillis = System.currentTimeMillis()

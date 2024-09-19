@@ -1,4 +1,4 @@
-package com.example.nexttrip.components
+package com.example.nexttrip.components.appBar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

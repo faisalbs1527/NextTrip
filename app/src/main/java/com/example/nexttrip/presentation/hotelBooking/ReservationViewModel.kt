@@ -3,7 +3,7 @@ package com.example.nexttrip.presentation.hotelBooking
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nexttrip.components.formatNumber
+import com.example.nexttrip.components.infoCard.formatNumber
 import com.example.nexttrip.domain.model.hotelbooking.HotelBookingData
 import com.example.nexttrip.domain.model.hotelbooking.Room
 import com.example.nexttrip.domain.model.hotelbooking.toAvailableHotel

@@ -37,7 +37,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
 import com.example.nexttrip.components.HorizontalLine
-import com.example.nexttrip.components.HotelInfoCard
+import com.example.nexttrip.components.infoCard.HotelInfoCard
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro

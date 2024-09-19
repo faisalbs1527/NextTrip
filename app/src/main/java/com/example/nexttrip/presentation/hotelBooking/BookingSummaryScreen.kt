@@ -1,6 +1,5 @@
 package com.example.nexttrip.presentation.hotelBooking
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,14 +40,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.nexttrip.R
 import com.example.nexttrip.components.ButtonCustom
 import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.InfoRow
-import com.example.nexttrip.components.PaymentMethod
 import com.example.nexttrip.components.PaymentSection
-import com.example.nexttrip.components.formatNumber
-import com.example.nexttrip.domain.model.hotelbooking.Hotel
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableHotelData
 import com.example.nexttrip.ui.theme.Font_SFPro

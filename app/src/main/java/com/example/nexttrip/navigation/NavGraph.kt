@@ -15,6 +15,11 @@ import com.example.nexttrip.presentation.busTicketBooking.BusReservationScreen
 import com.example.nexttrip.presentation.busTicketBooking.BusReservationViewModel
 import com.example.nexttrip.presentation.busTicketBooking.PaymentScreen
 import com.example.nexttrip.presentation.busTicketBooking.SeatSelectionScreen
+import com.example.nexttrip.presentation.carBooking.CarDetailsScreen
+import com.example.nexttrip.presentation.carBooking.CarBookingScreen
+import com.example.nexttrip.presentation.carBooking.CarBookingViewModel
+import com.example.nexttrip.presentation.carBooking.RideConfirmationScreen
+import com.example.nexttrip.presentation.carBooking.SelectLocationScreen
 import com.example.nexttrip.presentation.destination.PopularDestinationScreen
 import com.example.nexttrip.presentation.flightBooking.ResultsScreen
 import com.example.nexttrip.presentation.flightBooking.SearchScreen
@@ -42,7 +47,8 @@ fun SetUpNavGraph(
     sharedViewModel: SharedViewModel = hiltViewModel(),
     myBookingViewModel: MyBookingViewModel = hiltViewModel(),
     reservationViewModel: ReservationViewModel = hiltViewModel(),
-    busReservationViewModel: BusReservationViewModel = hiltViewModel()
+    busReservationViewModel: BusReservationViewModel = hiltViewModel(),
+    carBookingViewModel: CarBookingViewModel = hiltViewModel()
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = Screen.MainScreen.route) {
@@ -168,6 +174,18 @@ fun SetUpNavGraph(
         }
         composable(route = Screen.BusPaymentScreen.route) {
             PaymentScreen(navController = navController, viewModel = busReservationViewModel)
+        }
+        composable(route = Screen.CarBookingScreen.route) {
+            CarBookingScreen(navController = navController, viewModel = carBookingViewModel)
+        }
+        composable(route = Screen.SelectLocationScreen.route) {
+            SelectLocationScreen(navController = navController, viewModel = carBookingViewModel)
+        }
+        composable(route = Screen.CarDetailsScreen.route) {
+            CarDetailsScreen(navController = navController, viewModel = carBookingViewModel)
+        }
+        composable(route = Screen.RideConfirmationScreen.route) {
+            RideConfirmationScreen(navController = navController, viewModel = carBookingViewModel)
         }
     }
 

@@ -20,6 +20,7 @@ class ApiClient {
             return Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(baseUrl)
+                .client(buildClient())
                 .build()
         }
     }

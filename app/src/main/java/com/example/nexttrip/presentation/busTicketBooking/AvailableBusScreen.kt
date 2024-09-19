@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -35,15 +33,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.nexttrip.R
-import com.example.nexttrip.components.BustTicketInfoCard
+import com.example.nexttrip.components.infoCard.BustTicketInfoCard
 import com.example.nexttrip.components.HorizontalLine
-import com.example.nexttrip.components.HotelInfoCard
 import com.example.nexttrip.components.TicketText
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.gray
 import com.example.nexttrip.ui.theme.red40
-import com.example.nexttrip.utils.getDateWithDay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

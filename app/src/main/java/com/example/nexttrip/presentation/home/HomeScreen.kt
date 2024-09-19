@@ -184,6 +184,7 @@ fun HomeScreenSkeleton(navController: NavController, innerPadding: PaddingValues
                             1 -> navController.navigate(Screen.BookingScreen.route)
                             2 -> navController.navigate(Screen.ReservationScreen.route)
                             4 -> navController.navigate(Screen.BusReservationScreen.route)
+                            5 -> navController.navigate(Screen.CarBookingScreen.route)
                         }
                     }
                 }
