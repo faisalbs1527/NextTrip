@@ -2,22 +2,21 @@ package com.example.nexttrip.utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.graphics.Color
 import com.example.nexttrip.R
 import com.example.nexttrip.presentation.model.AirportsData
 import com.example.nexttrip.presentation.model.FlightBookingData
 import com.example.nexttrip.presentation.model.FlightsData
-import com.example.nexttrip.presentation.model.AvailableCarData
 import com.example.nexttrip.presentation.model.PassengerData
 import com.example.nexttrip.presentation.model.ServiceItemData
 
 
-//val destinationList = listOf(
-//    DestinationData("Dubai City",R.drawable.dubai,"16 Aug,2024","Business Class","$3100.00"),
-//    DestinationData("Phi Phi Island",R.drawable.phiphi,"16 Aug,2024","Business/First Class","$1100.00"),
-//    DestinationData("Kashmir",R.drawable.kashmir,"16 Sep,2024","Business/First Class","$1400.00"),
-//    DestinationData("Manali City",R.drawable.manali,"18 Aug,2024","Business/First Class","$2260.00"),
-//    DestinationData("Gangtok",R.drawable.gantok,"16 Aug,2024","Business Class","$1540.00")
-//)
+val status = listOf(
+    Pair("Done", Color(0xFF28A745)),
+    Pair("In Progress", Color(0xFF007BFF)),
+    Pair("Upcoming", Color(0xFFFFC107)),
+    Pair("Cancel", Color(0xFFDC3545)),
+)
 
 val itemsList = listOf(
     ServiceItemData(1, "Flight", R.drawable.plane),

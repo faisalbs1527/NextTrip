@@ -11,6 +11,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
@@ -100,6 +101,21 @@ fun convertToISO8601(dateString: String, timeString: String): String {
     val iso8601String = localDateTime.atZone(ZoneOffset.UTC).format(iso8601Formatter)
 
     return iso8601String
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun hasTimeCrossed(givenTime: String): Boolean {
+    // Define the date-time format
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+    // Parse the given time string to ZonedDateTime
+    val parsedTime = ZonedDateTime.parse(givenTime, formatter.withZone(ZoneOffset.UTC))
+
+    // Get the current time in UTC
+    val currentTime = ZonedDateTime.now(ZoneOffset.UTC)
+
+    // Compare the parsed time with the current time
+    return currentTime.isAfter(parsedTime)
 }
 
 fun ticketDate(): String {

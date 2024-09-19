@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.nexttrip.ui.theme.Font_LatoBold
+import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.NextTripTheme
 import com.example.nexttrip.ui.theme.red40
 
@@ -40,7 +42,8 @@ fun TicketType(
         Text(
             text = text,
             fontSize = 14.sp,
-            fontFamily = Font_LatoBold,
+            fontFamily = Font_SFPro,
+            fontWeight = FontWeight(600),
             modifier = Modifier.padding(8.dp),
             color = if(selected)Color.White else Color.Black
         )
