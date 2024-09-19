@@ -277,7 +277,7 @@ fun BottomSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 16.dp)
                 .padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Top
@@ -308,7 +308,7 @@ fun BottomSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 LocationBox(
@@ -354,7 +354,7 @@ fun BottomSection(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 LazyColumn(
                     modifier = Modifier.padding(top = 8.dp),

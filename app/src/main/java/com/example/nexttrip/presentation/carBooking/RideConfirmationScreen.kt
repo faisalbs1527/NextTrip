@@ -136,6 +136,7 @@ fun RideConfirmationScreen(
                         }
                     },
                     onBackHome = {
+                        viewModel.updateBookingPageState(1)
                         navController.navigate(Screen.HomeScreen.route) {
                             popUpTo(Screen.HomeScreen.route) { inclusive = true }
                         }
@@ -214,7 +215,7 @@ fun RiderPositionPage(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 16.dp)
                     .padding(bottom = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -236,7 +237,7 @@ fun RiderPositionPage(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(
@@ -272,7 +273,7 @@ fun RiderInfoCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
