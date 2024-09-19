@@ -1,13 +1,18 @@
 package com.example.nexttrip.presentation.busTicketBooking
 
+import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.nexttrip.domain.model.busTicketBooking.BusTicketEntity
 import com.example.nexttrip.domain.model.busTicketBooking.SeatData
 import com.example.nexttrip.domain.model.busTicketBooking.toAvailableBusData
 import com.example.nexttrip.domain.model.busTicketBooking.toCityData
 import com.example.nexttrip.domain.repository.BusTicketRepository
 import com.example.nexttrip.presentation.model.AvailableBusData
 import com.example.nexttrip.presentation.model.CityData
+import com.example.nexttrip.utils.convertToISO8601
 import com.example.nexttrip.utils.currentDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +51,7 @@ class BusReservationViewModel @Inject constructor(
         private set
     var totalPrice = MutableStateFlow(0)
         private set
+
 
     private fun getAvailableSeats(seatList: List<SeatData>): Int {
         var seats = 0
@@ -159,4 +165,20 @@ class BusReservationViewModel @Inject constructor(
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun saveBookingInfo(ticket: ByteArray, fileName: String, bus: AvailableBusData) =
+        viewModelScope.launch {
+            val departure = convertToISO8601(travelDate.value, bus.busSchedule.departureTime)
+            val ticketEntity =
+                BusTicketEntity(
+                    busName = bus.companyName,
+                    departureCity = fromLoc.value,
+                    arrivalCity = toLoc.value,
+                    ticket = ticket,
+                    ticketName = fileName,
+                    travelDate = departure
+                )
+            repository.saveBusTicketInfo(ticketEntity)
+        }
 }

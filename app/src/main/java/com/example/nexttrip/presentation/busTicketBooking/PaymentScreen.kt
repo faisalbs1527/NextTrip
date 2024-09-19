@@ -41,6 +41,7 @@ import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.utils.createBitmapFromComposable
 import com.example.nexttrip.utils.createPdfFromBitmap
 import com.example.nexttrip.utils.ticketDate
+import com.example.nexttrip.utils.toByteArray
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -104,6 +105,11 @@ fun PaymentScreen(
                                     barcodeWidth = barcodeWidth
                                 )
                             }
+                            viewModel.saveBookingInfo(
+                                ticketBitmap!!.toByteArray(),
+                                fileName,
+                                selectedBus
+                            )
                         }
 
                         2 -> {

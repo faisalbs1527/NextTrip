@@ -118,6 +118,16 @@ fun hasTimeCrossed(givenTime: String): Boolean {
     return currentTime.isAfter(parsedTime)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun hasCrossedOnlyDate(givenDate: String): Boolean {
+    val inputFormatter = DateTimeFormatter.ofPattern("dd MMM, yyyy")
+    val localDate = LocalDate.parse(givenDate, inputFormatter)
+
+    val currentDateLocal = LocalDate.parse(currentDate, inputFormatter)
+
+    return currentDateLocal.isAfter(localDate)
+}
+
 fun ticketDate(): String {
     val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
     val currentDateTime = dateFormat.format(Date())

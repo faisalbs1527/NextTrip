@@ -8,5 +8,5 @@ interface HotelRepository {
 
     suspend fun saveHotelBookingInfo(hotelBookingData: HotelBookingData)
 
-//    suspend fun getHotelBookingInfo(): List<HotelBookingData>
+    suspend fun getHotelBookingInfo(): List<HotelBookingData>
 }

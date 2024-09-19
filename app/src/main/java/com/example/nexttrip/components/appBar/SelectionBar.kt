@@ -29,11 +29,12 @@ import com.example.nexttrip.utils.itemsList
 
 @Composable
 fun SelectionBar(
+    selectedId: Int,
     items: List<ServiceItemData> = itemsList,
     onSelect: (Int) -> Unit
 ) {
 
-    var selectedItem by remember { mutableIntStateOf(1) }
+    var selectedItem by remember { mutableIntStateOf(selectedId) }
 
     Row(
         modifier = Modifier
@@ -61,7 +62,9 @@ fun SelectionBar(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    SelectionBar {
+    SelectionBar(
+        selectedId = 2
+    ) {
 
     }
 }

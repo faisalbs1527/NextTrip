@@ -7,10 +7,11 @@ import androidx.room.RoomDatabase
 import com.example.nexttrip.data.local.dao.HotelBookingDao
 import com.example.nexttrip.data.local.dao.TicketDao
 import com.example.nexttrip.domain.model.TicketEntity
+import com.example.nexttrip.domain.model.busTicketBooking.BusTicketEntity
 import com.example.nexttrip.domain.model.hotelbooking.HotelBookingData
 
 @Database(
-    entities = [TicketEntity::class, HotelBookingData::class],
+    entities = [TicketEntity::class, HotelBookingData::class, BusTicketEntity::class],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {

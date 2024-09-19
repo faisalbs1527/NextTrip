@@ -19,7 +19,7 @@ class HotelRepoImpl @Inject constructor(
         dbService.hotelBookingDao().saveHotelBookingInfo(hotelBookingData)
     }
 
-    suspend fun getHotelBookingInfo(): List<HotelBookingData> {
+    override suspend fun getHotelBookingInfo(): List<HotelBookingData> {
         return dbService.hotelBookingDao().getHotelBookingInfo()
     }
 }
