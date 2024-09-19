@@ -86,10 +86,11 @@ class CarBookingViewModel @Inject constructor(
     }
 
     fun findAvailableCars() = viewModelScope.launch {
-        availableCars.value = carLocations.value.filter { cars ->
-            checkRoutes(cars.availableRoutes)
+        availableCars.value = emptyList()
+        val foundCars = carLocations.value.filter { car ->
+            checkRoutes(car.availableRoutes)
         }
-        availableCars.value = availableCars.value.map {
+        availableCars.value = foundCars.map {
             it.copy(
                 routeInfo = MapUtils.getDistanceAndDuration(
                     pickUp.value.latitude,

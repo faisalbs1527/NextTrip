@@ -46,7 +46,7 @@ fun AvailableCarCard(
             .clickable {
                 onClick()
             },
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),

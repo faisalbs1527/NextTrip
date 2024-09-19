@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -59,6 +60,7 @@ import com.example.nexttrip.components.HorizontalLine
 import com.example.nexttrip.components.OsmdroidMapView
 import com.example.nexttrip.components.button.IconTextButton
 import com.example.nexttrip.components.button.TextButton
+import com.example.nexttrip.components.shimmerEffect.ShimmerItem
 import com.example.nexttrip.domain.model.carBooking.LocationDetails
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.presentation.model.AvailableCarData
@@ -360,9 +362,23 @@ fun BottomSection(
                     modifier = Modifier.padding(top = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(availableCars) {
-                        AvailableCarCard(it) {
-                            onSelectCar(it)
+                    if (availableCars.isEmpty()) {
+                        items(3) {
+                            ShimmerItem(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(148.dp)
+                                    .background(
+                                        color = Color.LightGray,
+                                        shape = RoundedCornerShape(4.dp)
+                                    )
+                            )
+                        }
+                    } else {
+                        items(availableCars) {
+                            AvailableCarCard(it) {
+                                onSelectCar(it)
+                            }
                         }
                     }
                 }
