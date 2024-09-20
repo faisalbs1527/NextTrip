@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -59,6 +62,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,4 +70,48 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation (libs.material3)
+    //icon
+    implementation (libs.androidx.material.icons.extended)
+    //navigation compose
+    implementation(libs.androidx.navigation.compose)
+
+    implementation (libs.retrofit)
+
+    implementation (libs.converter.gson)
+
+    implementation (libs.glide)
+
+    annotationProcessor (libs.compiler)
+
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    //for hiltviewmodel
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation (libs.coil.compose)
+
+    // Parcelable library (if needed)
+    implementation(libs.androidx.core.ktx.v1100)
+
+    //barcode
+    implementation (libs.core)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:2.6.1")
+    // Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
+
+    implementation(libs.play.services.location)
+    implementation(libs.accompanist.permissions)
+
+    implementation (libs.osmdroid.android)
 }

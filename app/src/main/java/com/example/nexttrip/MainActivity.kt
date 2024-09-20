@@ -1,47 +1,32 @@
 package com.example.nexttrip
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.annotation.RequiresApi
+import androidx.navigation.compose.rememberNavController
+import com.example.nexttrip.navigation.Screen
+import com.example.nexttrip.navigation.SetUpNavGraph
 import com.example.nexttrip.ui.theme.NextTripTheme
+import dagger.hilt.android.AndroidEntryPoint
+import org.osmdroid.config.Configuration
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Load osmdroid configuration
+        Configuration.getInstance().load(this, getSharedPreferences("osm_prefs", MODE_PRIVATE))
         setContent {
             NextTripTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navController = rememberNavController()
+                SetUpNavGraph(
+                    navController = navController,
+                    startDestination = Screen.HomeScreen.route
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NextTripTheme {
-        Greeting("Android")
     }
 }
