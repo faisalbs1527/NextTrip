@@ -7,8 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Person2
+import androidx.compose.material.icons.filled.PersonOutline
+import androidx.compose.material.icons.filled.PersonPin
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +37,7 @@ import com.example.nexttrip.components.bookingCard.HotelBookingItem
 import com.example.nexttrip.navigation.Screen
 import com.example.nexttrip.ui.theme.Font_SFPro
 import com.example.nexttrip.ui.theme.red40
+import com.example.nexttrip.ui.theme.red80
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -58,79 +65,94 @@ fun MyBookingsScreen(
     ) {
         Column(
             modifier = Modifier
-                .background(color = Color.Gray.copy(0.2f))
                 .fillMaxSize()
-                .padding(top = 30.dp)
-                .padding(horizontal = 20.dp)
+                .background(color = Color.Gray.copy(alpha = 0.2f))
         ) {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
-                    contentDescription = "",
-                    modifier = Modifier
-                        .weight(.1f)
-                        .size(28.dp)
-                        .clickable {
-                            navController.popBackStack()
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .background(color = red80)
+                        .padding(vertical = 30.dp, horizontal = 20.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(
+                            text = "My Bookings",
+                            fontSize = 28.sp,
+                            fontFamily = Font_SFPro,
+                            fontWeight = FontWeight(500),
+                            color = Color.White
+                        )
+                        Row(
+                            modifier = Modifier
+                                .background(color = Color.White, shape = CircleShape)
+                                .padding(4.dp)
+                        ) {
+                            Icon(imageVector = Icons.Default.Person, contentDescription = "")
                         }
-                )
+
+                    }
+                }
                 Row(
                     modifier = Modifier
-                        .weight(.8f),
-                    horizontalArrangement = Arrangement.Center
+                        .fillMaxWidth()
+                        .padding(top = 100.dp)
+                        .padding(horizontal = 20.dp)
                 ) {
-                    Text(
-                        text = "My Bookings",
-                        fontFamily = Font_SFPro,
-                        fontSize = 20.sp,
-                        color = red40,
-                        fontWeight = FontWeight(600)
-                    )
+                    SelectionBar(
+                        selectedId = selectedService
+                    ) {
+                        viewModel.updateSelectedService(it)
+                    }
                 }
-                Spacer(modifier = Modifier.weight(.1f))
             }
-            SelectionBar(
-                selectedId = selectedService
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
             ) {
-                viewModel.updateSelectedService(it)
-            }
-
-            when (selectedService) {
-                1 -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(bookings) { booking ->
-                        BookingItem(booking) {
-                            viewModel.getTicket(booking.id)
-                            navController.navigate(Screen.PdfViewScreen.route)
+                when (selectedService) {
+                    1 -> LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(bookings) { booking ->
+                            BookingItem(booking) {
+                                viewModel.getTicket(booking.id)
+                                navController.navigate(Screen.PdfViewScreen.route)
+                            }
                         }
                     }
-                }
 
-                2 -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(hotelBookings) { booking ->
-                        HotelBookingItem(booking) {
+                    2 -> LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(hotelBookings) { booking ->
+                            HotelBookingItem(booking) {
 
+                            }
                         }
                     }
-                }
 
-                4 -> LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    items(busBookings) { booking ->
-                        BusBookingItem(booking) {
-                            viewModel.getBusTicket(booking.id)
-                            navController.navigate(Screen.PdfViewScreen.route)
+                    4 -> LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        items(busBookings) { booking ->
+                            BusBookingItem(booking) {
+                                viewModel.getBusTicket(booking.id)
+                                navController.navigate(Screen.PdfViewScreen.route)
+                            }
                         }
                     }
                 }
@@ -144,5 +166,5 @@ fun MyBookingsScreen(
 @Preview(showBackground = true)
 @Composable
 private fun Show() {
-    MyBookingsScreen(rememberNavController(), PaddingValues(0.dp))
+
 }

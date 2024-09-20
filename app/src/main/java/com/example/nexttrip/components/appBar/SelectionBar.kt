@@ -40,8 +40,8 @@ fun SelectionBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp)
-            .background(color = Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(vertical = 8.dp, horizontal = 4.dp),
+            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+            .padding(vertical = 12.dp, horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         items.forEach { item ->

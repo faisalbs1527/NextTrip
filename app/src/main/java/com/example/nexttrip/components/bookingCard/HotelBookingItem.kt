@@ -40,7 +40,7 @@ fun HotelBookingItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
-            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .padding(16.dp)
             .clickable {
                 onClick()
             }

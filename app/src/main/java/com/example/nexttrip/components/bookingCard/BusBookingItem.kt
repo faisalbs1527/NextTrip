@@ -40,7 +40,7 @@ fun BusBookingItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .background(color = Color.White, shape = RoundedCornerShape(4.dp))
-            .padding(vertical = 16.dp, horizontal = 8.dp)
+            .padding(16.dp)
             .clickable {
                 onClick()
             }
@@ -77,7 +77,7 @@ fun BusBookingItem(
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Departure Date: ${booking.travelDate}",
+            text = "Travel Date: ${booking.travelDate}",
             fontFamily = Font_SFPro,
             style = MaterialTheme.typography.bodyMedium
         )
